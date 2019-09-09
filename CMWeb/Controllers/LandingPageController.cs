@@ -8,7 +8,7 @@ using CMWeb.Models;
 
 namespace CMWeb.Controllers
 {
-    public class HomeController : Controller
+    public class LandingPageController : Controller
     {
         public IActionResult Index()
         {
