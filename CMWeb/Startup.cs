@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using CMWeb.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CMWeb
 {
@@ -33,6 +35,10 @@ namespace CMWeb
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddEntityFrameworkNpgsql().AddDbContext<CMWebContext>(options =>
+            options.UseNpgsql(Configuration.GetConnectionString("CMWebContext")));
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

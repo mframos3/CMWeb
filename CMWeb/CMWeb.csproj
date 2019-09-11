@@ -6,20 +6,34 @@
     <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
     <UserSecretsId>4d4936a4-100e-4d3f-99c8-c2a24a68d2f8</UserSecretsId>
   </PropertyGroup>
-
-
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App">
       <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
       <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGenerators.Mvc" Version="2.2.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\HelloWorld\" />
+    <Folder Include="Views\HomePage\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Views\HelloWorld\Welcome.cshtml" />
+    <Content Remove="Views\ConferencePage\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Controllers\ConferencePageController.cs" />
+    <Compile Remove="Migrations\20190910020126_InitialMigration.cs" />
+    <Compile Remove="Migrations\20190910023027_InitialMigration2.Designer.cs" />
+    <Compile Remove="Migrations\20190911184012_Initial.cs" />
+    <Compile Remove="Migrations\20190911184012_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190911184436_Initial2.cs" />
+    <Compile Remove="Migrations\20190911184436_Initial2.Designer.cs" />
+    <Compile Remove="Migrations\CMWebContextModelSnapshot.cs" />
   </ItemGroup>
 </Project>
