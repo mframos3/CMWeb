@@ -6,3 +6,26 @@ services:
     build:
       context: .
       dockerfile: CMWeb/Dockerfile
+    ports:
+        - '5000:5000'
+    depends_on:
+        - db
+    networks:
+        - cmweb-network
+  db:
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=g5
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=CMDB
+    volumes:
+       - ./volumes/data/db:/var/lib/postgresql/data
+    image: 'postgres:11.5'
+    networks:
+        - cmweb-network
+
+networks:
+    cmweb-network:
+        driver: bridge
+      
