@@ -5,15 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using CMWeb.Data;
 using CMWeb.Models;
 
 namespace CMWeb.Controllers
 {
     public class ConferenceController : Controller
     {
-        private readonly CMWebContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public ConferenceController(CMWebContext context)
+        public ConferenceController(ApplicationDbContext context)
         {
             _context = context;
         }

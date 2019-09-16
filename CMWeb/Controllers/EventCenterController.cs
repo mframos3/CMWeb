@@ -6,14 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CMWeb.Models;
+using CMWeb.Data;
 
 namespace CMWeb.Controllers
 {
     public class EventCenterController : Controller
     {
-        private readonly CMWebContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public EventCenterController(CMWebContext context)
+        public EventCenterController(ApplicationDbContext context)
         {
             _context = context;
         }

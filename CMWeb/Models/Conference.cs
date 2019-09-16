@@ -17,7 +17,7 @@ namespace CMWeb.Models
 
        // No sé si es buena práctica agregar este tipo de datos a los modelos
        // usando System.Collections.Generic
-       public List<String> Sponsors { get; set; }
+       public ICollection<Sponsor> Sponsors { get; set; }
 
     }
 }

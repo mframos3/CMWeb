@@ -6,14 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CMWeb.Models;
+using CMWeb.Data;
 
 namespace CMWeb.Controllers
 {
     public class RoomController : Controller
     {
-        private readonly CMWebContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public RoomController(CMWebContext context)
+        public RoomController(ApplicationDbContext context)
         {
             _context = context;
         }
