@@ -1,47 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
-    <UserSecretsId>4d4936a4-100e-4d3f-99c8-c2a24a68d2f8</UserSecretsId>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App">
-      <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
-      <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGenerators.Mvc" Version="2.2.3" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <UserSecretsId>aspnet-CMWeb-1BF09062-CD57-4967-A716-55EFF536EF9A</UserSecretsId>
+        <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\HomePage\" />
-    <Folder Include="Data\" />
-    <Folder Include="Areas\" />
-    <Folder Include="Areas\Identity\" />
-    <Folder Include="Areas\Identity\Pages\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Remove="Views\HelloWorld\Welcome.cshtml" />
-    <Content Remove="Views\ConferencePage\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Controllers\ConferencePageController.cs" />
-    <Compile Remove="Migrations\20190910020126_InitialMigration.cs" />
-    <Compile Remove="Migrations\20190910023027_InitialMigration2.Designer.cs" />
-    <Compile Remove="Migrations\20190911184012_Initial.cs" />
-    <Compile Remove="Migrations\20190911184012_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190911184436_Initial2.cs" />
-    <Compile Remove="Migrations\20190911184436_Initial2.Designer.cs" />
-    <Compile Remove="Migrations\CMWebContextModelSnapshot.cs" />
-    <Compile Remove="Migrations\20190916020502_MergeProjects.cs" />
-    <Compile Remove="Migrations\ApplicationDbContextModelSnapshot.cs" />
-    <Compile Remove="Migrations\20190916020502_MergeProjects.Designer.cs" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
+    </ItemGroup>
+
 </Project>
