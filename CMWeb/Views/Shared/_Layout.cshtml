@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - CMWeb</title>
+    <title>@ViewData["Title"] - CM Web</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css"/>
@@ -18,10 +18,21 @@
     <link rel="stylesheet" href="~/css/site.css"/>
 </head>
 <body>
-<header>
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+        <header class="masthead mb-auto">
+            <div class="inner">
+                <h4 class="masthead-brand">Conference</h4>
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link active" href="#">Home</a>
+                    <a class="nav-link" href="#">Contact</a>
+                </nav>
+            </div>
+        </header>
+        </div>
+@*<header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CMWeb</a>
+            <a class="navbar-brand" asp-area="" asp-controller="LandingPage" asp-action="Index">CMWeb</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -30,16 +41,16 @@
                 <partial name="_LoginPartial"/>
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="LandingPage" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="LandingPage" asp-action="Privacy">Privacy</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-</header>
+</header>*@
 <div class="container">
     <partial name="_CookieConsentPartial"/>
     <main role="main" class="pb-3">
@@ -49,7 +60,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2019 - CMWeb - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2019 - CMWeb - <a asp-area="" asp-controller="LandingPage" asp-action="Privacy">Privacy</a>
     </div>
 </footer>
 
