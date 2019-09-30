@@ -25,5 +25,11 @@ namespace CMWeb.Data
         public DbSet<CMWeb.Models.EventCenter> EventCenter { get; set; }
 
         public DbSet<CMWeb.Models.EventCenterRoom> EventCenterRoom { get; set; }
+
+        public DbSet<CMWeb.Models.StatManager> StatManager { get; set; }
+
+        public DbSet<CMWeb.Models.Event> Event { get; set; }
+
+        public DbSet<CMWeb.Models.Notification> Notification { get; set; }
     }
 }
