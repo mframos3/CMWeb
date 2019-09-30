@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using CMWeb.Areas.Identity.Data
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<CMWebUser> SignInManager
+@inject UserManager<CMWebUser> UserManager
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
@@ -23,8 +27,14 @@
             <div class="inner">
                 <h3 class="masthead-brand">Conference</h3>
                 <nav class="nav nav-masthead justify-content-center">
-                    <a class="nav-link active" href="#">Home</a>
-                    <a class="nav-link" href="#">Contact</a>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <a class="nav-link active" asp-area="" asp-controller="HomePage" asp-action="Index">Home</a>
+                    }
+                    else
+                    {
+                        <a class="nav-link active" asp-area="" asp-controller="LandingPage" asp-action="Index">Home</a>
+                    }
                 </nav>
             </div>
         </header>
