@@ -50,18 +50,6 @@ body {
 
 
 
-body {
-    display: -ms-flexbox;
-    display: -webkit-box;
-    display: flex;
-    -ms-flex-pack: center;
-    -webkit-box-pack: center;
-    justify-content: center;
-    color: #fff;
-    text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
-    box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
-}
-
 .cover-container {
     max-width: 42em;
 }
@@ -110,7 +98,9 @@ body {
     }
 }
 
-
+.div-central{
+    margin-top: 130px;
+}
 /*
  * Cover
  */
@@ -123,6 +113,11 @@ body {
     font-weight: 700;
 }
 
+.text-center h1,
+.text-center h3,
+.text-center p {
+    color: white;
+}
 
 /*
  * Footer
