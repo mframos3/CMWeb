@@ -67,6 +67,15 @@ namespace CMWeb
                 routes.MapRoute(
                     "default",
                     "{controller=LandingPage}/{action=Index}/{id?}");
+                routes.MapRoute(
+                    name: "home",
+                    template: "{controller=HomePage}/{action=Index}/{id?}");
+                routes.MapRoute(
+                    name: "conference",
+                    template: "{controller=Conference}/{action=Index}/{id?}");
+                routes.MapRoute(
+                    name: "eventcenter",
+                    template: "{controller=EventCenter}/{action=Index}/{id?}");
             });
         }
     }

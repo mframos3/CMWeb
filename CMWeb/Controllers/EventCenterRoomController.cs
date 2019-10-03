@@ -22,7 +22,7 @@ namespace CMWeb.Controllers
         // GET: EventCenterRoom
         public async Task<IActionResult> Index()
         {
-            return View(await _context.EventCenterRoom.ToListAsync());
+            return View(await _context.EventCenterRooms.ToListAsync());
         }
 
         // GET: EventCenterRoom/Details/5
@@ -33,7 +33,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var eventCenterRoom = await _context.EventCenterRoom
+            var eventCenterRoom = await _context.EventCenterRooms
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (eventCenterRoom == null)
             {
@@ -73,7 +73,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var eventCenterRoom = await _context.EventCenterRoom.FindAsync(id);
+            var eventCenterRoom = await _context.EventCenterRooms.FindAsync(id);
             if (eventCenterRoom == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var eventCenterRoom = await _context.EventCenterRoom
+            var eventCenterRoom = await _context.EventCenterRooms
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (eventCenterRoom == null)
             {
@@ -139,15 +139,15 @@ namespace CMWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var eventCenterRoom = await _context.EventCenterRoom.FindAsync(id);
-            _context.EventCenterRoom.Remove(eventCenterRoom);
+            var eventCenterRoom = await _context.EventCenterRooms.FindAsync(id);
+            _context.EventCenterRooms.Remove(eventCenterRoom);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool EventCenterRoomExists(int id)
         {
-            return _context.EventCenterRoom.Any(e => e.Id == id);
+            return _context.EventCenterRooms.Any(e => e.Id == id);
         }
     }
 }

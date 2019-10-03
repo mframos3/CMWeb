@@ -8,14 +8,15 @@ ViewData["Title"] = "Home Page";
 integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 <!-- Custom styles for this template -->
-<link href="./css/cover.css" rel="stylesheet">
 </head>
 
 <body class="text-center">
 <div>
 <main role="main" class="inner cover" style="margin-top: 150px">
-<h1 class="cover-heading">Conference</h1>
-<p class="lead">Home</p>
+<h1 class="cover-heading">Home Page</h1>
+    <p class="lead">Feed e Itinerario</p>
+    <a asp-controller="Conference" asp-action="Details" asp-route-id="1">1. - Deep Learning Conference 2019</a>
+    <a asp-controller="Conference" asp-action="Details">a. - NN </a> <!-- EVENTS-->
 <p class="lead">
 </p>
 </main>

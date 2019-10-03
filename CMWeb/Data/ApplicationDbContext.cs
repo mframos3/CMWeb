@@ -12,24 +12,40 @@ namespace CMWeb.Data
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        
+        public DbSet<Conference> Conferences { get; set; }
+
+        public DbSet<EventCenter> EventCenters { get; set; }
+
+        public DbSet<EventCenterRoom> EventCenterRooms { get; set; }
+
+        public DbSet<Notification> Notifications { get; set; }
+        
+        public DbSet<Chat> Chats { get; set; }
+        
+        public DbSet<Meal> Meals { get; set; }
+        
+        public DbSet<Party> Parties { get; set; }
+        
+        public DbSet<Talk> Talk { get; set; }
+        
+        public DbSet<Workshop> Workshops { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Conference>().ToTable("Conference");
+            modelBuilder.Entity<EventCenter>().ToTable("EventCenter");
+            modelBuilder.Entity<Notification>().ToTable("Notification");
+            modelBuilder.Entity<EventCenterRoom>().ToTable("EventCenterRoom");
+            modelBuilder.Entity<Event>().ToTable("Event")
+                .HasDiscriminator<EventType>("EventType")
+                .HasValue<Chat>(EventType.Chat)
+                .HasValue<Meal>(EventType.Meal)
+                .HasValue<Party>(EventType.Party)
+                .HasValue<Talk>(EventType.Talk)
+                .HasValue<Workshop>(EventType.Workshop);
         }
 
-        public DbSet<CMWeb.Models.Conference> Conference { get; set; }
-
-        public DbSet<CMWeb.Models.EventCenter> EventCenter { get; set; }
-
-        public DbSet<CMWeb.Models.EventCenterRoom> EventCenterRoom { get; set; }
-
-        public DbSet<CMWeb.Models.StatManager> StatManager { get; set; }
-
-        public DbSet<CMWeb.Models.Event> Event { get; set; }
-
-        public DbSet<CMWeb.Models.Notification> Notification { get; set; }
+        
     }
 }

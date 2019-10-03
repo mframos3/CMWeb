@@ -22,7 +22,7 @@ namespace CMWeb.Controllers
         // GET: Notification
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Notification.ToListAsync());
+            return View(await _context.Notifications.ToListAsync());
         }
 
         // GET: Notification/Details/5
@@ -33,7 +33,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var notification = await _context.Notification
+            var notification = await _context.Notifications
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (notification == null)
             {
@@ -73,7 +73,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var notification = await _context.Notification.FindAsync(id);
+            var notification = await _context.Notifications.FindAsync(id);
             if (notification == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var notification = await _context.Notification
+            var notification = await _context.Notifications
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (notification == null)
             {
@@ -139,15 +139,15 @@ namespace CMWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var notification = await _context.Notification.FindAsync(id);
-            _context.Notification.Remove(notification);
+            var notification = await _context.Notifications.FindAsync(id);
+            _context.Notifications.Remove(notification);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool NotificationExists(string id)
         {
-            return _context.Notification.Any(e => e.Id == id);
+            return _context.Notifications.Any(e => e.Id == id);
         }
     }
 }

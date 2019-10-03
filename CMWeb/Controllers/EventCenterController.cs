@@ -22,7 +22,7 @@ namespace CMWeb.Controllers
         // GET: EventCenter
         public async Task<IActionResult> Index()
         {
-            return View(await _context.EventCenter.ToListAsync());
+            return View(await _context.EventCenters.ToListAsync());
         }
 
         // GET: EventCenter/Details/5
@@ -33,7 +33,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var eventCenter = await _context.EventCenter
+            var eventCenter = await _context.EventCenters
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (eventCenter == null)
             {
@@ -73,7 +73,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var eventCenter = await _context.EventCenter.FindAsync(id);
+            var eventCenter = await _context.EventCenters.FindAsync(id);
             if (eventCenter == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var eventCenter = await _context.EventCenter
+            var eventCenter = await _context.EventCenters
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (eventCenter == null)
             {
@@ -139,15 +139,15 @@ namespace CMWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var eventCenter = await _context.EventCenter.FindAsync(id);
-            _context.EventCenter.Remove(eventCenter);
+            var eventCenter = await _context.EventCenters.FindAsync(id);
+            _context.EventCenters.Remove(eventCenter);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool EventCenterExists(int id)
         {
-            return _context.EventCenter.Any(e => e.Id == id);
+            return _context.EventCenters.Any(e => e.Id == id);
         }
     }
 }

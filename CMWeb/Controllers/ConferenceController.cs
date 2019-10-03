@@ -22,7 +22,7 @@ namespace CMWeb.Controllers
         // GET: Conference
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Conference.ToListAsync());
+            return View(await _context.Conferences.ToListAsync());
         }
 
         // GET: Conference/Details/5
@@ -33,7 +33,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var conference = await _context.Conference
+            var conference = await _context.Conferences
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (conference == null)
             {
@@ -73,7 +73,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var conference = await _context.Conference.FindAsync(id);
+            var conference = await _context.Conferences.FindAsync(id);
             if (conference == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var conference = await _context.Conference
+            var conference = await _context.Conferences
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (conference == null)
             {
@@ -139,15 +139,15 @@ namespace CMWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var conference = await _context.Conference.FindAsync(id);
-            _context.Conference.Remove(conference);
+            var conference = await _context.Conferences.FindAsync(id);
+            _context.Conferences.Remove(conference);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ConferenceExists(int id)
         {
-            return _context.Conference.Any(e => e.Id == id);
+            return _context.Conferences.Any(e => e.Id == id);
         }
     }
 }
