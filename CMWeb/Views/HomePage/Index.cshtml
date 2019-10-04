@@ -1,26 +1,67 @@
 @{
-ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home Page";
 }
 <head>
 
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
-integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-<!-- Custom styles for this template -->
+    <!-- Custom styles for this template -->
 </head>
 
-<body class="text-center">
+<body>
 <div>
-<main role="main" class="inner cover" style="margin-top: 150px">
-<h1 class="cover-heading">Home Page</h1>
-    <p class="lead">Feed e Itinerario</p>
-    <a asp-controller="Conference" asp-action="Details" asp-route-id="1">1. - Deep Learning Conference 2019</a>
-    <a asp-controller="Event" asp-action="Details">a. - Neural Network Talk </a> <!-- EVENTS-->
-<p class="lead">
-</p>
-</main>
+    <h1>Home Page</h1>
 </div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h3>Itinerario </h3>
+            <p>Proximos eventos:</p>
+            <div>
+                <a asp-controller="Event" asp-action="Details"> Neural Network Talk </a>
+                <p>11/12/2019</p>
+            </div>
+            <div>
+                <a asp-controller="Event" asp-action="Details"> IA workshop </a>
+                <p>11/12/2019</p>
+            </div>
+            <div>
+                <a asp-controller="Event" asp-action="Details"> Meal </a>
+                <p>11/12/2019</p>
+            </div>
+
+
+        </div>
+
+        <div class="col-6">
+            <h3>Feed</h3>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Wellcome to the conference</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@@Benedeto</h6>
+
+                    <a asp-controller="Conference" asp-action="Details" asp-route-id="1">1. - Deep Learning Conference 2019</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">No te olvides de inscribir tu menú</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@@Benedeto</h6>
+                    <a asp-controller="Conference" asp-action="Details" asp-route-id="1">1. - Deep Learning Conference 2019</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+
+        </div>
+    </div>
+
+</div>
+
+
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
