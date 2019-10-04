@@ -36,7 +36,7 @@ namespace CMWeb.Controllers
             {
                 _context.Add(conferenceRating);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Create));
+                return Redirect("/Conference/Details/1");
             }
             return View(conferenceRating);
         }

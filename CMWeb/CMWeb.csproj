@@ -23,4 +23,8 @@
       <Folder Include="wwwroot\img" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Data\Migrations\ApplicationDbContextModelSnapshot.cs" />
+    </ItemGroup>
+
 </Project>
