@@ -30,6 +30,10 @@ namespace CMWeb.Data
         public DbSet<Talk> Talk { get; set; }
         
         public DbSet<Workshop> Workshops { get; set; }
+        
+        public DbSet<ConferenceRating> ConferenceRatings { get; set; }
+        
+        public DbSet<EventRating> EventRatings { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -37,6 +41,8 @@ namespace CMWeb.Data
             modelBuilder.Entity<EventCenter>().ToTable("EventCenter");
             modelBuilder.Entity<Notification>().ToTable("Notification");
             modelBuilder.Entity<EventCenterRoom>().ToTable("EventCenterRoom");
+            modelBuilder.Entity<ConferenceRating>().ToTable("ConferenceRating");
+            modelBuilder.Entity<EventRating>().ToTable("EventRating");
             modelBuilder.Entity<Event>().ToTable("Event")
                 .HasDiscriminator<EventType>("EventType")
                 .HasValue<Chat>(EventType.Chat)

@@ -5,7 +5,7 @@ namespace CMWeb.Models
 {
     public abstract class Event
     {
-        public string Id { get; set; }
+        public string Id { get; set; } //TODO: cambiar a int
         public string Name { get; set; }
         
         [DataType(DataType.Date)]

@@ -4,13 +4,23 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using CMWeb.Data;
 using CMWeb.Models;
+
 
 namespace CMWeb.Controllers
 {
     public class EventController : Controller
     {
+        
         public IActionResult Index()
+        {
+            return View();
+        }
+        
+        public IActionResult Details()
         {
             return View();
         }
@@ -20,5 +30,7 @@ namespace CMWeb.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        
+        
     }
 }

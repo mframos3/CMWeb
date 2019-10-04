@@ -76,6 +76,9 @@ namespace CMWeb
                 routes.MapRoute(
                     name: "eventcenter",
                     template: "{controller=EventCenter}/{action=Index}/{id?}");
+                routes.MapRoute(
+                    name: "event",
+                    template: "{controller=Event}/{action=Index}/{id?}");
             });
         }
     }
