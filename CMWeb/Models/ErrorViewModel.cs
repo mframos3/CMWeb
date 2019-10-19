@@ -1,5 +1,3 @@
-using System;
-
 namespace CMWeb.Models
 {
     public class ErrorViewModel

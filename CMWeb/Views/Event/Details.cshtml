@@ -1,0 +1,19 @@
+
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Neural Network Talk</h1>
+
+<div>
+    <h4>Event</h4>
+    <br>
+    <a asp-controller="Notification" asp-action="Create">Send Notification</a>
+    <br>
+    <a asp-controller="Conference" asp-action="Details" asp-route-id="1" class="btn btn-primary">Attend</a>
+    <br>
+    <a asp-controller="EventRating" asp-action="Create">Rate Event</a>
+        
+    <hr />
+</div>
