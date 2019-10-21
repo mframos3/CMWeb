@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using CMWeb.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace CMWeb.Areas.Identity.Data
@@ -8,6 +10,8 @@ namespace CMWeb.Areas.Identity.Data
     {
         [PersonalData]
         public string Name { get; set; }
+        
+        public List<EventUser> EventUsers { get; set; }
         
     }
 }

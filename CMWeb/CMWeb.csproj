@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <Compile Remove="Data\Migrations\ApplicationDbContextModelSnapshot.cs" />
+      <Compile Remove="Migrations\ApplicationDbContextModelSnapshot.cs" />
     </ItemGroup>
 
 </Project>

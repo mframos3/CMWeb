@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace CMWeb.Data.Migrations
+namespace CMWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -107,7 +107,7 @@ namespace CMWeb.Data.Migrations
 
             modelBuilder.Entity("CMWeb.Models.Event", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("EndDate");
@@ -173,6 +173,39 @@ namespace CMWeb.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EventRating");
+                });
+
+            modelBuilder.Entity("CMWeb.Models.EventUser", b =>
+                {
+                    b.Property<int>("EventId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("EventId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EventUser");
+                });
+
+            modelBuilder.Entity("CMWeb.Models.Menu", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Dessert");
+
+                    b.Property<string>("Entree");
+
+                    b.Property<string>("Main");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Soup");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Menu");
                 });
 
             modelBuilder.Entity("CMWeb.Models.Notification", b =>
@@ -320,6 +353,8 @@ namespace CMWeb.Data.Migrations
                 {
                     b.HasBaseType("CMWeb.Models.Event");
 
+                    b.Property<string>("Topic");
+
                     b.HasDiscriminator().HasValue(0);
                 });
 
@@ -327,7 +362,13 @@ namespace CMWeb.Data.Migrations
                 {
                     b.HasBaseType("CMWeb.Models.Event");
 
-                    b.Property<string>("Menu");
+                    b.Property<int>("MenuId");
+
+                    b.Property<int?>("MenuId1");
+
+                    b.HasIndex("MenuId");
+
+                    b.HasIndex("MenuId1");
 
                     b.HasDiscriminator().HasValue(1);
                 });
@@ -343,7 +384,8 @@ namespace CMWeb.Data.Migrations
                 {
                     b.HasBaseType("CMWeb.Models.Event");
 
-                    b.Property<string>("Topic");
+                    b.Property<string>("Topic")
+                        .HasColumnName("Talk_Topic");
 
                     b.HasDiscriminator().HasValue(3);
                 });
@@ -353,6 +395,19 @@ namespace CMWeb.Data.Migrations
                     b.HasBaseType("CMWeb.Models.Event");
 
                     b.HasDiscriminator().HasValue(4);
+                });
+
+            modelBuilder.Entity("CMWeb.Models.EventUser", b =>
+                {
+                    b.HasOne("CMWeb.Models.Event", "Event")
+                        .WithMany("EventUsers")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CMWeb.Areas.Identity.Data.CMWebUser", "User")
+                        .WithMany("EventUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("CMWeb.Models.Sponsor", b =>
@@ -405,6 +460,18 @@ namespace CMWeb.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("CMWeb.Models.Meal", b =>
+                {
+                    b.HasOne("CMWeb.Models.Menu", "Menu")
+                        .WithMany()
+                        .HasForeignKey("MenuId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CMWeb.Models.Menu")
+                        .WithMany("Meals")
+                        .HasForeignKey("MenuId1");
                 });
 #pragma warning restore 612, 618
         }
