@@ -10,11 +10,20 @@
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Data\Migrations" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Event\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Event\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Event\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Event\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Event\Index.cshtml" />
     </ItemGroup>
 
 </Project>
