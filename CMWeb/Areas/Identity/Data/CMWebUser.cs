@@ -11,7 +11,7 @@ namespace CMWeb.Areas.Identity.Data
         [PersonalData]
         public string Name { get; set; }
         
-        public List<EventUser> EventUsers { get; set; }
+        public ICollection<EventUser> EventUsers { get; set; }
         
     }
 }

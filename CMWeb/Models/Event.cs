@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using CMWeb.Areas.Identity.Data;
 
 namespace CMWeb.Models
 {

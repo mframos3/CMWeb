@@ -21,15 +21,7 @@ namespace CMWeb.Data
 
         public DbSet<Notification> Notifications { get; set; }
         
-        public DbSet<Chat> Chats { get; set; }
-        
-        public DbSet<Meal> Meals { get; set; }
-        
-        public DbSet<Party> Parties { get; set; }
-        
-        public DbSet<Talk> Talks { get; set; }
-        
-        public DbSet<Workshop> Workshops { get; set; }
+        public DbSet<Event> Events { get; set; }
         
         public DbSet<ConferenceRating> ConferenceRatings { get; set; }
         
@@ -55,8 +47,11 @@ namespace CMWeb.Data
                 .HasValue<Party>(EventType.Party)
                 .HasValue<Talk>(EventType.Talk)
                 .HasValue<Workshop>(EventType.Workshop);
-            
-            modelBuilder.Entity<Menu>().HasMany(b => b.Meals).WithOne();
+
+            modelBuilder.Entity<Meal>()
+                .HasOne(meal => meal.Menu)
+                .WithMany(menu => menu.Meals)
+                .HasForeignKey(meal => meal.MenuId);
             
             modelBuilder.Entity<EventUser>().HasKey(eu => new {eu.EventId, eu.UserId});
             
