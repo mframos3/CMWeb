@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace CMWeb.Migrations
+namespace CMWeb.Data.Migrations
 {
     public partial class MigrationsReset : Migration
     {

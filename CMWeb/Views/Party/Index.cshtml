@@ -24,6 +24,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Track)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Conference)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EventCenterRoom)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -41,6 +47,12 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Track)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Conference.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventCenterRoom.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

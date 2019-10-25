@@ -22,7 +22,8 @@ namespace CMWeb.Controllers
         // GET: Workshop
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Events.OfType<Workshop>().ToListAsync());
+            var applicationDbContext = _context.Events.OfType<Workshop>().Include(w => w.Conference).Include(w => w.EventCenterRoom);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Workshop/Details/5
@@ -34,6 +35,8 @@ namespace CMWeb.Controllers
             }
 
             var workshop = (Workshop) await _context.Events
+                .Include(w => w.Conference)
+                .Include(w => w.EventCenterRoom)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (workshop == null)
             {
@@ -46,6 +49,8 @@ namespace CMWeb.Controllers
         // GET: Workshop/Create
         public IActionResult Create()
         {
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id");
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id");
             return View();
         }
 
@@ -54,7 +59,7 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,StartDate,EndDate,Track")] Workshop workshop)
+        public async Task<IActionResult> Create([Bind("Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Workshop workshop)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +67,8 @@ namespace CMWeb.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", workshop.ConferenceId);
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", workshop.EventCenterRoomId);
             return View(workshop);
         }
 
@@ -78,6 +85,8 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", workshop.ConferenceId);
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", workshop.EventCenterRoomId);
             return View(workshop);
         }
 
@@ -86,30 +95,36 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartDate,EndDate,Track")] Workshop workshop)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Workshop workshop)
         {
             if (id != workshop.Id)
             {
                 return NotFound();
             }
 
-            if (!ModelState.IsValid) return View(workshop);
-            try
+            if (ModelState.IsValid)
             {
-                _context.Update(workshop);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!WorkshopExists(workshop.Id))
+                try
                 {
-                    return NotFound();
+                    _context.Update(workshop);
+                    await _context.SaveChangesAsync();
                 }
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!WorkshopExists(workshop.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", workshop.ConferenceId);
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", workshop.EventCenterRoomId);
+            return View(workshop);
         }
 
         // GET: Workshop/Delete/5
@@ -121,6 +136,8 @@ namespace CMWeb.Controllers
             }
 
             var workshop = (Workshop) await _context.Events
+                .Include(w => w.Conference)
+                .Include(w => w.EventCenterRoom)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (workshop == null)
             {

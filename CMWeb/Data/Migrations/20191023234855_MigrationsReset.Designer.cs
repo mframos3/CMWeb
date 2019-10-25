@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace CMWeb.Migrations
+namespace CMWeb.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191024003117_EventsRelationships")]
-    partial class EventsRelationships
+    [Migration("20191023234855_MigrationsReset")]
+    partial class MigrationsReset
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -177,39 +177,6 @@ namespace CMWeb.Migrations
                     b.ToTable("EventRating");
                 });
 
-            modelBuilder.Entity("CMWeb.Models.EventUser", b =>
-                {
-                    b.Property<int>("EventId");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("EventId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("EventUser");
-                });
-
-            modelBuilder.Entity("CMWeb.Models.Menu", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Dessert");
-
-                    b.Property<string>("Entree");
-
-                    b.Property<string>("Main");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Soup");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Menu");
-                });
-
             modelBuilder.Entity("CMWeb.Models.Notification", b =>
                 {
                     b.Property<string>("Id")
@@ -362,9 +329,7 @@ namespace CMWeb.Migrations
                 {
                     b.HasBaseType("CMWeb.Models.Event");
 
-                    b.Property<int>("MenuId");
-
-                    b.HasIndex("MenuId");
+                    b.Property<string>("Menu");
 
                     b.HasDiscriminator().HasValue(1);
                 });
@@ -390,19 +355,6 @@ namespace CMWeb.Migrations
                     b.HasBaseType("CMWeb.Models.Event");
 
                     b.HasDiscriminator().HasValue(4);
-                });
-
-            modelBuilder.Entity("CMWeb.Models.EventUser", b =>
-                {
-                    b.HasOne("CMWeb.Models.Event", "Event")
-                        .WithMany("EventUsers")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("CMWeb.Areas.Identity.Data.CMWebUser", "User")
-                        .WithMany("EventUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("CMWeb.Models.Sponsor", b =>
@@ -454,14 +406,6 @@ namespace CMWeb.Migrations
                     b.HasOne("CMWeb.Areas.Identity.Data.CMWebUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("CMWeb.Models.Meal", b =>
-                {
-                    b.HasOne("CMWeb.Models.Menu", "Menu")
-                        .WithMany("Meals")
-                        .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

@@ -17,6 +17,16 @@ namespace CMWeb.Models
         
         public string Track { get; set; }
         
+        public int ConferenceId { get; set; }
+        public Conference Conference { get; set; }
+        
+        public int EventCenterRoomId { get; set; }
+        
+        public EventCenterRoom EventCenterRoom { get; set; }
         public ICollection<EventUser> EventUsers { get; set; }
+        
+        public ICollection<EventRating> EventRatings { get; set; }
+        
+        
     }
 }

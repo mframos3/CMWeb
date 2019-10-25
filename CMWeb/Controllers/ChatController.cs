@@ -22,7 +22,8 @@ namespace CMWeb.Controllers
         // GET: Chat
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Events.OfType<Chat>().ToListAsync());
+            var applicationDbContext = _context.Events.OfType<Chat>().Include(c => c.Conference).Include(c => c.EventCenterRoom);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Chat/Details/5
@@ -33,7 +34,10 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var chat = (Chat) await _context.Events.FirstOrDefaultAsync(m => m.Id == id);
+            var chat = (Chat) await _context.Events
+                .Include(c => c.Conference)
+                .Include(c => c.EventCenterRoom)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (chat == null)
             {
                 return NotFound();
@@ -45,6 +49,8 @@ namespace CMWeb.Controllers
         // GET: Chat/Create
         public IActionResult Create()
         {
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id");
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id");
             return View();
         }
 
@@ -53,12 +59,17 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,StartDate,EndDate,Track")] Chat chat)
+        public async Task<IActionResult> Create([Bind("Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Chat chat)
         {
-            if (!ModelState.IsValid) return View(chat);
-            _context.Add(chat);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (ModelState.IsValid)
+            {
+                _context.Add(chat);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", chat.ConferenceId);
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", chat.EventCenterRoomId);
+            return View(chat);
         }
 
         // GET: Chat/Edit/5
@@ -74,6 +85,8 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", chat.ConferenceId);
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", chat.EventCenterRoomId);
             return View(chat);
         }
 
@@ -82,30 +95,36 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartDate,EndDate,Track")] Chat chat)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Chat chat)
         {
             if (id != chat.Id)
             {
                 return NotFound();
             }
 
-            if (!ModelState.IsValid) return View(chat);
-            try
+            if (ModelState.IsValid)
             {
-                _context.Update(chat);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ChatExists(chat.Id))
+                try
                 {
-                    return NotFound();
+                    _context.Update(chat);
+                    await _context.SaveChangesAsync();
                 }
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!ChatExists(chat.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", chat.ConferenceId);
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", chat.EventCenterRoomId);
+            return View(chat);
         }
 
         // GET: Chat/Delete/5
@@ -117,6 +136,8 @@ namespace CMWeb.Controllers
             }
 
             var chat = (Chat) await _context.Events
+                .Include(c => c.Conference)
+                .Include(c => c.EventCenterRoom)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (chat == null)
             {

@@ -56,13 +56,10 @@ namespace CMWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,StartDate,EndDate")] Conference conference)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(conference);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(conference);
+            if (!ModelState.IsValid) return View(conference);
+            _context.Add(conference);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Conference/Edit/5
@@ -93,27 +90,24 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(conference);
+            try
             {
-                try
-                {
-                    _context.Update(conference);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ConferenceExists(conference.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(conference);
+                await _context.SaveChangesAsync();
             }
-            return View(conference);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ConferenceExists(conference.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Conference/Delete/5

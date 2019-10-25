@@ -1,5 +1,4 @@
 @model CMWeb.Models.Conference
-
 @{
     ViewData["Title"] = "Details";
 }
@@ -42,6 +41,7 @@
             @Html.DisplayFor(model => model.EndDate)
         </dd>
     </dl>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

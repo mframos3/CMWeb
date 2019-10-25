@@ -13,5 +13,7 @@ namespace CMWeb.Areas.Identity.Data
         
         public ICollection<EventUser> EventUsers { get; set; }
         
+        public ICollection<EventRating> EventRatings { get; set; }
+        
     }
 }

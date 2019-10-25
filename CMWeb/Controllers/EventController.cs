@@ -22,7 +22,9 @@ namespace CMWeb.Controllers
         // GET: Event
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Events.ToListAsync());
+            var applicationDbContext = _context.Events.Include(@event => @event.Conference)
+                .Include(@event => @event.EventCenterRoom);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Event/Details/5
@@ -34,6 +36,8 @@ namespace CMWeb.Controllers
             }
 
             var @event = await _context.Events
+                .Include(ev => ev.Conference)
+                .Include(ev => ev.EventCenterRoom)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (@event == null)
             {
@@ -46,6 +50,8 @@ namespace CMWeb.Controllers
         // GET: Event/Create
         public IActionResult Create()
         {
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id");
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id");
             return View();
         }
 
@@ -54,7 +60,7 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,StartDate,EndDate,Track")] Event @event)
+        public async Task<IActionResult> Create([Bind("Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Event @event)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +68,8 @@ namespace CMWeb.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", @event.ConferenceId);
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", @event.EventCenterRoomId);
             return View(@event);
         }
 
@@ -78,6 +86,8 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", @event.ConferenceId);
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", @event.EventCenterRoomId);
             return View(@event);
         }
 
@@ -86,7 +96,7 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartDate,EndDate,Track")] Event @event)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Event @event)
         {
             if (id != @event.Id)
             {
@@ -113,6 +123,8 @@ namespace CMWeb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", @event.ConferenceId);
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", @event.EventCenterRoomId);
             return View(@event);
         }
 
@@ -125,6 +137,8 @@ namespace CMWeb.Controllers
             }
 
             var @event = await _context.Events
+                .Include(ev => ev.Conference)
+                .Include(ev => ev.EventCenterRoom)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (@event == null)
             {
