@@ -163,5 +163,25 @@ namespace CMWeb.Controllers
         {
             return _context.Events.Any(e => e.Id == id);
         }
+
+
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult ConflictChecker(DateTime startDate, DateTime endDate, EventCenterRoom room)
+        {
+            foreach (var @event in room.Events)
+            {
+                if (@event.EndDate > startDate)
+                {
+                    return Json($"{room.Location} is busy with event {@event.Name} at this moment.");
+                }
+
+                if (@event.StartDate < endDate)
+                {
+                    return Json($"{room.Location} is busy with event {@event.Name} at this moment.");
+                }
+            }
+
+            return Json(true);
+        }
     }
 }
