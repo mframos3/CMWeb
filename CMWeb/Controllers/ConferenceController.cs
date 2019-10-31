@@ -56,10 +56,13 @@ namespace CMWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,StartDate,EndDate")] Conference conference)
         {
-            if (!ModelState.IsValid) return View(conference);
-            _context.Add(conference);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (ModelState.IsValid)
+            {
+                _context.Add(conference);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(conference);
         }
 
         // GET: Conference/Edit/5
@@ -90,24 +93,27 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            if (!ModelState.IsValid) return View(conference);
-            try
+            if (ModelState.IsValid)
             {
-                _context.Update(conference);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ConferenceExists(conference.Id))
+                try
                 {
-                    return NotFound();
+                    _context.Update(conference);
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!ConferenceExists(conference.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            return View(conference);
         }
 
         // GET: Conference/Delete/5

@@ -40,8 +40,5 @@ namespace CMWeb.Controllers
             }
             return View(conferenceRating);
         }
-
-       
-        
     }
 }

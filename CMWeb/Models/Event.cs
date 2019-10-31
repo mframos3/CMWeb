@@ -11,11 +11,11 @@ namespace CMWeb.Models
         public string Name { get; set; }
         
         [DataType(DataType.Date)]
-        [Remote(action: "ConflictChecker", controller: "Event", AdditionalFields = "EndDate,EventCenterRoom")]
+        //[Remote(action: "ConflictChecker", controller: "Event", AdditionalFields = "EndDate,EventCenterRoom")]
         public DateTime StartDate { get; set; }
         
         [DataType(DataType.Date)]
-        [Remote(action: "ConflictChecker", controller: "Event")]
+        //[Remote(action: "ConflictChecker", controller: "Event")]
         public DateTime EndDate { get; set; }
         
         public string Track { get; set; }
@@ -24,7 +24,7 @@ namespace CMWeb.Models
         public Conference Conference { get; set; }
         
         public int EventCenterRoomId { get; set; }
-        [Remote(action: "ConflictChecker", controller: "Event")]
+        //[Remote(action: "ConflictChecker", controller: "Event")]
         public EventCenterRoom EventCenterRoom { get; set; }
         public ICollection<EventUser> EventUsers { get; set; }
         
