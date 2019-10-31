@@ -1,5 +1,4 @@
 @model CMWeb.Models.Conference
-
 @{
     ViewData["Title"] = "Details";
 }
@@ -8,6 +7,13 @@
 
 <div>
     <h4>Conference</h4>
+    <a asp-controller="Event" asp-action="Index">Crear Evento</a>
+    <br>
+    <a asp-controller="Notification" asp-action="Create">Send Notification</a>
+    <br>
+    <a asp-controller="ConferenceRating" asp-action="Create">Rate Conference</a>
+    
+        
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -34,7 +40,9 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.EndDate)
         </dd>
+        
     </dl>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
