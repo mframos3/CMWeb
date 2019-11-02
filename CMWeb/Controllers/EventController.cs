@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CMWeb.Data;
 using CMWeb.Models;
-using System.Text.Encodings.Web;
 
 namespace CMWeb.Controllers
 {
@@ -82,13 +81,6 @@ namespace CMWeb.Controllers
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", @event.ConferenceId);
             ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", @event.EventCenterRoomId);
             return View(@event);
-        }
-
-        // GET: /HelloWorld/Welcome/ 
-        // Requires using System.Text.Encodings.Web;
-        public string Welcome(string name, int numTimes = 1)
-        {
-            return HtmlEncoder.Default.Encode($"Hello {name}, NumTimes is: {numTimes}");
         }
 
         // GET: Event/Edit/5
