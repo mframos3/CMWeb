@@ -46,7 +46,7 @@
                 @Html.DisplayFor(modelItem => item.EndDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Track)
+                <a asp-action="Track" asp-route-track="@item.Track">@Html.DisplayFor(modelItem => item.Track)</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Conference.Id)
