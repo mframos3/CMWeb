@@ -58,11 +58,23 @@ namespace CMWeb.Controllers
         }
 
         // GET: Event/Create
-        public IActionResult Create()
+        public IActionResult Create(int cid, EventType eventType)
         {
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id");
-            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id");
-            return View();
+            switch (eventType)
+            {   
+                case EventType.Chat:
+                    return RedirectToAction("Create", "Chat", new {conferenceId = cid}); 
+                case EventType.Meal:
+                    return RedirectToAction("Create", "Meal", new {conferenceId = cid}); 
+                case EventType.Party:
+                    return RedirectToAction("Create", "Party", new {conferenceId = cid}); 
+                case EventType.Talk:
+                    return RedirectToAction("Create", "Talk", new {conferenceId = cid}); 
+                case EventType.Workshop:
+                    return RedirectToAction("Create", "Workshop", new {conferenceId = cid});
+                default:
+                    return NotFound();
+            }
         }
 
         // POST: Event/Create

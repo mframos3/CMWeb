@@ -32,14 +32,14 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
-
+            
+            
             var conference = await _context.Conferences
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (conference == null)
             {
                 return NotFound();
             }
-
             return View(conference);
         }
 
