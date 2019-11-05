@@ -8,6 +8,6 @@ namespace CMWeb.Models
         public int MenuId { get; set; }
         public Menu Menu { get; set; }
         
-        
+        // TODO: Menu es many-to-many
     }
 }

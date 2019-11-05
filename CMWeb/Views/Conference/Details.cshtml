@@ -1,6 +1,7 @@
 @model CMWeb.Models.Conference
 @{
     ViewData["Title"] = "Details";
+    //var eEvents = ViewData["Events"] as List<Event>;
 }
 <style>
     .dropbtn {
@@ -87,7 +88,7 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.EndDate)
         </dd>
-        
+
     </dl>
 
 </div>
@@ -95,6 +96,60 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+<br>
+<h3> Events</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Start Date
+            </th>
+            <th>
+                End Date
+            </th>
+            <th>
+                Track
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Location
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Events) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                <a asp-action="Track" asp-controller="Event" asp-route-track="@item.Track">@Html.DisplayFor(modelItem => item.Track)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GetType().Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventCenterRoom.Location)
+            </td>
+            <td>
+                <a asp-action="Details" asp-controller="@item.GetType().Name" asp-route-id="@item.Id">Details</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
 
 <script>
 /* When the user clicks on the button, 
