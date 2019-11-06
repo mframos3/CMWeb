@@ -28,6 +28,8 @@ namespace CMWeb.Data
         
         public DbSet<Menu> Menus { get; set; }
         
+        public DbSet<FileDetails> Files { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -85,6 +87,11 @@ namespace CMWeb.Data
             modelBuilder.Entity<EventCenterRoom>()
                 .HasOne(ecr => ecr.EventCenter)
                 .WithMany(ec => ec.EventCenterRooms);
+                
+            modelBuilder.Entity<FileDetails>()
+                .HasOne(f => f.Event)
+                .WithMany(e => e.Files)
+                .HasForeignKey(f => f.EventId);
 
 
         }

@@ -36,10 +36,7 @@
                 <input asp-for="Track" class="form-control" />
                 <span asp-validation-for="Track" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ConferenceId" class="control-label"></label>
-                <select asp-for="ConferenceId" class ="form-control" asp-items="ViewBag.ConferenceId"></select>
-            </div>
+            <div class="form-group"><input asp-for="ConferenceId" hidden="hidden"/></div>
             <div class="form-group">
                 <label asp-for="EventCenterRoomId" class="control-label"></label>
                 <select asp-for="EventCenterRoomId" class ="form-control" asp-items="ViewBag.EventCenterRoomId"></select>
@@ -52,7 +49,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Details" asp-controller="Conference" asp-route-id="@ViewData["ConferenceId"]">Back to Conference</a>
 </div>
 
 @section Scripts {

@@ -37,6 +37,7 @@ namespace CMWeb.Controllers
             var workshop = (Workshop) await _context.Events
                 .Include(w => w.Conference)
                 .Include(w => w.EventCenterRoom)
+                .Include(w => w.Files)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (workshop == null)
             {
@@ -47,9 +48,9 @@ namespace CMWeb.Controllers
         }
 
         // GET: Workshop/Create
-        public IActionResult Create()
+        public IActionResult Create(int conferenceId)
         {
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id");
+            ViewData["ConferenceId"] = conferenceId;
             ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id");
             return View();
         }
@@ -65,7 +66,7 @@ namespace CMWeb.Controllers
             {
                 _context.Add(workshop);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Conference", new {id = workshop.ConferenceId});
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", workshop.ConferenceId);
             ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", workshop.EventCenterRoomId);

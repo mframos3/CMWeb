@@ -48,9 +48,9 @@ namespace CMWeb.Controllers
         }
 
         // GET: Meal/Create
-        public IActionResult Create()
+        public IActionResult Create(int conferenceId)
         {
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id");
+            ViewData["ConferenceId"] = conferenceId;
             ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id");
             ViewData["MenuId"] = new SelectList(_context.Menus, "Id", "Id");
             return View();
@@ -67,7 +67,7 @@ namespace CMWeb.Controllers
             {
                 _context.Add(meal);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Conference", new {id = meal.ConferenceId});
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", meal.ConferenceId);
             ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", meal.EventCenterRoomId);
