@@ -37,6 +37,7 @@ namespace CMWeb.Controllers
             var talk = (Talk) await _context.Events
                 .Include(t => t.Conference)
                 .Include(t => t.EventCenterRoom)
+                .Include(t => t.Files)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (talk == null)
             {
@@ -138,6 +139,7 @@ namespace CMWeb.Controllers
             var talk = (Talk) await _context.Events
                 .Include(t => t.Conference)
                 .Include(t => t.EventCenterRoom)
+                .Include(t => t.Files)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (talk == null)
             {

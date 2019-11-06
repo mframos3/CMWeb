@@ -58,7 +58,7 @@ namespace CMWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadFileViaModel(FileInputModel model)
+        public async Task<IActionResult> UploadFileViaModel([Bind("Id, Name, Path, EventId")] FileInputModel model)
         {
             if (model == null || 
                 model.FileToUpload == null || model.FileToUpload.Length == 0)

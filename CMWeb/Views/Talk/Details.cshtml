@@ -54,24 +54,20 @@
         </dd>
     </dl>
 </div>
-<form asp-controller="FileManager" asp-action="UploadFile" method="post"
-      enctype="multipart/form-data">
-    
-    <input type="file" name="file" />
-    <button type="submit">Upload File</button>
-</form>
 
-<form asp-controller="FileManager" asp-action="UploadFiles" method="post"
-      enctype="multipart/form-data">
-
-    <input type="file" name="files" multiple />
-    <button type="submit">Upload Files</button>
-</form>
-
+     @foreach (var item in Model.Files)
+            {
+                <li>
+                    <a asp-action="Download" asp-controller="FileManager" asp-route-filename="@item.Name">
+                        @item.Name
+                    </a>
+                </li>
+            }
 <form asp-controller="FileManager" asp-action="UploadFileViaModel" method="post"
       enctype="multipart/form-data">
 
     <input type="file" name="FileToUpload" />
+    <input asp-for="Id" />
     <button type="submit">Upload File (model)</button>
 </form>
 <div>
