@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using CMWeb.Data;
+using CMWeb.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -11,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CMWeb.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190930024832_Scaffold")]
-    partial class Scaffold
+    [Migration("20191024003117_EventsRelationships")]
+    partial class EventsRelationships
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -92,12 +93,28 @@ namespace CMWeb.Data.Migrations
                     b.ToTable("Conference");
                 });
 
+            modelBuilder.Entity("CMWeb.Models.ConferenceRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Comment");
+
+                    b.Property<int>("Rating");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConferenceRating");
+                });
+
             modelBuilder.Entity("CMWeb.Models.Event", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("EndDate");
+
+                    b.Property<int>("EventType");
 
                     b.Property<string>("Name");
 
@@ -108,6 +125,8 @@ namespace CMWeb.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Event");
+
+                    b.HasDiscriminator<int>("EventType");
                 });
 
             modelBuilder.Entity("CMWeb.Models.EventCenter", b =>
@@ -144,6 +163,53 @@ namespace CMWeb.Data.Migrations
                     b.ToTable("EventCenterRoom");
                 });
 
+            modelBuilder.Entity("CMWeb.Models.EventRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Comment");
+
+                    b.Property<int>("Rating");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EventRating");
+                });
+
+            modelBuilder.Entity("CMWeb.Models.EventUser", b =>
+                {
+                    b.Property<int>("EventId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("EventId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EventUser");
+                });
+
+            modelBuilder.Entity("CMWeb.Models.Menu", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Dessert");
+
+                    b.Property<string>("Entree");
+
+                    b.Property<string>("Main");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Soup");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Menu");
+                });
+
             modelBuilder.Entity("CMWeb.Models.Notification", b =>
                 {
                     b.Property<string>("Id")
@@ -172,16 +238,6 @@ namespace CMWeb.Data.Migrations
                     b.HasIndex("ConferenceId");
 
                     b.ToTable("Sponsor");
-                });
-
-            modelBuilder.Entity("CMWeb.Models.StatManager", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StatManager");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -295,6 +351,60 @@ namespace CMWeb.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("CMWeb.Models.Chat", b =>
+                {
+                    b.HasBaseType("CMWeb.Models.Event");
+
+                    b.HasDiscriminator().HasValue(0);
+                });
+
+            modelBuilder.Entity("CMWeb.Models.Meal", b =>
+                {
+                    b.HasBaseType("CMWeb.Models.Event");
+
+                    b.Property<int>("MenuId");
+
+                    b.HasIndex("MenuId");
+
+                    b.HasDiscriminator().HasValue(1);
+                });
+
+            modelBuilder.Entity("CMWeb.Models.Party", b =>
+                {
+                    b.HasBaseType("CMWeb.Models.Event");
+
+                    b.HasDiscriminator().HasValue(2);
+                });
+
+            modelBuilder.Entity("CMWeb.Models.Talk", b =>
+                {
+                    b.HasBaseType("CMWeb.Models.Event");
+
+                    b.Property<string>("Topic");
+
+                    b.HasDiscriminator().HasValue(3);
+                });
+
+            modelBuilder.Entity("CMWeb.Models.Workshop", b =>
+                {
+                    b.HasBaseType("CMWeb.Models.Event");
+
+                    b.HasDiscriminator().HasValue(4);
+                });
+
+            modelBuilder.Entity("CMWeb.Models.EventUser", b =>
+                {
+                    b.HasOne("CMWeb.Models.Event", "Event")
+                        .WithMany("EventUsers")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CMWeb.Areas.Identity.Data.CMWebUser", "User")
+                        .WithMany("EventUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("CMWeb.Models.Sponsor", b =>
                 {
                     b.HasOne("CMWeb.Models.Conference")
@@ -344,6 +454,14 @@ namespace CMWeb.Data.Migrations
                     b.HasOne("CMWeb.Areas.Identity.Data.CMWebUser")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("CMWeb.Models.Meal", b =>
+                {
+                    b.HasOne("CMWeb.Models.Menu", "Menu")
+                        .WithMany("Meals")
+                        .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

@@ -1,0 +1,73 @@
+@model CMWeb.Models.Workshop
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Workshop</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Track)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Track)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Conference)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Conference.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EventCenterRoom)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EventCenterRoom.Id)
+        </dd>
+    </dl>
+</div>
+<h3> Files</h3>
+
+
+     @foreach (var item in Model.Files)
+            {
+                <li>
+                    <a asp-action="Download" asp-controller="FileManager" asp-route-filename="@item.Name">
+                        @item.Name
+                    </a>
+                </li>
+            }
+<div>
+    <h3>Upload Files</h3>
+    <form asp-controller="FileManager" asp-action="UploadFileViaModel" method="post"
+          enctype="multipart/form-data">
+    
+        <input type="file" name="FileToUpload" />
+        <button type="submit">Upload File (model)</button>
+    </form>
+    <br>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Details" asp-controller="Conference" asp-route-id="@Model.ConferenceId">Back to Conference</a>
+</div>

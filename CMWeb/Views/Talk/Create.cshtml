@@ -1,0 +1,61 @@
+@model CMWeb.Models.Talk
+
+@{
+    ViewData["Title"] = "Create";
+    var t = ViewData["ConferenceId"];
+}
+
+<h1>Create</h1>
+
+<h4>Talk</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Topic" class="control-label"></label>
+                <input asp-for="Topic" class="form-control" />
+                <span asp-validation-for="Topic" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Track" class="control-label"></label>
+                <input asp-for="Track" class="form-control" />
+                <span asp-validation-for="Track" class="text-danger"></span>
+            </div>
+             <div class="form-group">
+                 <input asp-for="ConferenceId" hidden="hidden"/>
+                 </div>
+            <div class="form-group">
+                <label asp-for="EventCenterRoomId" class="control-label"></label>
+                <select asp-for="EventCenterRoomId" class ="form-control" asp-items="ViewBag.EventCenterRoomId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Details" asp-controller="Conference" asp-route-id="@ViewData["ConferenceId"]">Back to Conference</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

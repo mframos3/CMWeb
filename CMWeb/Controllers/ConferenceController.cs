@@ -32,14 +32,18 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
-
+            
+            
             var conference = await _context.Conferences
+                .Include(c => c.Events)
+                .ThenInclude(e => e.EventCenterRoom)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (conference == null)
             {
                 return NotFound();
             }
 
+            // ViewData["Events"] = conference.Events;
             return View(conference);
         }
 

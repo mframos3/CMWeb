@@ -21,19 +21,16 @@ namespace CMWeb.Data
 
         public DbSet<Notification> Notifications { get; set; }
         
-        public DbSet<Chat> Chats { get; set; }
-        
-        public DbSet<Meal> Meals { get; set; }
-        
-        public DbSet<Party> Parties { get; set; }
-        
-        public DbSet<Talk> Talk { get; set; }
-        
-        public DbSet<Workshop> Workshops { get; set; }
+        public DbSet<Event> Events { get; set; }
         
         public DbSet<ConferenceRating> ConferenceRatings { get; set; }
         
         public DbSet<EventRating> EventRatings { get; set; }
+        
+        public DbSet<Menu> Menus { get; set; }
+        
+        public DbSet<FileDetails> Files { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -43,6 +40,8 @@ namespace CMWeb.Data
             modelBuilder.Entity<EventCenterRoom>().ToTable("EventCenterRoom");
             modelBuilder.Entity<ConferenceRating>().ToTable("ConferenceRating");
             modelBuilder.Entity<EventRating>().ToTable("EventRating");
+            modelBuilder.Entity<Menu>().ToTable("Menu");
+            modelBuilder.Entity<EventUser>().ToTable("EventUser");
             modelBuilder.Entity<Event>().ToTable("Event")
                 .HasDiscriminator<EventType>("EventType")
                 .HasValue<Chat>(EventType.Chat)
@@ -50,8 +49,48 @@ namespace CMWeb.Data
                 .HasValue<Party>(EventType.Party)
                 .HasValue<Talk>(EventType.Talk)
                 .HasValue<Workshop>(EventType.Workshop);
-        }
 
-        
+            modelBuilder.Entity<Event>()
+                .HasOne(ev => ev.EventCenterRoom)
+                .WithMany(ecr => ecr.Events)
+                .HasForeignKey(ev => ev.EventCenterRoomId);
+
+            modelBuilder.Entity<Event>()
+                .HasOne(ev => ev.Conference)
+                .WithMany(c => c.Events)
+                .HasForeignKey(ev => ev.ConferenceId);
+            
+            modelBuilder.Entity<EventRating>().HasKey(er => new {er.EventId, er.UserId});
+            
+            modelBuilder.Entity<EventRating>().HasOne(er => er.Event)
+                .WithMany(e => e.EventRatings)
+                .HasForeignKey(er => er.EventId);
+            
+            modelBuilder.Entity<EventRating>().HasOne(er => er.User)
+                .WithMany(u => u.EventRatings)
+                .HasForeignKey(er => er.UserId);
+
+            modelBuilder.Entity<Meal>()
+                .HasOne(meal => meal.Menu)
+                .WithMany(menu => menu.Meals)
+                .HasForeignKey(meal => meal.MenuId);
+            
+            modelBuilder.Entity<EventUser>().HasKey(eu => new {eu.EventId, eu.UserId});
+            
+            modelBuilder.Entity<EventUser>().HasOne(eu => eu.Event)
+                .WithMany(e => e.EventUsers)
+                .HasForeignKey(eu => eu.EventId);
+            
+            modelBuilder.Entity<EventUser>().HasOne(eu => eu.User)
+                .WithMany(u => u.EventUsers)
+                .HasForeignKey(eu => eu.UserId);
+
+            modelBuilder.Entity<FileDetails>()
+                .HasOne(f => f.Event)
+                .WithMany(e => e.Files)
+                .HasForeignKey(f => f.EventId);
+
+
+        }
     }
 }

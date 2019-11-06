@@ -13,9 +13,12 @@ namespace CMWeb.Models
 
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
+        [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
         
-        public ICollection<Sponsor> Sponsors { get; set; }
+        public ICollection<Event> Events { get; set; }
+        
+        
 
     }
 }

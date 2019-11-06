@@ -7,5 +7,7 @@ namespace CMWeb.Models
         public string Capacity { get; set; }
         public string Location { get; set; }
         public List<string> Equipment { get; set; }
+        
+        public ICollection<Event> Events { get; set; }
     }
 }
