@@ -1,4 +1,5 @@
-﻿using CMWeb.Areas.Identity.Data;
+﻿using System.IO;
+using CMWeb.Areas.Identity.Data;
 using CMWeb.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 
 namespace CMWeb
 {
@@ -37,6 +39,11 @@ namespace CMWeb
             services.AddDefaultIdentity<CMWebUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            
+            services.AddSingleton<IFileProvider>(  
+                new PhysicalFileProvider(  
+                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))); 
+            
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
