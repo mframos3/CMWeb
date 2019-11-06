@@ -22,6 +22,7 @@ namespace CMWeb.Controllers
         // GET: EventCenterRoom
         public async Task<IActionResult> Index()
         {
+            
             return View(await _context.EventCenterRooms.ToListAsync());
         }
 
@@ -44,8 +45,9 @@ namespace CMWeb.Controllers
         }
 
         // GET: EventCenterRoom/Create
-        public IActionResult Create()
+        public IActionResult Create(int eventCenterId)
         {
+            ViewData["EventCenterId"] = eventCenterId;
             return View();
         }
 
@@ -54,13 +56,13 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Capacity,Location,Equipment")] EventCenterRoom eventCenterRoom)
+        public async Task<IActionResult> Create([Bind("Id,Name,Capacity,Location,Equipment,EventCenterId")] EventCenterRoom eventCenterRoom)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(eventCenterRoom);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "EventCenter");
             }
             return View(eventCenterRoom);
         }

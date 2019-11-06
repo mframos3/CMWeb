@@ -34,7 +34,9 @@ namespace CMWeb.Controllers
             }
 
             var eventCenter = await _context.EventCenters
+                .Include(ec => ec.EventCenterRooms)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
             if (eventCenter == null)
             {
                 return NotFound();

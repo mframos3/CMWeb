@@ -5,15 +5,17 @@ using CMWeb.Data;
 using CMWeb.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CMWeb.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191102233919_EventCenterRoomRelationships")]
+    partial class EventCenterRoomRelationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,8 +167,6 @@ namespace CMWeb.Data.Migrations
                     b.Property<int>("EventCenterId");
 
                     b.Property<string>("Location");
-
-                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 
@@ -406,8 +406,8 @@ namespace CMWeb.Data.Migrations
 
             modelBuilder.Entity("CMWeb.Models.EventCenterRoom", b =>
                 {
-                    b.HasOne("CMWeb.Models.EventCenter", "EventCenter")
-                        .WithMany("EventCenterRooms")
+                    b.HasOne("CMWeb.Models.EventCenter")
+                        .WithMany("Rooms")
                         .HasForeignKey("EventCenterId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
