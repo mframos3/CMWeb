@@ -1,9 +1,6 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMWeb", "CMWeb\CMWeb.csproj", "{690DAB05-5ADC-4CBA-A14B-9EB225EE6EEB}"
-EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{EF1F3849-8C12-407C-85EA-631F4DD3EA25}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMWeb", "CMWeb\CMWeb.csproj", "{B5163710-BD0B-4275-A7E5-1A17FC2C137D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,13 +8,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{690DAB05-5ADC-4CBA-A14B-9EB225EE6EEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{690DAB05-5ADC-4CBA-A14B-9EB225EE6EEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{690DAB05-5ADC-4CBA-A14B-9EB225EE6EEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{690DAB05-5ADC-4CBA-A14B-9EB225EE6EEB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF1F3849-8C12-407C-85EA-631F4DD3EA25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF1F3849-8C12-407C-85EA-631F4DD3EA25}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF1F3849-8C12-407C-85EA-631F4DD3EA25}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF1F3849-8C12-407C-85EA-631F4DD3EA25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5163710-BD0B-4275-A7E5-1A17FC2C137D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5163710-BD0B-4275-A7E5-1A17FC2C137D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5163710-BD0B-4275-A7E5-1A17FC2C137D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5163710-BD0B-4275-A7E5-1A17FC2C137D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

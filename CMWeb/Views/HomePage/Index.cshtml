@@ -1,0 +1,80 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+<head>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+</head>
+
+<body>
+    <div>
+        <h1>Home Page</h1>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <h3>Itinerario </h3>
+                <p>Upcoming Conferences:</p>
+                @foreach (Conference conference in Model)
+                {
+                <div class="card">
+                    <div class="card-body">
+
+                        <a asp-controller="Conference" asp-action="Details" asp-route-id=@conference.Id> @conference.Name: </a>
+                        <p>@conference.Description</p>
+                        <div class="card-body">
+                            Events:
+                            @foreach (Event evento in conference.Events.OrderBy(e => e.StartDate))
+                            {
+                                <div>
+                                    <a asp-controller="Event" asp-action="Details" asp-route-id=@evento.Id> @evento.Name </a>
+                                    <p>@evento.StartDate.ToString("dd/MM/yyyy")</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+            </div>
+                }
+
+            </div>
+
+            <div class="col-6">
+                <h3>Feed</h3>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Welcome to the conference</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@@Benedeto</h6>
+
+                        <a asp-controller="Conference" asp-action="Details" asp-route-id="1">1. - Deep Learning Conference 2019</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Don't forget to select a Menu</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@@Benedeto</h6>
+                        <a asp-controller="Conference" asp-action="Details" asp-route-id="1">1. - Deep Learning Conference 2019</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col">
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>

@@ -1,19 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
-    <UserSecretsId>4d4936a4-100e-4d3f-99c8-c2a24a68d2f8</UserSecretsId>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App">
-      <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
-      <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-  </ItemGroup>
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Event\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Event\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Event\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Event\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Event\Index.cshtml" />
+    </ItemGroup>
 
 </Project>

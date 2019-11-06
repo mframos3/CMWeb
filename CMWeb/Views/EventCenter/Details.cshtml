@@ -1,0 +1,65 @@
+@model CMWeb.Models.EventCenter
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+<div>
+    <a asp-controller="EventCenterRoom" asp-action="Create" asp-route-eventCenterId="@Model.Id" >Crear Sala de Evento</a>
+</div>
+<div>
+    <h4>EventCenter</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Location)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Location)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+</div>
+<h3> Event Center Rooms</h3>
+
+@foreach (var room in Model.EventCenterRooms)
+{
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(modelRoom => room.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(modelRoom => room.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(modelRoom => room.Equipment)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(modelRoom => room.Equipment)
+        </dd>
+    </dl>
+}
+
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
