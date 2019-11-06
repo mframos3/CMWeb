@@ -14,6 +14,7 @@ namespace CMWeb.Models
         [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; }
 
+        public ICollection<EventCenterRoom> EventCenterRooms { get; set; }
         public string Description { get; set; }
 
     }

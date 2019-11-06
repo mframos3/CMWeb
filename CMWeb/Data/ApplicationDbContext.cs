@@ -11,7 +11,6 @@ namespace CMWeb.Data
             : base(options)
         {
         }
-
         
         public DbSet<Conference> Conferences { get; set; }
 
@@ -85,6 +84,10 @@ namespace CMWeb.Data
                 .WithMany(u => u.EventUsers)
                 .HasForeignKey(eu => eu.UserId);
 
+            modelBuilder.Entity<EventCenterRoom>()
+                .HasOne(ecr => ecr.EventCenter)
+                .WithMany(ec => ec.EventCenterRooms);
+                
             modelBuilder.Entity<FileDetails>()
                 .HasOne(f => f.Event)
                 .WithMany(e => e.Files)
