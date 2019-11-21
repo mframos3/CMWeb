@@ -30,5 +30,7 @@ namespace CMWeb.Models
         
         public ICollection<EventRating> EventRatings { get; set; }
         
+        public List<FileDetails> Files { get; set; }
+        
     }
 }

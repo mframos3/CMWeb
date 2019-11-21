@@ -54,26 +54,23 @@
         </dd>
     </dl>
 </div>
-<form asp-controller="FileManager" asp-action="UploadFile" method="post"
-      enctype="multipart/form-data">
-    
-    <input type="file" name="file" />
-    <button type="submit">Upload File</button>
-</form>
+<h3>Files</h3>
+     @foreach (var item in Model.Files)
+            {
+                <li>
+                    <a asp-action="Download" asp-controller="FileManager" asp-route-filename="@item.Name">
+                        @item.Name
+                    </a>
+                </li>
+            }
 
-<form asp-controller="FileManager" asp-action="UploadFiles" method="post"
-      enctype="multipart/form-data">
-
-    <input type="file" name="files" multiple />
-    <button type="submit">Upload Files</button>
-</form>
-
-<form asp-controller="FileManager" asp-action="UploadFileViaModel" method="post"
-      enctype="multipart/form-data">
-
-    <input type="file" name="FileToUpload" />
-    <button type="submit">Upload File (model)</button>
-</form>
+<form asp-controller="FileManager" asp-action="UploadFile" asp-route-ev="@Model.Id" 
+      asp-route-evType="@Model.GetType().Name" method="post"
+          enctype="multipart/form-data">
+        
+        <input type="file" name="file" />
+        <button type="submit">Upload File</button>
+    </form>
 <div>
         @{
             if (!(bool)ViewData["Attendance"])

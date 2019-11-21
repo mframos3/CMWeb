@@ -49,10 +49,12 @@ namespace CMWeb.Controllers
                 .Include(ev => ev.Conference)
                 .Include(ev => ev.EventCenterRoom)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (@event == null)
             {
                 return NotFound();
             }
+            
 
             return View(@event);
         }

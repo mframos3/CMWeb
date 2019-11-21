@@ -2,17 +2,20 @@
 using System;
 using System.Collections.Generic;
 using CMWeb.Data;
+using CMWeb.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CMWeb.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191106154831_AddNameEventCenterRoom")]
+    partial class AddNameEventCenterRoom
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,8 +168,6 @@ namespace CMWeb.Data.Migrations
 
                     b.Property<string>("Location");
 
-                    b.Property<string>("Name");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EventCenterId");
@@ -202,24 +203,6 @@ namespace CMWeb.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("EventUser");
-                });
-
-            modelBuilder.Entity("CMWeb.Models.FileDetails", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("EventId");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Path");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("Files");
                 });
 
             modelBuilder.Entity("CMWeb.Models.Menu", b =>
@@ -452,14 +435,6 @@ namespace CMWeb.Data.Migrations
                     b.HasOne("CMWeb.Areas.Identity.Data.CMWebUser", "User")
                         .WithMany("EventUsers")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("CMWeb.Models.FileDetails", b =>
-                {
-                    b.HasOne("CMWeb.Models.Event", "Event")
-                        .WithMany("Files")
-                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -72,6 +72,7 @@ namespace CMWeb.Controllers
             var workshop = (Workshop) await _context.Events
                 .Include(w => w.Conference)
                 .Include(w => w.EventCenterRoom)
+                .Include(w => w.Files)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (workshop == null)
             {

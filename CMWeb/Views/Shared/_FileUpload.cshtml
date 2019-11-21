@@ -1,0 +1,24 @@
+@model CMWeb.Models.FileDetails
+
+<!DOCTYPE html>
+
+<html>
+<head>
+</head>
+<body>
+<div>
+      
+    <p>TEST</p>
+    <form asp-controller="FileManager" asp-action="UploadFileViaModel" method="post"
+          enctype="multipart/form-data">
+        
+        <input asp-for="EventId"/>
+            <input asp-for="Name"/>
+            <input asp-for="Path"/>
+
+        <input type="file" name="FileToUpload"/>
+        <button type="submit">Upload File (model)</button>
+    </form>
+</div>
+</body>
+</html>

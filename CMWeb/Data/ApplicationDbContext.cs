@@ -12,7 +12,6 @@ namespace CMWeb.Data
         {
         }
 
-
         public DbSet<EventUser> EventUsers { get; set; }
         public DbSet<Conference> Conferences { get; set; }
 
@@ -29,6 +28,8 @@ namespace CMWeb.Data
         public DbSet<EventRating> EventRatings { get; set; }
         
         public DbSet<Menu> Menus { get; set; }
+        
+        public DbSet<FileDetails> Files { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -83,9 +84,17 @@ namespace CMWeb.Data
             modelBuilder.Entity<EventUser>().HasOne(eu => eu.User)
                 .WithMany(u => u.EventUsers)
                 .HasForeignKey(eu => eu.UserId);
-            
-            
-            
+
+            modelBuilder.Entity<EventCenterRoom>()
+                .HasOne(ecr => ecr.EventCenter)
+                .WithMany(ec => ec.EventCenterRooms);
+                
+            modelBuilder.Entity<FileDetails>()
+                .HasOne(f => f.Event)
+                .WithMany(e => e.Files)
+                .HasForeignKey(f => f.EventId);
+
+
         }
     }
 }

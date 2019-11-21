@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using CMWeb.Data;
 using CMWeb.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +20,7 @@ namespace CMWeb.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        public async Task<IActionResult> UploadFile(IFormFile file, int ev, string evType)
         {
             if (file == null || file.Length == 0)
                 return Content("file not selected");
@@ -26,14 +28,17 @@ namespace CMWeb.Controllers
             var path = Path.Combine(
                         Directory.GetCurrentDirectory(), "wwwroot", 
                         file.FileName);
-          
+
+            var name = Path.GetFileName(path);
+            
 
             using (var stream = new FileStream(path, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            return RedirectToAction("Files");
+            return RedirectToAction("AddFile", "FileDb", 
+                new{eventId = ev, name = name, route = path, type = evType});
         }
 
         [HttpPost]
@@ -58,10 +63,9 @@ namespace CMWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadFileViaModel(FileInputModel model)
+        public async Task<IActionResult> UploadFileViaModel([Bind("Id, Name, Path, EventId")] FileInputModel model)
         {
-            if (model == null || 
-                model.FileToUpload == null || model.FileToUpload.Length == 0)
+            if (model?.FileToUpload == null || model.FileToUpload.Length == 0)
                 return Content("file not selected");
 
             var path = Path.Combine(

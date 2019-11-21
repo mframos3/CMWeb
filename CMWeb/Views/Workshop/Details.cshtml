@@ -48,7 +48,19 @@
         </dd>
     </dl>
 </div>
+<h3> Files</h3>
+
+
+     @foreach (var item in Model.Files)
+            {
+                <li>
+                    <a asp-action="Download" asp-controller="FileManager" asp-route-filename="@item.Name">
+                        @item.Name
+                    </a>
+                </li>
+            }
 <div>
+
         @{
             if (!(bool)ViewData["Attendance"])
             {
@@ -56,6 +68,15 @@
             }
     
         }
+    <h3>Upload Files</h3>
+    <form asp-controller="FileManager" asp-action="UploadFile" asp-route-ev="@Model.Id" 
+          asp-route-evType="@Model.GetType().Name" method="post"
+          enctype="multipart/form-data">
+        
+        <input type="file" name="file" />
+        <button type="submit">Upload File</button>
+    </form>
+    <br>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Details" asp-controller="Conference" asp-route-id="@Model.ConferenceId">Back to Conference</a>
 </div>
