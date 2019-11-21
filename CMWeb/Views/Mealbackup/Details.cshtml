@@ -1,4 +1,4 @@
-@model CMWeb.Models.Chat
+@model CMWeb.Models.Meal
 
 @{
     ViewData["Title"] = "Details";
@@ -7,9 +7,15 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Chat</h4>
+    <h4>Meal</h4>
     <hr />
     <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Menu)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Menu.Id)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>

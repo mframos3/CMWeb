@@ -10,23 +10,23 @@ using CMWeb.Models;
 
 namespace CMWeb.Controllers
 {
-    public class ChatController : Controller
+    public class MealController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ChatController(ApplicationDbContext context)
+        public MealController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Chat
+        // GET: Meal
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Events.OfType<Chat>().Include(c => c.Conference).Include(c => c.EventCenterRoom);
+            var applicationDbContext = _context.Events.OfType<Meal>().Include(m => m.Conference).Include(m => m.EventCenterRoom).Include(m => m.Menu);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Chat/Details/5
+        // GET: Meal/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,45 +34,48 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var chat = (Chat) await _context.Events
-                .Include(c => c.Conference)
-                .Include(c => c.EventCenterRoom)
+            var meal = await _context.Events.OfType<Meal>()
+                .Include(m => m.Conference)
+                .Include(m => m.EventCenterRoom)
+                .Include(m => m.Menu)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (chat == null)
+            if (meal == null)
             {
                 return NotFound();
             }
 
-            return View(chat);
+            return View(meal);
         }
 
-        // GET: Chat/Create
+        // GET: Meal/Create
         public IActionResult Create(int conferenceId)
         {
             ViewData["ConferenceId"] = conferenceId;
             ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Name");
+            ViewData["MenuId"] = new SelectList(_context.Menus, "Id", "Id");
             return View();
         }
 
-        // POST: Chat/Create
+        // POST: Meal/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Chat chat)
+        public async Task<IActionResult> Create([Bind("MenuId,Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Meal meal)
         {
-            
             if (ModelState.IsValid)
             {
-                _context.Add(chat);
+                _context.Add(meal);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Conference", new {id = chat.ConferenceId});
+                return RedirectToAction("Details", "Conference", new {id = meal.ConferenceId});
             }
-            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", chat.EventCenterRoomId);
-            return View(chat);
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", meal.ConferenceId);
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", meal.EventCenterRoomId);
+            ViewData["MenuId"] = new SelectList(_context.Menus, "Id", "Id", meal.MenuId);
+            return View(meal);
         }
 
-        // GET: Chat/Edit/5
+        // GET: Meal/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,24 +83,25 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var chat = (Chat) await _context.Events.FindAsync(id);
-            if (chat == null)
+            var meal = (Meal) await _context.Events.FindAsync(id);
+            if (meal == null)
             {
                 return NotFound();
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", chat.ConferenceId);
-            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", chat.EventCenterRoomId);
-            return View(chat);
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", meal.ConferenceId);
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", meal.EventCenterRoomId);
+            ViewData["MenuId"] = new SelectList(_context.Menus, "Id", "Id", meal.MenuId);
+            return View(meal);
         }
 
-        // POST: Chat/Edit/5
+        // POST: Meal/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Chat chat)
+        public async Task<IActionResult> Edit(int id, [Bind("MenuId,Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Meal meal)
         {
-            if (id != chat.Id)
+            if (id != meal.Id)
             {
                 return NotFound();
             }
@@ -106,12 +110,12 @@ namespace CMWeb.Controllers
             {
                 try
                 {
-                    _context.Update(chat);
+                    _context.Update(meal);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ChatExists(chat.Id))
+                    if (!MealExists(meal.Id))
                     {
                         return NotFound();
                     }
@@ -122,12 +126,13 @@ namespace CMWeb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", chat.ConferenceId);
-            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", chat.EventCenterRoomId);
-            return View(chat);
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", meal.ConferenceId);
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", meal.EventCenterRoomId);
+            ViewData["MenuId"] = new SelectList(_context.Menus, "Id", "Id", meal.MenuId);
+            return View(meal);
         }
 
-        // GET: Chat/Delete/5
+        // GET: Meal/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,30 +140,31 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
 
-            var chat = (Chat) await _context.Events
-                .Include(c => c.Conference)
-                .Include(c => c.EventCenterRoom)
+            var meal = await _context.Events.OfType<Meal>()
+                .Include(m => m.Conference)
+                .Include(m => m.EventCenterRoom)
+                .Include(m => m.Menu)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (chat == null)
+            if (meal == null)
             {
                 return NotFound();
             }
 
-            return View(chat);
+            return View(meal);
         }
 
-        // POST: Chat/Delete/5
+        // POST: Meal/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var chat = await _context.Events.FindAsync(id);
-            _context.Events.Remove(chat);
+            var meal = await _context.Events.FindAsync(id);
+            _context.Events.Remove(meal);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ChatExists(int id)
+        private bool MealExists(int id)
         {
             return _context.Events.Any(e => e.Id == id);
         }

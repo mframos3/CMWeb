@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CMWeb.Data;
 using CMWeb.Models;
+using Microsoft.Extensions.Logging;
 
 namespace CMWeb.Controllers
 {
@@ -190,21 +192,34 @@ namespace CMWeb.Controllers
 
 
         [AcceptVerbs("Get", "Post")]
-        public IActionResult ConflictChecker(DateTime startDate, DateTime endDate, EventCenterRoom room)
+        public  async Task<IActionResult> ConflictChecker(DateTime startDate, DateTime endDate, int eventCenterRoomId)
         {
-            foreach (var @event in room.Events)
+            var room = await _context.EventCenterRooms
+                .Include(r => r.Events)
+                .FirstOrDefaultAsync(r => r.Id == eventCenterRoomId);
+            foreach (var @event in room.Events.Where(@event =>
+                @event.EndDate > startDate && endDate > @event.EndDate
+                || @event.StartDate < endDate && @event.StartDate > startDate))
             {
-                if (@event.EndDate > startDate)
-                {
-                    return Json($"{room.Location} is busy with event {@event.Name} at this moment.");
-                }
+                return Json($"The event {@event.Name} is being held on this room in between " +
+                            $"dates {@event.StartDate}, {@event.EndDate} \nPlease change the room or dates.");
+            }
+            return Json(true);
+        }
 
-                if (@event.StartDate < endDate)
-                {
-                    return Json($"{room.Location} is busy with event {@event.Name} at this moment.");
-                }
+        [AcceptVerbs("Get", "Post")]
+        public async Task<IActionResult> DateChecker(DateTime startDate, DateTime endDate, int conferenceId)
+        {
+            var conference = await _context.Conferences.FirstOrDefaultAsync(r => r.Id == conferenceId);
+            if (startDate > endDate)
+            {
+                return Json("End Date must be after Start Date.");
             }
 
+            if (startDate < conference.StartDate || endDate > conference.EndDate)
+            {
+                return Json($"The event must be held during the conference it belongs.");
+            }
             return Json(true);
         }
     }

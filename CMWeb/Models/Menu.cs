@@ -6,7 +6,8 @@ namespace CMWeb.Models
     public class Menu
     {
         public int Id { get; set; }
-        public List<Meal> Meals { get; set; }
+        
+        public List<MealMenu> MealMenus { get; set; }
         
         public string Name { get; set; }
         public string Soup { get; set; }

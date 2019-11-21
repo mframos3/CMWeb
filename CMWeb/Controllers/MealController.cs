@@ -22,7 +22,7 @@ namespace CMWeb.Controllers
         // GET: Meal
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Events.OfType<Meal>().Include(m => m.Conference).Include(m => m.EventCenterRoom).Include(m => m.Menu);
+            var applicationDbContext = _context.Events.OfType<Meal>().Include(m => m.Conference).Include(m => m.EventCenterRoom).Include(m => m.MealMenus);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -37,7 +37,7 @@ namespace CMWeb.Controllers
             var meal = await _context.Events.OfType<Meal>()
                 .Include(m => m.Conference)
                 .Include(m => m.EventCenterRoom)
-                .Include(m => m.Menu)
+                .Include(m => m.MealMenus).ThenInclude(m => m.Menu)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (meal == null)
             {
@@ -51,8 +51,7 @@ namespace CMWeb.Controllers
         public IActionResult Create(int conferenceId)
         {
             ViewData["ConferenceId"] = conferenceId;
-            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id");
-            ViewData["MenuId"] = new SelectList(_context.Menus, "Id", "Id");
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Name");
             return View();
         }
 
@@ -61,7 +60,7 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MenuId,Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Meal meal)
+        public async Task<IActionResult> Create([Bind("Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Meal meal)
         {
             if (ModelState.IsValid)
             {
@@ -71,7 +70,6 @@ namespace CMWeb.Controllers
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", meal.ConferenceId);
             ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", meal.EventCenterRoomId);
-            ViewData["MenuId"] = new SelectList(_context.Menus, "Id", "Id", meal.MenuId);
             return View(meal);
         }
 
@@ -90,7 +88,6 @@ namespace CMWeb.Controllers
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", meal.ConferenceId);
             ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", meal.EventCenterRoomId);
-            ViewData["MenuId"] = new SelectList(_context.Menus, "Id", "Id", meal.MenuId);
             return View(meal);
         }
 
@@ -99,7 +96,7 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MenuId,Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Meal meal)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Meal meal)
         {
             if (id != meal.Id)
             {
@@ -128,7 +125,6 @@ namespace CMWeb.Controllers
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", meal.ConferenceId);
             ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", meal.EventCenterRoomId);
-            ViewData["MenuId"] = new SelectList(_context.Menus, "Id", "Id", meal.MenuId);
             return View(meal);
         }
 
@@ -143,7 +139,6 @@ namespace CMWeb.Controllers
             var meal = await _context.Events.OfType<Meal>()
                 .Include(m => m.Conference)
                 .Include(m => m.EventCenterRoom)
-                .Include(m => m.Menu)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (meal == null)
             {

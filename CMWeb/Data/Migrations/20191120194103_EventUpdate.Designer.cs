@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CMWeb.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191106164013_Reset")]
-    partial class Reset
+    [Migration("20191120194103_EventUpdate")]
+    partial class EventUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -120,11 +120,13 @@ namespace CMWeb.Data.Migrations
 
                     b.Property<int>("EventType");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.Property<DateTime>("StartDate");
 
-                    b.Property<string>("Track");
+                    b.Property<string>("Track")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -223,6 +225,19 @@ namespace CMWeb.Data.Migrations
                     b.HasIndex("EventId");
 
                     b.ToTable("Files");
+                });
+
+            modelBuilder.Entity("CMWeb.Models.MealMenu", b =>
+                {
+                    b.Property<int>("MealId");
+
+                    b.Property<int>("MenuId");
+
+                    b.HasKey("MealId", "MenuId");
+
+                    b.HasIndex("MenuId");
+
+                    b.ToTable("MealMenu");
                 });
 
             modelBuilder.Entity("CMWeb.Models.Menu", b =>
@@ -381,10 +396,6 @@ namespace CMWeb.Data.Migrations
                 {
                     b.HasBaseType("CMWeb.Models.Event");
 
-                    b.Property<int>("MenuId");
-
-                    b.HasIndex("MenuId");
-
                     b.HasDiscriminator().HasValue(1);
                 });
 
@@ -466,6 +477,19 @@ namespace CMWeb.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("CMWeb.Models.MealMenu", b =>
+                {
+                    b.HasOne("CMWeb.Models.Meal", "Meal")
+                        .WithMany("MealMenus")
+                        .HasForeignKey("MealId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CMWeb.Models.Menu", "Menu")
+                        .WithMany("MealMenus")
+                        .HasForeignKey("MenuId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -508,14 +532,6 @@ namespace CMWeb.Data.Migrations
                     b.HasOne("CMWeb.Areas.Identity.Data.CMWebUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("CMWeb.Models.Meal", b =>
-                {
-                    b.HasOne("CMWeb.Models.Menu", "Menu")
-                        .WithMany("Meals")
-                        .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
