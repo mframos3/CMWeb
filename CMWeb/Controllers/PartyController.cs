@@ -1,19 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CMWeb.Data;
 using CMWeb.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace CMWeb.Controllers
 {
     public class PartyController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+        
         public PartyController(ApplicationDbContext context)
         {
             _context = context;
@@ -27,7 +29,41 @@ namespace CMWeb.Controllers
                 .Include(p => p.EventCenterRoom);
             return View(await applicationDbContext.ToListAsync());
         }
-
+        
+        public async Task<IActionResult> Attend(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var party = (Party) await _context.Events
+                .Include(p => p.Conference)
+                .Include(p => p.EventCenterRoom)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (party == null)
+            {
+                return NotFound();
+            }
+            
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == party.Id);
+            if (eventUser != null)
+            {
+                return RedirectToAction("Details", routeValues: new {id = party.Id});
+            }
+            
+            var newEventUser = new EventUser();
+            newEventUser.UserId = currentUserId;
+            newEventUser.EventId = party.Id;
+            _context.Add(newEventUser);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Details", routeValues: new {id = party.Id});
+        }
+        
         // GET: Party/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -44,7 +80,21 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
-
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == party.Id);
+            if (eventUser != null)
+            {
+                ViewData["Attendance"] = true;
+            }
+            else
+            {
+                ViewData["Attendance"] = false;
+            }
+            
+            
             return View(party);
         }
 
