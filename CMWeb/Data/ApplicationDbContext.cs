@@ -71,11 +71,19 @@ namespace CMWeb.Data
             modelBuilder.Entity<EventRating>().HasOne(er => er.User)
                 .WithMany(u => u.EventRatings)
                 .HasForeignKey(er => er.UserId);
+            
+            modelBuilder.Entity<MealMenu>()
+                .HasKey(t => new { t.MealId, t.MenuId });
 
-            modelBuilder.Entity<Meal>()
-                .HasOne(meal => meal.Menu)
-                .WithMany(menu => menu.Meals)
-                .HasForeignKey(meal => meal.MenuId);
+            modelBuilder.Entity<MealMenu>()
+                .HasOne(mm => mm.Meal)
+                .WithMany(m => m.MealMenus)
+                .HasForeignKey(mm => mm.MealId);
+
+            modelBuilder.Entity<MealMenu>()
+                .HasOne(mm => mm.Menu)
+                .WithMany(m => m.MealMenus)
+                .HasForeignKey(mm => mm.MenuId);
             
             modelBuilder.Entity<EventUser>().HasKey(eu => new {eu.EventId, eu.UserId});
             
@@ -105,5 +113,6 @@ namespace CMWeb.Data
                 .WithMany(c => c.Conferences);
 
         }
+        
     }
 }

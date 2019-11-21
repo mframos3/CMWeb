@@ -5,15 +5,17 @@ using CMWeb.Data;
 using CMWeb.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CMWeb.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191119193658_MealUpdate")]
+    partial class MealUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,25 +82,13 @@ namespace CMWeb.Data.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("Edition");
-
                     b.Property<DateTime>("EndDate");
 
-                    b.Property<int>("EventCenterId");
-
-                    b.Property<float>("Rating");
-
-                    b.Property<string>("Sponsor");
+                    b.Property<string>("Name");
 
                     b.Property<DateTime>("StartDate");
 
-                    b.Property<int>("SuperConferenceId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("EventCenterId");
-
-                    b.HasIndex("SuperConferenceId");
 
                     b.ToTable("Conference");
                 });
@@ -130,13 +120,11 @@ namespace CMWeb.Data.Migrations
 
                     b.Property<int>("EventType");
 
-                    b.Property<string>("Name")
-                        .IsRequired();
+                    b.Property<string>("Name");
 
                     b.Property<DateTime>("StartDate");
 
-                    b.Property<string>("Track")
-                        .IsRequired();
+                    b.Property<string>("Track");
 
                     b.HasKey("Id");
 
@@ -282,22 +270,6 @@ namespace CMWeb.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Notification");
-                });
-
-            modelBuilder.Entity("CMWeb.Models.SuperConference", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Name");
-
-                    b.Property<float>("Rating");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SuperConferences");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -446,19 +418,6 @@ namespace CMWeb.Data.Migrations
                     b.HasBaseType("CMWeb.Models.Event");
 
                     b.HasDiscriminator().HasValue(4);
-                });
-
-            modelBuilder.Entity("CMWeb.Models.Conference", b =>
-                {
-                    b.HasOne("CMWeb.Models.EventCenter", "EventCenter")
-                        .WithMany("Conferences")
-                        .HasForeignKey("EventCenterId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("CMWeb.Models.SuperConference", "SuperConference")
-                        .WithMany("Conferences")
-                        .HasForeignKey("SuperConferenceId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("CMWeb.Models.Event", b =>

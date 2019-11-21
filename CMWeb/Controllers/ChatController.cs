@@ -98,7 +98,7 @@ namespace CMWeb.Controllers
         public IActionResult Create(int conferenceId)
         {
             ViewData["ConferenceId"] = conferenceId;
-            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id");
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Name");
             return View();
         }
 
@@ -109,13 +109,13 @@ namespace CMWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Chat chat)
         {
+            
             if (ModelState.IsValid)
             {
                 _context.Add(chat);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Conference", new {id = chat.ConferenceId});
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", chat.ConferenceId);
             ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", chat.EventCenterRoomId);
             return View(chat);
         }

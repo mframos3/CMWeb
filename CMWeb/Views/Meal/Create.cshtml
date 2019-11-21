@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    var menuOptions = ViewData["MenuOptions"] as List<Menu>;
 }
 
 <h1>Create</h1>
@@ -13,8 +14,8 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="MenuId" class="control-label"></label>
-                <select asp-for="MenuId" class ="form-control" asp-items="ViewBag.MenuId"></select>
+                <input asp-for="ConferenceId" hidden="hidden"/>
+                <span asp-validation-for="ConferenceId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -36,15 +37,16 @@
                 <input asp-for="Track" class="form-control" />
                 <span asp-validation-for="Track" class="text-danger"></span>
             </div>
-            <div class="form-group"><input asp-for="ConferenceId" hidden="hidden"/></div>
             <div class="form-group">
-                <label asp-for="EventCenterRoomId" class="control-label"></label>
+                <label class="control-label">Room</label>
                 <select asp-for="EventCenterRoomId" class ="form-control" asp-items="ViewBag.EventCenterRoomId"></select>
+                <span asp-validation-for="EventCenterRoomId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Go to Menu Selection" class="btn btn-primary" />
             </div>
         </form>
+        
     </div>
 </div>
 

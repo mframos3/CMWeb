@@ -11,12 +11,6 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Menu)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Menu.Id)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
         <dd class = "col-sm-10">
@@ -44,13 +38,13 @@
             @Html.DisplayNameFor(model => model.Conference)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Conference.Id)
+            @Html.DisplayFor(model => model.Conference.Name)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.EventCenterRoom)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EventCenterRoom.Id)
+            @Html.DisplayFor(model => model.EventCenterRoom.Name)
         </dd>
     </dl>
 </div>
@@ -65,3 +59,47 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Details" asp-controller="Conference" asp-route-id="@Model.ConferenceId">Back to Conference</a>
 </div>
+<br/>
+<h3> Meal Options</h3>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Soup
+        </th>
+        <th>
+            Entree
+        </th>
+        <th>
+            Main
+        </th>
+        <th>
+            Dessert
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.MealMenus) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Menu.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Menu.Soup)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Menu.Entree)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Menu.Main)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Menu.Dessert)
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
