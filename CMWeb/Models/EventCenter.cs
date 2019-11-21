@@ -17,5 +17,7 @@ namespace CMWeb.Models
         public ICollection<EventCenterRoom> EventCenterRooms { get; set; }
         public string Description { get; set; }
 
+        public ICollection<Conference> Conferences { get; set; }
+
     }
 }

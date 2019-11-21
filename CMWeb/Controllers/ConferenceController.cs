@@ -32,7 +32,7 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
-            
+
             
             var conference = await _context.Conferences
                 .Include(c => c.Events)
@@ -42,14 +42,17 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
+            ViewData["EventCenterName"] = await _context.EventCenters.FindAsync(conference.EventCenterId);
 
             // ViewData["Events"] = conference.Events;
             return View(conference);
         }
 
         // GET: Conference/Create
-        public IActionResult Create()
+        public IActionResult Create(int superConferenceId)
         {
+            ViewData["superConferenceId"] = superConferenceId;
+            ViewData["EventCenterId"] = new SelectList(_context.EventCenters, "Id", "Name");
             return View();
         }
 
@@ -58,13 +61,15 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,StartDate,EndDate")] Conference conference)
+        public async Task<IActionResult> Create([Bind("Id,Edition,Description,StartDate,EndDate,SuperConferenceId,Sponsor,EventCenterId")] Conference conference)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(conference);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var superConference = await _context.SuperConferences.FindAsync(conference.SuperConferenceId);
+                superConference.Conferences.Add(conference);
+                return RedirectToAction("Index", "SuperConference");
             }
             return View(conference);
         }

@@ -13,9 +13,9 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Edition" class="control-label"></label>
+                <input asp-for="Edition" class="form-control" />
+                <span asp-validation-for="Edition" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
@@ -31,6 +31,20 @@
                 <label asp-for="EndDate" class="control-label"></label>
                 <input asp-for="EndDate" class="form-control" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Event Center</label>
+                <select asp-for="EventCenterId" class ="form-control" asp-items="ViewBag.EventCenterId"></select>
+                <span asp-validation-for="EventCenterId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sponsor" class="control-label"></label>
+                <input asp-for="Sponsor" class="form-control" />
+                <span asp-validation-for="Sponsor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="SuperConferenceId" hidden="hidden"/>
+
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
