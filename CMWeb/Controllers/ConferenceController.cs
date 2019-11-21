@@ -32,7 +32,7 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
-            
+
             
             var conference = await _context.Conferences
                 .Include(c => c.Events)
@@ -42,6 +42,7 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
+            ViewData["EventCenterName"] = await _context.EventCenters.FindAsync(conference.EventCenterId);
 
             // ViewData["Events"] = conference.Events;
             return View(conference);
