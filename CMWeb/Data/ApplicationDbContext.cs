@@ -29,7 +29,9 @@ namespace CMWeb.Data
         public DbSet<Menu> Menus { get; set; }
         
         public DbSet<FileDetails> Files { get; set; }
-        
+
+        public DbSet<SuperConference> SuperConferences { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -91,8 +93,11 @@ namespace CMWeb.Data
             modelBuilder.Entity<FileDetails>()
                 .HasOne(f => f.Event)
                 .WithMany(e => e.Files)
-                .HasForeignKey(f => f.EventId);
-
+                .HasForeignKey(f => f.EventId); 
+            
+            modelBuilder.Entity<Conference>()
+                .HasOne(c => c.SuperConference)
+                .WithMany(c => c.Conferences);
 
         }
     }

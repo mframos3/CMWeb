@@ -48,8 +48,9 @@ namespace CMWeb.Controllers
         }
 
         // GET: Conference/Create
-        public IActionResult Create()
+        public IActionResult Create(int superConferenceId)
         {
+            ViewData["superConferenceId"] = superConferenceId;
             return View();
         }
 
@@ -58,13 +59,15 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,StartDate,EndDate")] Conference conference)
+        public async Task<IActionResult> Create([Bind("Id,Edition,Description,StartDate,EndDate,SuperConferenceId")] Conference conference)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(conference);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var superConference = await _context.SuperConferences.FindAsync(conference.SuperConferenceId);
+                superConference.Conferences.Add(conference);
+                return RedirectToAction("Index", "SuperConference");
             }
             return View(conference);
         }
