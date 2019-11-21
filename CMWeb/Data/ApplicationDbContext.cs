@@ -89,7 +89,11 @@ namespace CMWeb.Data
             modelBuilder.Entity<EventCenterRoom>()
                 .HasOne(ecr => ecr.EventCenter)
                 .WithMany(ec => ec.EventCenterRooms);
-                
+            
+            modelBuilder.Entity<Conference>()
+                .HasOne(ec => ec.EventCenter)
+                .WithMany(c => c.Conferences);
+
             modelBuilder.Entity<FileDetails>()
                 .HasOne(f => f.Event)
                 .WithMany(e => e.Files)

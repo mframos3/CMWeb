@@ -22,5 +22,11 @@ namespace CMWeb.Models
 
         public SuperConference SuperConference { get; set; }
 
+        public EventCenter EventCenter { get; set; }
+
+        public int EventCenterId { get; set; }
+
+        public string Sponsor { get; set; }
+
     }
 }
