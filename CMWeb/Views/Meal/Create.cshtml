@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    var menuOptions = ViewData["MenuOptions"] as List<Menu>;
 }
 
 <h1>Create</h1>
@@ -42,9 +43,10 @@
                 <span asp-validation-for="EventCenterRoomId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Go to Menu Selection" class="btn btn-primary" />
             </div>
         </form>
+        
     </div>
 </div>
 

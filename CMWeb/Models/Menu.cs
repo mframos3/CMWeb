@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CMWeb.Models
 {
@@ -14,5 +15,8 @@ namespace CMWeb.Models
         public string Entree { get; set; }
         public string Main { get; set; }
         public string Dessert { get; set; }
+        
+        [NotMapped]
+        public bool checkboxAnswer { get; set; }
     }
 }

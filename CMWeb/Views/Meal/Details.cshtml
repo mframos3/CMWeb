@@ -52,3 +52,47 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Details" asp-controller="Conference" asp-route-id="@Model.ConferenceId">Back to Conference</a>
 </div>
+<br/>
+<h3> Meal Options</h3>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Soup
+        </th>
+        <th>
+            Entree
+        </th>
+        <th>
+            Main
+        </th>
+        <th>
+            Dessert
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.MealMenus) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Menu.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Menu.Soup)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Menu.Entree)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Menu.Main)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Menu.Dessert)
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

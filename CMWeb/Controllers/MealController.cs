@@ -52,6 +52,7 @@ namespace CMWeb.Controllers
         {
             ViewData["ConferenceId"] = conferenceId;
             ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Name");
+            ViewBag.Menus = new MultiSelectList(_context.Menus.ToList(), "Id", "Name");
             return View();
         }
 
@@ -66,7 +67,7 @@ namespace CMWeb.Controllers
             {
                 _context.Add(meal);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Conference", new {id = meal.ConferenceId});
+                return RedirectToAction("SelectMenus", "Meal", new {id = meal.Id});
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", meal.ConferenceId);
             ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", meal.EventCenterRoomId);
@@ -162,6 +163,44 @@ namespace CMWeb.Controllers
         private bool MealExists(int id)
         {
             return _context.Events.Any(e => e.Id == id);
+        }
+        
+        // GET: Meal/AddMenus/1
+        public async Task<IActionResult> SelectMenus(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var meal = await _context.Events.OfType<Meal>()
+                .Include(m => m.Conference)
+                .Include(m => m.EventCenterRoom)
+                .Include(m => m.MealMenus).ThenInclude(m => m.Menu)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            
+            if (meal == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Menus = _context.Menus.ToList();
+            return View(meal);
+        }
+        
+        // POST: Meal/AddMenus/1
+
+        public async Task<IActionResult> AddMenus(int[] areChecked, int mealId)
+        {
+            var meal = (Meal) await _context.Events.FirstOrDefaultAsync(e => e.Id == mealId);
+            foreach (var menuId in areChecked)
+            {
+                var menu = await _context.Menus.FirstOrDefaultAsync(m => m.Id == menuId);
+                _context.Add(new MealMenu {Menu = menu, Meal = meal});
+                await _context.SaveChangesAsync();
+            }
+            
+            return RedirectToAction("Details", "Conference", new {id = meal.ConferenceId});
         }
     }
 }

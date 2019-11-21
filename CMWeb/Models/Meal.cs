@@ -8,5 +8,6 @@ namespace CMWeb.Models
     {
         public List<MealMenu> MealMenus { get; set; }
         
+        
     }
 }
