@@ -11,7 +11,8 @@ namespace CMWeb.Data
             : base(options)
         {
         }
-        
+
+        public DbSet<EventUser> EventUsers { get; set; }
         public DbSet<Conference> Conferences { get; set; }
 
         public DbSet<EventCenter> EventCenters { get; set; }

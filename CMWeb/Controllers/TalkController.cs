@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -25,7 +26,41 @@ namespace CMWeb.Controllers
             var applicationDbContext = _context.Events.OfType<Talk>().Include(t => t.Conference).Include(t => t.EventCenterRoom);
             return View(await applicationDbContext.ToListAsync());
         }
-
+        
+        public async Task<IActionResult> Attend(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var talk = (Talk) await _context.Events
+                .Include(p => p.Conference)
+                .Include(p => p.EventCenterRoom)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (talk == null)
+            {
+                return NotFound();
+            }
+            
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == talk.Id);
+            if (eventUser != null)
+            {
+                return RedirectToAction("Details", routeValues: new {id = talk.Id});
+            }
+            
+            var newEventUser = new EventUser();
+            newEventUser.UserId = currentUserId;
+            newEventUser.EventId = talk.Id;
+            _context.Add(newEventUser);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Details", routeValues: new {id = talk.Id});
+        }    
+        
         // GET: Talk/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -42,6 +77,19 @@ namespace CMWeb.Controllers
             if (talk == null)
             {
                 return NotFound();
+            }
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == talk.Id);
+            if (eventUser != null)
+            {
+                ViewData["Attendance"] = true;
+            }
+            else
+            {
+                ViewData["Attendance"] = false;
             }
 
             return View(talk);

@@ -60,6 +60,14 @@
                 </li>
             }
 <div>
+
+        @{
+            if (!(bool)ViewData["Attendance"])
+            {
+                <a asp-action="Attend" asp-route-id="@Model.Id">Attend</a>
+            }
+    
+        }
     <h3>Upload Files</h3>
     <form asp-controller="FileManager" asp-action="UploadFile" asp-route-ev="@Model.Id" 
           asp-route-evType="@Model.GetType().Name" method="post"

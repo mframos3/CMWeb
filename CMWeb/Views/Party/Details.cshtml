@@ -49,6 +49,14 @@
     </dl>
 </div>
 <div>
+    @{
+        if (!(bool)ViewData["Attendance"])
+        {
+            <a asp-action="Attend" asp-route-id="@Model.Id">Attend</a>
+        }
+
+    }
+    
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Details" asp-controller="Conference" asp-route-id="@Model.ConferenceId">Back to Conference</a>
 </div>

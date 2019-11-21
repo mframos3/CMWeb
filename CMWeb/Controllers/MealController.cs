@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,12 +20,48 @@ namespace CMWeb.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> Attend(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var meal = (Meal) await _context.Events
+                .Include(p => p.Conference)
+                .Include(p => p.EventCenterRoom)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (meal == null)
+            {
+                return NotFound();
+            }
+            
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == meal.Id);
+            if (eventUser != null)
+            {
+                return RedirectToAction("Details", routeValues: new {id = meal.Id});
+            }
+            
+            var newEventUser = new EventUser();
+            newEventUser.UserId = currentUserId;
+            newEventUser.EventId = meal.Id;
+            _context.Add(newEventUser);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Details", routeValues: new {id = meal.Id});
+        }
+
         // GET: Meal
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Events.OfType<Meal>().Include(m => m.Conference).Include(m => m.EventCenterRoom).Include(m => m.Menu);
             return View(await applicationDbContext.ToListAsync());
         }
+        
+        
 
         // GET: Meal/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -42,6 +79,19 @@ namespace CMWeb.Controllers
             if (meal == null)
             {
                 return NotFound();
+            }
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == meal.Id);
+            if (eventUser != null)
+            {
+                ViewData["Attendance"] = true;
+            }
+            else
+            {
+                ViewData["Attendance"] = false;
             }
 
             return View(meal);
