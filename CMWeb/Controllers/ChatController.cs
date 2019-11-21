@@ -34,7 +34,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
             var chat = (Chat) await _context.Events
-                .Include(p => p.Conference)
+                .Include(p => p.Conference).ThenInclude(c => c.SuperConference)
                 .Include(p => p.EventCenterRoom)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (chat == null)

@@ -35,6 +35,7 @@ namespace CMWeb.Controllers
 
             
             var conference = await _context.Conferences
+                .Include(c => c.SuperConference)
                 .Include(c => c.Events)
                 .ThenInclude(e => e.EventCenterRoom)
                 .FirstOrDefaultAsync(m => m.Id == id);

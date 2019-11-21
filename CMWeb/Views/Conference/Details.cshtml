@@ -47,6 +47,7 @@
 
 <div>
     <h4>Conference</h4>
+    <h3>@Model.SuperConference.Name</h3>
     <button onclick="myFunction()" class="dropbtn">Create Event</button>
     <div id="myDropdown" class="dropdown-content">
         <a asp-controller="Chat" asp-action="Create" asp-route-conferenceId="@Model.Id">Chat</a>

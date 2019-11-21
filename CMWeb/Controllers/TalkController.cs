@@ -70,7 +70,7 @@ namespace CMWeb.Controllers
             }
 
             var talk = (Talk) await _context.Events
-                .Include(t => t.Conference)
+                .Include(t => t.Conference).ThenInclude(c => c.SuperConference)
                 .Include(t => t.EventCenterRoom)
                 .Include(t => t.Files)
                 .FirstOrDefaultAsync(m => m.Id == id);

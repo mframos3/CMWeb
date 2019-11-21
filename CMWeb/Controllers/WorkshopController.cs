@@ -34,7 +34,7 @@ namespace CMWeb.Controllers
                 return NotFound();
             }
             var workshop = (Workshop) await _context.Events
-                .Include(p => p.Conference)
+                .Include(p => p.Conference).ThenInclude(c => c.SuperConference)
                 .Include(p => p.EventCenterRoom)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (workshop == null)

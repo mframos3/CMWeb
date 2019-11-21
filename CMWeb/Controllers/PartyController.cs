@@ -73,7 +73,7 @@ namespace CMWeb.Controllers
             }
 
             var party = (Party) await _context.Events
-                .Include(p => p.Conference)
+                .Include(p => p.Conference).ThenInclude(c => c.SuperConference)
                 .Include(p => p.EventCenterRoom)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (party == null)

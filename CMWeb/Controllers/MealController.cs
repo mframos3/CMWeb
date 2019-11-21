@@ -44,10 +44,8 @@ namespace CMWeb.Controllers
             {
                 return RedirectToAction("Details", routeValues: new {id = meal.Id});
             }
-            
-            var newEventUser = new EventUser();
-            newEventUser.UserId = currentUserId;
-            newEventUser.EventId = meal.Id;
+
+            var newEventUser = new EventUser {UserId = currentUserId, EventId = meal.Id};
             _context.Add(newEventUser);
             await _context.SaveChangesAsync();
             
@@ -72,7 +70,7 @@ namespace CMWeb.Controllers
             }
 
             var meal = await _context.Events.OfType<Meal>()
-                .Include(m => m.Conference)
+                .Include(m => m.Conference).ThenInclude(c => c.SuperConference)
                 .Include(m => m.EventCenterRoom)
                 .Include(m => m.MealMenus).ThenInclude(m => m.Menu)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -224,7 +222,7 @@ namespace CMWeb.Controllers
             }
 
             var meal = await _context.Events.OfType<Meal>()
-                .Include(m => m.Conference)
+                .Include(m => m.Conference).ThenInclude(c => c.SuperConference)
                 .Include(m => m.EventCenterRoom)
                 .Include(m => m.MealMenus).ThenInclude(m => m.Menu)
                 .FirstOrDefaultAsync(m => m.Id == id);
