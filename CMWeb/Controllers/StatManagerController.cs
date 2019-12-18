@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,48 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CMWeb.Data;
 using CMWeb.Models;
-
-
-namespace CMWeb.Controllers
-{
-    public class StatManagerController : Controller
-    {
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-        
-        
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-/*
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using CMWeb.Data;
-using CMWeb.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CMWeb.Controllers
 {
@@ -63,135 +22,48 @@ namespace CMWeb.Controllers
         }
 
         // GET: StatManager
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Stats()
         {
-            return View(await _context.StatManager.ToListAsync());
-        }
-
-        // GET: StatManager/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var statManager = await _context.StatManager
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (statManager == null)
-            {
-                return NotFound();
-            }
-
-            return View(statManager);
-        }
-
-        // GET: StatManager/Create
-        public IActionResult Create()
-        {
+           
+            
+            ViewData["Events"] = await GetJsonEventsWithAttendance();
             return View();
         }
 
-        // POST: StatManager/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] StatManager statManager)
+        private async Task<List<string>> GetJsonEventsWithAttendance()
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(statManager);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(statManager);
-        }
+            var output = new List<string>();
+            var eEvents = await _context.Events.ToListAsync();
+            var jsonEvents = eEvents.ConvertAll(JsonConvert.SerializeObject).ToList();
 
-        // GET: StatManager/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
+            var eventAttendance = _context.EventUsers.GroupBy(eu => eu.EventId).ToList().Select(group => new Amount()
             {
-                return NotFound();
-            }
+                EventId = @group.Key,
+                Attendance = @group.Count()
+            });
 
-            var statManager = await _context.StatManager.FindAsync(id);
-            if (statManager == null)
+            foreach (var jObj in jsonEvents.Select(JObject.Parse))
             {
-                return NotFound();
-            }
-            return View(statManager);
-        }
-
-        // POST: StatManager/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id")] StatManager statManager)
-        {
-            if (id != statManager.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                var attendance = eventAttendance.FirstOrDefault(eu => eu.EventId.ToString() == (string) jObj["Id"]);
+                if (attendance == null)
                 {
-                    _context.Update(statManager);
-                    await _context.SaveChangesAsync();
+                    jObj["Attendance"] = 0;
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!StatManagerExists(statManager.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    jObj["Attendance"] = attendance.Attendance;
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(statManager);
-        }
-
-        // GET: StatManager/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
+                
+                output.Add(jObj.ToString());
             }
 
-            var statManager = await _context.StatManager
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (statManager == null)
-            {
-                return NotFound();
-            }
-
-            return View(statManager);
+            return output;
         }
 
-        // POST: StatManager/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        private class Amount
         {
-            var statManager = await _context.StatManager.FindAsync(id);
-            _context.StatManager.Remove(statManager);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool StatManagerExists(string id)
-        {
-            return _context.StatManager.Any(e => e.Id == id);
+            public int EventId { get; set; }
+            public int Attendance { get; set; }
         }
     }
 }
-*/

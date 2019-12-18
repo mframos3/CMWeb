@@ -1,0 +1,77 @@
+@using Newtonsoft.Json.Linq
+@model IEnumerable<CMWeb.Models.StatManager>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+
+<h1>Estadísticas</h1>
+<body>
+
+<canvas id="myChart"></canvas>
+ 
+
+@foreach (var item in (List<string>) ViewData["Events"])
+ {
+     <p>@item</p>
+ }
+</body>
+
+<!-- TODO: Cambiar chart.js por d3.js. Revisar https://jsfiddle.net/PBrockmann/x3jdxkqb/. En su reemplazo habría que hacer los filtros server-side.--> 
+<script>
+    var myChart = document.getElementById('myChart').getContext('2d');
+    var eventsName = [];
+    var eventsAttendance = [];
+    
+    @foreach (var item in (List<string>) ViewData["Events"])
+     {
+         <text>
+         eventsName.push("@JObject.Parse(item)["Name"]");
+         eventsAttendance.push("@JObject.Parse(item)["Attendance"]");
+         </text>
+     }
+    
+    
+    
+    var massPopChart = new Chart(myChart, {
+        type: "bar",
+        data: {
+            labels: eventsName,
+            datasets:[{
+                label: "Attendance",
+                data:eventsAttendance,
+                backgroundColor:"green",
+                          borderWidth:1,
+                          borderColor:'#777',
+                          hoverBorderWidth:3,
+                          hoverBorderColor:'#000'
+
+            }]
+        },
+        options: {
+             scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                },
+            title: {
+                display: true,
+                text: "Attendance",
+                fontSize: 25
+            },
+            legend: {
+               position: "right",
+               labels : {
+                   fontColor: "#000"
+               } 
+            }
+        }
+    });
+</script>
+    
+    

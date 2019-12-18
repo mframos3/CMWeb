@@ -113,6 +113,6 @@ namespace CMWeb.Data
                 .WithMany(c => c.Conferences);
 
         }
-        
+
     }
 }
