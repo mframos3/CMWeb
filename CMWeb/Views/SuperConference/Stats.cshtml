@@ -1,5 +1,5 @@
 @using Newtonsoft.Json.Linq
-@model IEnumerable<CMWeb.Models.StatManager>
+@model IEnumerable<CMWeb.Models.SuperConference>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,7 +13,28 @@
 <canvas id="myChart"></canvas>
  
 
-@foreach (var item in (List<string>) ViewData["Events"])
+@foreach (var item in (List<string>) ViewData["ConferencesEventsAttendance"])
+ {
+     <p>@item</p>
+ }
+<br/>
+  <h1>EVENTSATTENDANCE</h1>
+  
+  @foreach (var item in (List<string>) ViewData["EventsAttendance"])
+   {
+       <p>@item</p>
+   }
+<br/>
+<h1>CONFERENCETRACKSATTENDANCE</h1>
+
+@foreach (var item in (List<string>) ViewData["ConferencesTrackAttendance"])
+ {
+     <p>@item</p>
+ }
+<br/>
+<h1>TRACKSATTENDANCE</h1>
+
+@foreach (var item in (List<string>) ViewData["TracksAttendance"])
  {
      <p>@item</p>
  }
@@ -25,13 +46,7 @@
     var eventsName = [];
     var eventsAttendance = [];
     
-    @foreach (var item in (List<string>) ViewData["Events"])
-     {
-         <text>
-         eventsName.push("@JObject.Parse(item)["Name"]");
-         eventsAttendance.push("@JObject.Parse(item)["Attendance"]");
-         </text>
-     }
+  
     
     
     
