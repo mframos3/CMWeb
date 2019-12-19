@@ -161,6 +161,11 @@ namespace CMWeb.Controllers
             ViewData["EventsAttendance"] = await GetEventsAttendance(id);
             ViewData["ConferencesTrackAttendance"] = await GetConferencesTrackAttendance(id);
             ViewData["TracksAttendance"] = await GetTracksAttendance(id);
+            ViewData["ConferencesEventsRatings"] = await GetConferencesEventsRatings(id);
+            ViewData["EventsRatings"] = await GetEventsRating(id);
+            ViewData["ConferencesTrackRating"] = await GetConferencesTrackRating(id);
+            ViewData["TracksRating"] = await GetTracksRating(id);
+            ViewData["SpeakersRating"] = await GetSpeakersRating(id);
             return View(await _context.SuperConferences.ToListAsync());
         }
         
@@ -179,10 +184,10 @@ namespace CMWeb.Controllers
                 .ToListAsync();
             var jsonEvents = eEvents.ConvertAll(JsonConvert.SerializeObject).ToList();
 
-            var eventAttendance = _context.EventUsers.GroupBy(eu => eu.EventId).ToList().Select(group => new Amount()
+            var eventAttendance = _context.EventUsers.GroupBy(eu => eu.EventId).ToList().Select(group => new IdAmount()
             {
                 Id = @group.Key,
-                ValueAmount = @group.Count()
+                Attendance = @group.Count()
             });
 
             foreach (var jObj in jsonEvents.Select(JObject.Parse))
@@ -194,7 +199,7 @@ namespace CMWeb.Controllers
                 }
                 else
                 {
-                    jObj["Attendance"] = attendance.ValueAmount;
+                    jObj["Attendance"] = attendance.Attendance;
                 }
                 
                 JObjEvents.Add(jObj);
@@ -239,15 +244,15 @@ namespace CMWeb.Controllers
                         ce.ConferenceId
                     };
                     
-                    var conferenceAttendance = userConference.GroupBy(uc => uc.ConferenceId).ToList().Select(group => new Amount()
+                    var conferenceAttendance = userConference.GroupBy(uc => uc.ConferenceId).ToList().Select(group => new IdAmount()
                     {
                         Id = @group.Key,
-                        ValueAmount = @group.Count()
+                        Attendance = @group.Count()
                     });
                     var attendance = conferenceAttendance.FirstOrDefault(ca => ca.Id == conference.Id);
                     data.Add(attendance == null
                         ? new {name = conference.Edition, attendance = 0}
-                        : new {name = conference.Edition, attendance = attendance.ValueAmount});
+                        : new {name = conference.Edition, attendance = attendance.Attendance});
                 }
                 var tuple = new {name = eEvent.Name, data};
                 output.Add(tuple);
@@ -265,15 +270,15 @@ namespace CMWeb.Controllers
                 .FirstOrDefaultAsync(m => m.Id == superConferenceId);
             var conferences = superConference.Conferences.ToList();
             
-            var eventAttendance = _context.EventUsers.GroupBy(eu => eu.EventId).ToList().Select(group => new Amount()
+            var eventAttendance = _context.EventUsers.GroupBy(eu => eu.EventId).ToList().Select(group => new IdAmount()
             {
                 Id = @group.Key,
-                ValueAmount = @group.Count()
+                Attendance = @group.Count()
             });
             
             foreach (var conference in conferences)
             {
-                var trackAttendances = new List<TrackAmount>();
+                var trackAttendances = new List<NameAmount>();
                 var conferenceEvents = conference.Events;
                 foreach (var eEvent in conferenceEvents)
                 {
@@ -283,18 +288,18 @@ namespace CMWeb.Controllers
                         if (attendance == null)
                         {
                             trackAttendances.Add(
-                                new TrackAmount() {Track = track, ValueAmount = 0});
+                                new NameAmount() {Name = track, Attendance = 0});
                             continue;
                         };
-                        if (trackAttendances.All(ta => ta.Track != track))
+                        if (trackAttendances.All(ta => ta.Name != track))
                         {
                             trackAttendances.Add(
-                            new TrackAmount(){Track = track, ValueAmount = 0}
+                            new NameAmount(){Name = track, Attendance = 0}
                             );
                             
                         }
 
-                        trackAttendances.Find(ta => ta.Track == track).ValueAmount += attendance.ValueAmount;
+                        trackAttendances.Find(ta => ta.Name == track).Attendance += attendance.Attendance;
                     }
                     
                     
@@ -318,17 +323,17 @@ namespace CMWeb.Controllers
                 .FirstOrDefaultAsync(m => m.Id == superConferenceId);
             var conferences = superConference.Conferences.ToList();
             
-            var eventAttendance = _context.EventUsers.GroupBy(eu => eu.EventId).ToList().Select(group => new Amount()
+            var eventAttendance = _context.EventUsers.GroupBy(eu => eu.EventId).ToList().Select(group => new IdAmount()
             {
                 Id = @group.Key,
-                ValueAmount = @group.Count()
+                Attendance = @group.Count()
             });
 
-            var trackConferences = new List<TrackConferences>();
+            var trackConferences = new List<NameData>();
 
             foreach (var conference in conferences)
             {
-                var trackAttendances = new List<TrackAmount>();
+                var trackAttendances = new List<NameAmount>();
                 var conferenceEvents = conference.Events;
                 foreach (var eEvent in conferenceEvents)
                 {
@@ -338,18 +343,18 @@ namespace CMWeb.Controllers
                         if (attendance == null)
                         {
                             trackAttendances.Add(
-                                new TrackAmount() {Track = track, ValueAmount = 0});
+                                new NameAmount() {Name = track, Attendance = 0});
                             continue;
                         };
-                        if (trackAttendances.All(ta => ta.Track != track))
+                        if (trackAttendances.All(ta => ta.Name != track))
                         {
                             trackAttendances.Add(
-                                new TrackAmount(){Track = track, ValueAmount = 0}
+                                new NameAmount(){Name = track, Attendance = 0}
                             );
                             
                         }
 
-                        trackAttendances.Find(ta => ta.Track == track).ValueAmount += attendance.ValueAmount;
+                        trackAttendances.Find(ta => ta.Name == track).Attendance += attendance.Attendance;
                     }
                     
                     
@@ -357,28 +362,28 @@ namespace CMWeb.Controllers
 
                 foreach (var trackAttendance in trackAttendances)
                 {
-                    if (trackConferences.All(tc => tc.Track != trackAttendance.Track))
+                    if (trackConferences.All(tc => tc.Name != trackAttendance.Name))
                     {
-                        trackConferences.Add(new TrackConferences()
+                        trackConferences.Add(new NameData()
                         {
-                            Track = trackAttendance.Track,
-                            Data = new List<TrackConferenceAmount>()
+                            Name = trackAttendance.Name,
+                            Data = new List<NameAmount>()
                             {
-                                new TrackConferenceAmount()
+                                new NameAmount()
                                 {
-                                    Conference = conference.Edition,
-                                    ValueAmount = trackAttendance.ValueAmount
+                                    Name = conference.Edition,
+                                    Attendance = trackAttendance.Attendance
                                 }
                             } 
                         });
                     }
                     else
                     {
-                        trackConferences.Find(tc => tc.Track == trackAttendance.Track).Data.Add(
-                            new TrackConferenceAmount()
+                        trackConferences.Find(tc => tc.Name == trackAttendance.Name).Data.Add(
+                            new NameAmount()
                             {
-                                Conference = conference.Edition,
-                                ValueAmount = trackAttendance.ValueAmount
+                                Name = conference.Edition,
+                                Attendance = trackAttendance.Attendance
                             });
                     }
                 }
@@ -395,10 +400,10 @@ namespace CMWeb.Controllers
                 .ToListAsync();
             var jsonEvents = eEvents.ConvertAll(JsonConvert.SerializeObject).ToList();
 
-            var eventRating = _context.EventRatings.GroupBy(eu => eu.EventId).ToList().Select(group => new Amount()
+            var eventRating = _context.EventRatings.GroupBy(eu => eu.EventId).ToList().Select(group => new IdAmount()
             {
                 Id = @group.Key,
-                ValueAmount = @group.Sum(i => i.Rating) / @group.Count()
+                Rating = @group.Sum(i => i.Rating) / @group.Count()
             });
 
             foreach (var jObj in jsonEvents.Select(JObject.Parse))
@@ -410,7 +415,7 @@ namespace CMWeb.Controllers
                 }
                 else
                 {
-                    jObj["Attendance"] = attendance.ValueAmount;
+                    jObj["Attendance"] = attendance.Rating;
                 }
                 
                 JObjEvents.Add(jObj);
@@ -457,15 +462,15 @@ namespace CMWeb.Controllers
                         
                     };
                     
-                    var conferenceRating = userConference.GroupBy(uc => uc.ConferenceId).ToList().Select(group => new Amount()
+                    var conferenceRating = userConference.GroupBy(uc => uc.ConferenceId).ToList().Select(group => new IdAmount()
                     {
                         Id = @group.Key,
-                        ValueAmount = @group.Sum(i => i.Rating) / @group.Count()
+                        Rating = @group.Sum(i => i.Rating) / @group.Count()
                     });
                     var rating = conferenceRating.FirstOrDefault(ca => ca.Id == conference.Id);
                     data.Add(rating == null
-                        ? new {name = conference.Edition, Rating = 0}
-                        : new {name = conference.Edition, Rating = rating.ValueAmount});
+                        ? new NameAmount() {Name = conference.Edition, Rating = 0}
+                        : new NameAmount() {Name = conference.Edition, Rating = rating.Rating});
                 }
                 var tuple = new {name = eEvent.Name, data};
                 output.Add(tuple);
@@ -483,15 +488,15 @@ namespace CMWeb.Controllers
                 .FirstOrDefaultAsync(m => m.Id == superConferenceId);
             var conferences = superConference.Conferences.ToList();
             
-            var eventRating = _context.EventRatings.GroupBy(eu => eu.EventId).ToList().Select(group => new Amount()
+            var eventRating = _context.EventRatings.GroupBy(eu => eu.EventId).ToList().Select(group => new IdAmount()
             {
                 Id = @group.Key,
-                ValueAmount = @group.Sum(i => i.Rating) / @group.Count()
+                Rating = @group.Sum(i => i.Rating) / @group.Count()
             });
             
             foreach (var conference in conferences)
             {
-                var trackRatings = new List<TrackAmount>();
+                var trackRatings = new List<NameAmount>();
                 var conferenceEvents = conference.Events;
                 foreach (var eEvent in conferenceEvents)
                 {
@@ -502,18 +507,18 @@ namespace CMWeb.Controllers
                         if (rating == null)
                         {
                             trackRatings.Add(
-                                new TrackAmount() {Track = track, ValueAmount = 0});
+                                new NameAmount() {Name = track, Rating = 0});
                             continue;
                         };
-                        if (trackRatings.All(ta => ta.Track != track))
+                        if (trackRatings.All(ta => ta.Name != track))
                         {
                             trackRatings.Add(
-                            new TrackAmount(){Track = track, ValueAmount = 0}
+                            new NameAmount(){Name = track, Rating = 0}
                             );
                             
                         }
-                        var trackAttendance = trackRatings.Find(ta => ta.Track == track);
-                        trackAttendance.ValueAmount += ((rating.ValueAmount - trackAttendance.ValueAmount) / 
+                        var trackAttendance = trackRatings.Find(ta => ta.Name == track);
+                        trackAttendance.Rating += ((rating.Rating - trackAttendance.Rating) / 
                                                         trackAttendance.Count + 1) ;
                         trackAttendance.Count ++;
                     }
@@ -539,17 +544,17 @@ namespace CMWeb.Controllers
                 .FirstOrDefaultAsync(m => m.Id == superConferenceId);
             var conferences = superConference.Conferences.ToList();
             
-            var eventRating = _context.EventRatings.GroupBy(eu => eu.EventId).ToList().Select(group => new Amount()
+            var eventRating = _context.EventRatings.GroupBy(eu => eu.EventId).ToList().Select(group => new IdAmount()
             {
                 Id = @group.Key,
-                ValueAmount = @group.Sum(i => i.Rating) / @group.Count()
+                Rating = @group.Sum(i => i.Rating) / @group.Count()
             });
 
-            var trackConferences = new List<TrackConferences>();
+            var trackConferences = new List<NameData>();
 
             foreach (var conference in conferences)
             {
-                var trackRatings = new List<TrackAmount>();
+                var trackRatings = new List<NameAmount>();
                 var conferenceEvents = conference.Events;
                 foreach (var eEvent in conferenceEvents)
                 {
@@ -559,18 +564,18 @@ namespace CMWeb.Controllers
                         if (rating == null)
                         {
                             trackRatings.Add(
-                                new TrackAmount() {Track = track, ValueAmount = 0});
+                                new NameAmount() {Name = track, Rating = 0});
                             continue;
                         };
-                        if (trackRatings.All(ta => ta.Track != track))
+                        if (trackRatings.All(ta => ta.Name != track))
                         {
                             trackRatings.Add(
-                                new TrackAmount(){Track = track, ValueAmount = 0}
+                                new NameAmount(){Name = track, Rating = 0}
                             );
                             
                         }
-                        var trackAttendance = trackRatings.Find(ta => ta.Track == track);
-                        trackAttendance.ValueAmount += ((rating.ValueAmount - trackAttendance.ValueAmount) / 
+                        var trackAttendance = trackRatings.Find(ta => ta.Name == track);
+                        trackAttendance.Rating += ((rating.Rating - trackAttendance.Rating) / 
                                                         trackAttendance.Count + 1) ;
                         trackAttendance.Count ++;
                     }
@@ -580,28 +585,28 @@ namespace CMWeb.Controllers
 
                 foreach (var trackRating in trackRatings)
                 {
-                    if (trackConferences.All(tc => tc.Track != trackRating.Track))
+                    if (trackConferences.All(tc => tc.Name != trackRating.Name))
                     {
-                        trackConferences.Add(new TrackConferences()
+                        trackConferences.Add(new NameData()
                         {
-                            Track = trackRating.Track,
-                            Data = new List<TrackConferenceAmount>()
+                            Name = trackRating.Name,
+                            Data = new List<NameAmount>()
                             {
-                                new TrackConferenceAmount()
+                                new NameAmount()
                                 {
-                                    Conference = conference.Edition,
-                                    ValueAmount = trackRating.ValueAmount
+                                    Name = conference.Edition,
+                                    Rating = trackRating.Rating
                                 }
                             } 
                         });
                     }
                     else
                     {
-                        trackConferences.Find(tc => tc.Track == trackRating.Track).Data.Add(
-                            new TrackConferenceAmount()
+                        trackConferences.Find(tc => tc.Name == trackRating.Name).Data.Add(
+                            new NameAmount()
                             {
-                                Conference = conference.Edition,
-                                ValueAmount = trackRating.ValueAmount
+                                Name = conference.Edition,
+                                Rating = trackRating.Rating
                             });
                     }
                 }
@@ -610,49 +615,69 @@ namespace CMWeb.Controllers
             return trackConferences.ConvertAll(JsonConvert.SerializeObject);
         }
 
-        private async Task<List<string>> GetSpeakerRating(int superConferenceId)
+        private async Task<List<string>> GetSpeakersRating(int superConferenceId)
         {
             var superConference = await _context.SuperConferences
                 .Include(c => c.Conferences)
                 .FirstOrDefaultAsync(m => m.Id == superConferenceId);
             var conferences = superConference.Conferences.ToList();
-
+            var users = _context.Users.ToList();
+            var output = new List<NameData>();
             foreach (var conference in conferences)
             {
+                var speakersRating = new NameData(){Name = conference.Edition};
                 var eEvents = conference.Events.ToList();
                 foreach (var eEvent in eEvents)
                 {
-                    var speaker = _context.EventUsers.Select(eu => eu.Type == UserType.Speaker)
+                    var speakers = _context.EventUsers.Where(eu => eu.Type == UserType.Speaker).Where(eu => eu.EventId == eEvent.Id).ToList();
+                    foreach (var speaker in speakers)
+                    {
+                        if(speakersRating.Data.Any(d => d.Name == users.Find(u => u.Id == speaker.UserId).Name))
+                        {
+                            var repeatedspeaker = speakersRating.Data.Find(sr =>
+                                sr.Name == users.Find(u => u.Id == speaker.UserId).Name);
+                                repeatedspeaker.Rating += ((speaker.Rating - repeatedspeaker.Rating) / 
+                                                          repeatedspeaker.Count + 1) ;
+                                repeatedspeaker.Count ++;
+                        }
+                        else
+                        {
+                            speakersRating.Data.Add(new NameAmount()
+                            {
+                                Name = users.Find(u => u.Id == speaker.UserId).Name,
+                                Rating = 0
+                            });
+                        }
+                    }
                 }
+                output.Add(speakersRating);
             }
-            
+
+            return output.ConvertAll(JsonConvert.SerializeObject);
         }
         
         
-        private class Amount
+        private class IdAmount
         {
             public int Id { get; set; }
-            public int ValueAmount { get; set; }
+            public int Attendance { get; set; }
+            public float Rating { get; set; }
         }
 
-        private class TrackAmount
+        private class NameAmount
         {
-            public string Track { get; set; }
-            public int ValueAmount { get; set; }
+            public string Name { get; set; }
+            public float Rating { get; set; }
+            public int Attendance { get; set; }
             
             public int Count { get; set; }
         }
 
-        private class TrackConferenceAmount
+  
+        private class NameData
         {
-            public string Conference { get; set; }
-            public int ValueAmount { get; set; }
-        }
-        
-        private class TrackConferences
-        {
-            public string Track { get; set; }
-            public List<TrackConferenceAmount> Data { get; set; }
+            public string Name { get; set; }
+            public List<NameAmount> Data { get; set; }
         }
         
 

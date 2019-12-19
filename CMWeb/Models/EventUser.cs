@@ -12,5 +12,7 @@ namespace CMWeb.Models
         public Event Event { get; set; }
         
         public UserType Type { get; set; }
+        
+        public float Rating { get; set; }
     }
 }
