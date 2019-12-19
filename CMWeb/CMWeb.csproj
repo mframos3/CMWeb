@@ -44,4 +44,8 @@
       <Content Remove="Views\Mealbackup\**" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Views\StatManager" />
+    </ItemGroup>
+
 </Project>
