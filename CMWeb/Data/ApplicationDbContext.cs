@@ -84,16 +84,28 @@ namespace CMWeb.Data
                 .HasOne(mm => mm.Menu)
                 .WithMany(m => m.MealMenus)
                 .HasForeignKey(mm => mm.MenuId);
-            
-            modelBuilder.Entity<EventUser>().HasKey(eu => new {eu.EventId, eu.UserId});
-            
+
+            modelBuilder.Entity<EventUser>().HasKey(eu => new { eu.EventId, eu.UserId });
+
             modelBuilder.Entity<EventUser>().HasOne(eu => eu.Event)
                 .WithMany(e => e.EventUsers)
                 .HasForeignKey(eu => eu.EventId);
-            
+
             modelBuilder.Entity<EventUser>().HasOne(eu => eu.User)
                 .WithMany(u => u.EventUsers)
                 .HasForeignKey(eu => eu.UserId);
+
+            modelBuilder.Entity<UserNotification>().HasKey(userNotification => new { userNotification.NotificationId, userNotification.UserId });
+
+            modelBuilder.Entity<UserNotification>().HasOne(userNotification => userNotification.Notification)
+                .WithMany(notification => notification.UserNotifications)
+                .HasForeignKey(userNotification => userNotification.NotificationId);
+
+            modelBuilder.Entity<UserNotification>().HasOne(userNotification => userNotification.User)
+                .WithMany(user => user.UserNotifications)
+                .HasForeignKey(userNotification => userNotification.UserId);
+
+
 
             modelBuilder.Entity<EventCenterRoom>()
                 .HasOne(ecr => ecr.EventCenter)

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CMWeb.Data;
 using CMWeb.Models;
+using CMWeb.Areas.Identity.Data;
+using System.Security.Claims;
 
 namespace CMWeb.Controllers
 {
@@ -44,20 +46,49 @@ namespace CMWeb.Controllers
         }
 
         // GET: Notification/Create
-        public IActionResult Create()
+        public IActionResult Create(int conferenceId)
         {
+            ViewData["conferenceId"] = conferenceId;
             return View();
         }
 
-        // POST: Notification/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content")] Notification notification)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content")] Notification notification, string receivers, int conferenceId)
         {
+            Console.WriteLine("line");
             if (ModelState.IsValid)
             {
+                if (receivers == "Atendees")
+                {
+                    bool present;
+                    foreach (CMWebUser user in _context.Users)
+                    {
+                        present = false;
+                        foreach (Event aEvent in _context.Conferences.Find(conferenceId).Events)
+                        {
+                            foreach (EventUser eventUser in aEvent.EventUsers)
+                            {
+                                if (eventUser.UserId == user.Id)
+                                {
+                                    var newUserNotification = new UserNotification();
+                                    newUserNotification.UserId = user.Id;
+                                    newUserNotification.NotificationId = notification.Id;
+                                    _context.Add(newUserNotification);
+                                    await _context.SaveChangesAsync();
+                                }
+                                if (present)
+                                {
+                                    break;
+                                }
+                            }
+                            if (present)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
                 _context.Add(notification);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -65,6 +96,31 @@ namespace CMWeb.Controllers
             return View(notification);
         }
 
+        // POST: Notification/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+/*        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Title,Content")] Notification notification, string referrer)
+        {
+            if (ModelState.IsValid)
+            {
+                if (notification.receivers == "")
+                    ClaimsPrincipal currentUser = this.User;
+                var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var newUserNotification = new UserNotification();
+                newUserNotification.UserId = currentUserId;
+                newUserNotification.NotificationId = notification.Id;
+                _context.Add(newUserNotification);
+                await _context.SaveChangesAsync();
+                Console.WriteLine("hola");
+                _context.Add(notification);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(notification);
+        }
+*/
         // GET: Notification/Edit/5
         public async Task<IActionResult> Edit(string id)
         {

@@ -48,45 +48,55 @@
 <div>
     <h4>Conference</h4>
     <h3>@Model.SuperConference.Name</h3>
-    <button onclick="myFunction()" class="dropbtn">Create Event</button>
-    <div id="myDropdown" class="dropdown-content">
-        <a asp-controller="Chat" asp-action="Create" asp-route-conferenceId="@Model.Id">Chat</a>
-        <a asp-controller="Meal" asp-action="Create" asp-route-conferenceId="@Model.Id">Meal</a>
-        <a asp-controller="Party" asp-action="Create" asp-route-conferenceId="@Model.Id">Party</a>
-        <a asp-controller="Talk" asp-action="Create" asp-route-conferenceId="@Model.Id">Talk</a>
-        <a asp-controller="Workshop" asp-action="Create" asp-route-conferenceId="@Model.Id">Workshop</a>
+    <div>
+        <button onclick="myFunction2()" class="dropbtn">Send Notification</button>
+        <div id="myDropdown2" class="dropdown-content">
+            <a asp-controller="Notification" asp-action="Create" asp-route-conferenceId="@Model.Id" asp-route-receivers="Atendees">Atendees</a>
+            <a asp-controller="Notification" asp-action="CreateConferenceSpeaker" asp-route-conferenceId="@Model.Id" asp-route-receivers="Speakers">Speakers</a>
+        </div>
     </div>
-   
+    <p></p>
+    <div>
+        <button onclick="myFunction()" class="dropbtn">Create Event</button>
+        <div id="myDropdown" class="dropdown-content">
+            <a asp-controller="Chat" asp-action="Create" asp-route-conferenceId="@Model.Id">Chat</a>
+            <a asp-controller="Meal" asp-action="Create" asp-route-conferenceId="@Model.Id">Meal</a>
+            <a asp-controller="Party" asp-action="Create" asp-route-conferenceId="@Model.Id">Party</a>
+            <a asp-controller="Talk" asp-action="Create" asp-route-conferenceId="@Model.Id">Talk</a>
+            <a asp-controller="Workshop" asp-action="Create" asp-route-conferenceId="@Model.Id">Workshop</a>
+        </div>
+    </div>
+
     <br>
     <a asp-controller="Notification" asp-action="Create">Send Notification</a>
     <br>
     <a asp-controller="ConferenceRating" asp-action="Create">Rate Conference</a>
-    
-        
+
+
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Edition)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Edition)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.StartDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.StartDate)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EndDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.EndDate)
         </dd>
 
@@ -157,6 +167,9 @@
 toggle between hiding and showing the dropdown content */
 function myFunction() {
   document.getElementById("myDropdown").classList.toggle("show");
+}
+function myFunction2() {
+  document.getElementById("myDropdown2").classList.toggle("show");
 }
 
 // Close the dropdown if the user clicks outside of it
