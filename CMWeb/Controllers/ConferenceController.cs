@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -28,6 +29,7 @@ namespace CMWeb.Controllers
         // GET: Conference/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            
             if (id == null)
             {
                 return NotFound();
@@ -54,6 +56,9 @@ namespace CMWeb.Controllers
         {
             ViewData["superConferenceId"] = superConferenceId;
             ViewData["EventCenterId"] = new SelectList(_context.EventCenters, "Id", "Name");
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            ViewData["CurrentUserId"] = currentUserId;
             return View();
         }
 

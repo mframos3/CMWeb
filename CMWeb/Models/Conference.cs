@@ -16,8 +16,6 @@ namespace CMWeb.Models
 
         public ICollection<Event> Events { get; set; }
 
-        public float Rating { get; set; }
-
         public int SuperConferenceId { get; set; }
 
         public SuperConference SuperConference { get; set; }
