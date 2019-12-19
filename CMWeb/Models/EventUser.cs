@@ -10,5 +10,7 @@ namespace CMWeb.Models
         
         public int EventId { get; set; }
         public Event Event { get; set; }
+        
+        public UserType Type { get; set; }
     }
 }

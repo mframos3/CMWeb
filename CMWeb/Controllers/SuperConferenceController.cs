@@ -609,6 +609,25 @@ namespace CMWeb.Controllers
 
             return trackConferences.ConvertAll(JsonConvert.SerializeObject);
         }
+
+        private async Task<List<string>> GetSpeakerRating(int superConferenceId)
+        {
+            var superConference = await _context.SuperConferences
+                .Include(c => c.Conferences)
+                .FirstOrDefaultAsync(m => m.Id == superConferenceId);
+            var conferences = superConference.Conferences.ToList();
+
+            foreach (var conference in conferences)
+            {
+                var eEvents = conference.Events.ToList();
+                foreach (var eEvent in eEvents)
+                {
+                    var speaker = _context.EventUsers.Select(eu => eu.Type == UserType.Speaker)
+                }
+            }
+            
+        }
+        
         
         private class Amount
         {
