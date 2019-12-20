@@ -10,27 +10,249 @@
 <h1>Estadísticas</h1>
 <body>
 
-<canvas id="myChart"></canvas>
- 
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <canvas id="ConferencesEventsAttendance"></canvas>
+        </div>
+        <div class="col-sm">
+            <canvas id="EventsAttendance"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <canvas id="ConferencesTrackAttendance"></canvas>
+        </div>
+        <div class="col-sm">
+            <canvas id="TracksAttendance"></canvas>
+        </div>
+    </div>
+</div>
+
+<p id="asfg"></p>
 
 @foreach (var item in (List<string>) ViewData["ConferencesEventsAttendance"])
  {
      <p>@Html.Raw(item)</p>
  }
 <br/>
-  <h1>EVENTSATTENDANCE</h1>
+
+<script>
+function getRandomColor() {
+      var letters = '0123456789ABCDEF';
+      var color = '#';
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+</script>
+
+<script>
+    var conferenceEventsAttendanceData = []
+    var conferenceEventsAttendance =  [];
+    var conferenceEventsAttendanceConf = [];
+    @foreach (var item in (List<string>) ViewData["ConferencesEventsAttendance"])
+    {    
+        <text>conferenceEventsAttendanceData.push(@Html.Raw(item));</text>
+    }
+      
+    var ConferencesEventsAttendanceChart = document.getElementById('ConferencesEventsAttendance').getContext('2d');
+    
+    
+    for (let d of conferenceEventsAttendanceData)
+        {   
+            
+            let attendance = [];
+            for (let e of d.data)
+                {
+                                if (! conferenceEventsAttendanceConf.includes(e.Name))
+                                {
+                                    conferenceEventsAttendanceConf.push(e.Name);
+                                }
+                                attendance.push(e.Attendance);
+
+                }
+            let data = {label: d.name, data: attendance, backgroundColor: getRandomColor()};
+            conferenceEventsAttendance.push(data)
+            
+           
+        }
+   
+    var massPopChart = new Chart(ConferencesEventsAttendanceChart, {
+        type: "bar",
+        data: {
+            labels: conferenceEventsAttendanceConf,
+            datasets: conferenceEventsAttendance
+        },
+        options: {
+             scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                },
+            title: {
+                display: true,
+                text: "Attendance",
+                fontSize: 25
+            },
+            legend: {
+               position: "right",
+               labels : {
+                   fontColor: "#000"
+               } 
+            }
+        }
+    });
+</script>
+
+
+<h1>EVENTSATTENDANCE</h1>
   
   @foreach (var item in (List<string>) ViewData["EventsAttendance"])
    {
        <p>@Html.Raw(item)</p>
    }
 <br/>
+
+<script>
+    var EventsAttendanceData = []
+    var EventsAttendance =  [];
+    var EventsAttendanceConf = [];
+    @foreach (var item in (List<string>) ViewData["EventsAttendance"])
+    {    
+        <text>EventsAttendanceData.push(@Html.Raw(item));</text>
+    }
+      
+    var EventsAttendanceChart = document.getElementById('EventsAttendance').getContext('2d');
+    
+    var EventsAttendanceData = [{"name":"A","data":[{"name":"2019","attendance":1}, {"name":"2020","attendance":1}]}, {"name":"ASDSAF","data":[{"name":"2019","attendance":1}, {"name":"2020","attendance":0}]}]
+    
+    for (let d of EventsAttendanceData)
+        {   
+            
+            let attendance = [];
+            for (let e of d.data)
+                {
+                                if (! EventsAttendanceConf.includes(e.name))
+                                {
+                                    EventsAttendanceConf.push(e.name);
+                                }
+                                attendance.push(e.attendance);
+
+                }
+            let data = {label: d.name, data: attendance, backgroundColor: getRandomColor()};
+            EventsAttendance.push(data)
+            
+           
+        }
+   
+    var massPopChart = new Chart(EventsAttendanceChart, {
+        type: "bar",
+        data: {
+            labels: EventsAttendanceConf,
+            datasets: EventsAttendance
+        },
+        options: {
+             scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                },
+            title: {
+                display: true,
+                text: "Attendance",
+                fontSize: 25
+            },
+            legend: {
+               position: "right",
+               labels : {
+                   fontColor: "#000"
+               } 
+            }
+        }
+    });
+</script>
+
+
+
+
 <h1>CONFERENCETRACKSATTENDANCE</h1>
 
 @foreach (var item in (List<string>) ViewData["ConferencesTrackAttendance"])
  {
      <p>@Html.Raw(item)</p>
  }
+
+<script>
+    var ConferencesTrackAttendanceData = []
+    var ConferencesTrackAttendance =  [];
+    var ConferencesTrackAttendanceConf = [];
+    @foreach (var item in (List<string>) ViewData["ConferencesTrackAttendance"])
+    {    
+        <text>ConferencesTrackAttendanceData.push(@Html.Raw(item));</text>
+    }
+      
+    var ConferencesTrackAttendanceChart = document.getElementById('ConferencesTrackAttendance').getContext('2d');
+       
+    for (let d of ConferencesTrackAttendanceData)
+        {   
+            
+            let attendance = [];
+            for (let e of d.data)
+                {
+                                if (! ConferencesTrackAttendanceConf.includes(e.Name))
+                                {
+                                    ConferencesTrackAttendanceConf.push(e.Name);
+                                }
+                                attendance.push(e.Attendance);
+
+                }
+            let data = {label: d.name, data: attendance, backgroundColor: getRandomColor()};
+            ConferencesTrackAttendance.push(data)
+            
+           
+        }
+   
+    var massPopChart = new Chart(ConferencesTrackAttendanceChart, {
+        type: "bar",
+        data: {
+            labels: ConferencesTrackAttendanceConf,
+            datasets: ConferencesTrackAttendance
+        },
+        options: {
+             scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                },
+            title: {
+                display: true,
+                text: "Attendance",
+                fontSize: 25
+            },
+            legend: {
+               position: "right",
+               labels : {
+                   fontColor: "#000"
+               } 
+            }
+        }
+    });
+</script>
+
+
 <br/>
 <h1>TRACKSATTENDANCE</h1>
 
@@ -38,6 +260,68 @@
  {
      <p>@Html.Raw(item)</p>
  }
+
+<script>
+    var TracksAttendanceData = []
+    var TracksAttendance =  [];
+    var TracksAttendanceConf = [];
+    @foreach (var item in (List<string>) ViewData["TracksAttendance"])
+    {    
+        <text>TracksAttendanceData.push(@Html.Raw(item));</text>
+    }
+      
+    var TracksAttendanceChart = document.getElementById('TracksAttendance').getContext('2d');
+       
+    for (let d of TracksAttendanceData)
+        {   
+            
+            let attendance = [];
+            for (let e of d.Data)
+                {
+                                if (! TracksAttendanceConf.includes(e.Name))
+                                {
+                                    TracksAttendanceConf.push(e.Name);
+                                }
+                                attendance.push(e.Attendance);
+
+                }
+            let data = {label: d.Name, data: attendance, backgroundColor: getRandomColor()};
+            TracksAttendance.push(data)
+            
+           
+        }
+   
+    var massPopChart = new Chart(TracksAttendanceChart, {
+        type: "bar",
+        data: {
+            labels: TracksAttendanceConf,
+            datasets: TracksAttendance
+        },
+        options: {
+             scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                },
+            title: {
+                display: true,
+                text: "Attendance",
+                fontSize: 25
+            },
+            legend: {
+               position: "right",
+               labels : {
+                   fontColor: "#000"
+               } 
+            }
+        }
+    });
+</script>
+
+
 <h1>CONFERENCEEVENTSRATINGS</h1>
 
 @foreach (var item in (List<string>) ViewData["ConferencesEventsRatings"])
@@ -68,61 +352,4 @@
  {
      <p>@Html.Raw(item)</p>
  }
-</body>
-
-<script>
-    var myChart = document.getElementById('myChart').getContext('2d');
-    var eventsName = [];
-    var eventsAttendance = [];
-    
-    var events = [];
-    
-    @foreach (var item in (List<string>) ViewData["ConferencesEventsAttendance"])
-    {
-        <text>events.push(@Html.Raw(item));</text>
-    }
-    
-   console.log(events[0]);
-    
-    
-    
-    var massPopChart = new Chart(myChart, {
-        type: "bar",
-        data: {
-            labels: eventsName,
-            datasets:[{
-                label: "Attendance",
-                data:eventsAttendance,
-                backgroundColor:"green",
-                          borderWidth:1,
-                          borderColor:'#777',
-                          hoverBorderWidth:3,
-                          hoverBorderColor:'#000'
-
-            }]
-        },
-        options: {
-             scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            precision: 0
-                        }
-                    }]
-                },
-            title: {
-                display: true,
-                text: "Attendance",
-                fontSize: 25
-            },
-            legend: {
-               position: "right",
-               labels : {
-                   fontColor: "#000"
-               } 
-            }
-        }
-    });
-</script>
-    
-    
+</body>   
