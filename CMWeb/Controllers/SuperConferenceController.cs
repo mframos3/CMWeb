@@ -478,7 +478,7 @@ namespace CMWeb.Controllers
             var eventRating = _context.EventRatings.GroupBy(eu => eu.EventId).ToList().Select(group => new IdRating()
             {
                 Id = @group.Key,
-                Rating = @group.Sum(i => i.Rating) /  Math.Max(@group.Count(), 1)
+                Rating = @group.Sum(i => i.Rating) / Math.Max(@group.Count(), 1)
             });
             
             foreach (var conference in conferences)
@@ -506,7 +506,7 @@ namespace CMWeb.Controllers
                         }
                         var trackAttendance = trackRatings.Find(ta => ta.Name == track);
                         trackAttendance.Rating = (trackAttendance.Rating * trackAttendance.Count + rating.Rating) 
-                                                  / trackAttendance.Count + 1 ; 
+                                                  / (trackAttendance.Count + 1) ; 
                         trackAttendance.Count ++;
                     }
                     
@@ -564,7 +564,7 @@ namespace CMWeb.Controllers
                         }
                         var trackAttendance = trackRatings.Find(ta => ta.Name == track);
                         trackAttendance.Rating = (trackAttendance.Rating * trackAttendance.Count + rating.Rating) 
-                                                  / trackAttendance.Count + 1 ; 
+                                                  / (trackAttendance.Count + 1) ; 
                         trackAttendance.Count ++;
                     }
                     
@@ -629,7 +629,7 @@ namespace CMWeb.Controllers
                         var repeatedspeaker = speakersRating.Data.Find(sr =>
                             sr.Name == users.Find(u => u.Id == speaker.UserId).Name);
                             repeatedspeaker.Rating = (repeatedspeaker.Rating * repeatedspeaker.Count + speaker.Rating) 
-                                                     / repeatedspeaker.Count + 1 ;
+                                                     / (repeatedspeaker.Count + 1) ;
                             repeatedspeaker.Count ++;
                     }
                     else
