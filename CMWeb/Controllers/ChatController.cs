@@ -96,8 +96,8 @@ namespace CMWeb.Controllers
                 ViewData["Attendance"] = false;
             }
 
-            var speaker = _context.EventUsers.Where(eu => eu.Type == UserType.Speaker).Select(eu => eu.EventId == id);
-            ViewData["Speaker"] = speaker.Any();
+            var speaker = _context.EventUsers.Where(eu => eu.Type == UserType.Speaker).FirstOrDefault(eu => eu.EventId == id);
+            ViewData["Speaker"] = speaker != null;
             return View(chat);
         }
 

@@ -164,5 +164,11 @@ namespace CMWeb.Controllers
         {
             return _context.Conferences.Any(e => e.Id == id);
         }
+        
+        [AcceptVerbs("Get", "Post")]
+        public  IActionResult DateChecker(DateTime startDate, DateTime endDate)
+        {
+            return startDate > endDate ? Json("End Date must be after Start Date.") : Json(true);
+        }
     }
 }
