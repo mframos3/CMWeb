@@ -280,6 +280,9 @@ namespace CMWeb.Controllers
             {
                 var trackAttendances = new List<NameAttendance>();
                 var conferenceEvents = conference.Events;
+                if (conferenceEvents == null)
+                {
+                    continue;}
                 foreach (var eEvent in conferenceEvents)
                 {
                     foreach (var track in eEvent.Track.Split(";"))
@@ -335,6 +338,7 @@ namespace CMWeb.Controllers
             {
                 var trackAttendances = new List<NameAttendance>();
                 var conferenceEvents = conference.Events;
+                if(conferenceEvents == null) continue;
                 foreach (var eEvent in conferenceEvents)
                 {
                     foreach (var track in eEvent.Track.Split(";"))
@@ -404,7 +408,8 @@ namespace CMWeb.Controllers
              foreach (var conference in conferences)
              {
                  var conferenceData = new RatingData() {Name = conference.Edition, Data = new List<NameRating>()};
-                 foreach (var eEvent in conference.Events.ToList())
+                 if(conference.Events == null) continue;
+                 foreach (var eEvent in conference.Events)
                  {
                      var rating = eventRatings.FirstOrDefault(er => er.Id == eEvent.Id);
                      conferenceData.Data.Add(rating == null
@@ -480,6 +485,7 @@ namespace CMWeb.Controllers
             {
                 var trackRatings = new List<NameRating>();
                 var conferenceEvents = conference.Events;
+                if (conferenceEvents == null) continue;
                 foreach (var eEvent in conferenceEvents)
                 {
                     foreach (var track in eEvent.Track.Split(";"))
@@ -537,6 +543,7 @@ namespace CMWeb.Controllers
             {
                 var trackRatings = new List<NameRating>();
                 var conferenceEvents = conference.Events;
+                if (conferenceEvents == null) continue;
                 foreach (var eEvent in conferenceEvents)
                 {
                     foreach (var track in eEvent.Track.Split(";"))
@@ -607,7 +614,8 @@ namespace CMWeb.Controllers
             foreach (var conference in conferences)
             {
                 var speakersRating = new RatingData() {Name = conference.Edition, Data = new List<NameRating>()};
-                var eEvents = conference.Events.ToList();
+                var eEvents = conference.Events;
+                if(eEvents == null) continue; 
                 foreach (var eEvent in eEvents)
                 {
                     var speakers = _context.EventUsers.Where(eu => eu.Type == UserType.Speaker).Where(eu => eu.EventId == eEvent.Id).ToList();
