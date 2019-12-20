@@ -13,10 +13,12 @@
 
 
 <h1>Details</h1>
-<form asp-controller="EventRating" asp-action="Create" method="post">  
+@if (DateTime.Now >= Model.EndDate && (bool)ViewData["Attendance"])
+{
+    <form asp-controller="EventRating" asp-action="Create" method="post">
         <fieldset>
-        <legend>How was the talk? Rate the quality and comfort during the event!</legend>
-            <div class ="rate-select">
+            <legend>How was the talk? Rate the quality and comfort during the event!</legend>
+            <div class="rate-select">
                 <table>
                     <tr>
                         <th></th>
@@ -35,15 +37,15 @@
                         <td><input type="checkbox" name="Rating" value="5" onclick="return ValidateRating();"></td>
                     </tr>
                     <tr>
-                    <td>Speaker</td>
-                    <td><input type="checkbox" name="SpeakerRating" value="1" onclick="return ValidateRatingSpeaker();"></td>
-                    <td><input type="checkbox" name="SpeakerRating" value="2" onclick="return ValidateRatingSpeaker();"></td>
-                    <td><input type="checkbox" name="SpeakerRating" value="3" onclick="return ValidateRatingSpeaker();"></td>
-                    <td><input type="checkbox" name="SpeakerRating" value="4" onclick="return ValidateRatingSpeaker();"></td>
-                    <td><input type="checkbox" name="SpeakerRating" value="5" onclick="return ValidateRatingSpeaker();"></td>
+                        <td>Speaker</td>
+                        <td><input type="checkbox" name="SpeakerRating" value="1" onclick="return ValidateRatingSpeaker();"></td>
+                        <td><input type="checkbox" name="SpeakerRating" value="2" onclick="return ValidateRatingSpeaker();"></td>
+                        <td><input type="checkbox" name="SpeakerRating" value="3" onclick="return ValidateRatingSpeaker();"></td>
+                        <td><input type="checkbox" name="SpeakerRating" value="4" onclick="return ValidateRatingSpeaker();"></td>
+                        <td><input type="checkbox" name="SpeakerRating" value="5" onclick="return ValidateRatingSpeaker();"></td>
                     </tr>
                 </table>
-                
+
             </div>
             <div>
                 Comment:<br>
@@ -52,11 +54,11 @@
                 <input value="@ViewData["CurrentUserId"]" name="UserId" type="hidden"/>
                 <br>
             </div>
-            <input class="btn btn-primary" type="submit" value="Enviar">  
+            <input class="btn btn-primary" type="submit" value="Enviar">
             <hr/>
-        </fieldset>  
-    </form>  
-
+        </fieldset>
+    </form>
+}
 <div class="form-group row">
     <div class="col-md-2">
         <a class="btn btn-primary" asp-controller="Notification" asp-action="Create" asp-route-parentId="@Model.Id" asp-route-parent="Talk">Send Notification</a>

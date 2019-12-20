@@ -10,10 +10,12 @@
     }
 </style>
 <h1>Details</h1>
-<form asp-controller="EventRating" asp-action="Create" method="post">  
+@if (DateTime.Now >= Model.EndDate && (bool)ViewData["Attendance"])
+{
+    <form asp-controller="EventRating" asp-action="Create" method="post">
         <fieldset>
-        <legend>How about the party?</legend>
-            <div class ="rate-select">
+            <legend>How about the party?</legend>
+            <div class="rate-select">
                 <table>
                     <tr>
                         <th></th>
@@ -23,7 +25,7 @@
                         <th>4</th>
                         <th>5</th>
                     </tr>
-                    
+
                     <tr>
                         <td>Event</td>
                         <td><input type="checkbox" name="Rating" value="1" onclick="return ValidateRating();"></td>
@@ -41,7 +43,7 @@
                         <td><input type="checkbox" name="SpeakerRating" value="5" onclick="return ValidateRatingSpeaker();"></td>
                     </tr>
                 </table>
-                
+
             </div>
             <div>
                 Comment:<br>
@@ -50,10 +52,11 @@
                 <input value="@ViewData["CurrentUserId"]" name="UserId" type="hidden"/>
                 <br>
             </div>
-            <input class="btn btn-primary" type="submit" value="Enviar">  
-        </fieldset>  
-    <hr/>
-</form>  
+            <input class="btn btn-primary" type="submit" value="Enviar">
+        </fieldset>
+        <hr/>
+    </form>
+}
     
 <div class="form-group row">
     <div class="col-md-2">

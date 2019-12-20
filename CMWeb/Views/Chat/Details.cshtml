@@ -9,7 +9,8 @@
     }
 </style>
 <h1>Details</h1>
-
+@if (DateTime.Now >= Model.EndDate && (bool)ViewData["Attendance"])
+{
 <form asp-controller="EventRating" asp-action="Create" method="post">  
     <fieldset>
         <legend>How about the Chat? Rate the event in terms of quality and comfort!</legend>
@@ -53,6 +54,7 @@
         <hr/>
     </fieldset>  
 </form>
+}
 
 <div class="form-group row">
     <div class="col-md-2">

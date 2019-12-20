@@ -50,13 +50,13 @@ namespace CMWeb.Controllers
             var speaker = _context.EventUsers.Where(s =>s.Type == UserType.Speaker).FirstOrDefault(s => s.EventId == eventRating.EventId);
             var ratingCount = _context.EventRatings.Count(e => e.EventId == eventRating.EventId);
             
-            Console.WriteLine(speaker.Rating);
+            
             if (speaker != null)
             {
                 speaker.Rating = ((speaker.Rating*ratingCount)+(eventRating.SpeakerRating))/(ratingCount+1);
 
             }
-            Console.WriteLine(ratingCount);
+            
             var ev = _context.EventRatings.FirstOrDefault(u => u.EventId == eventRating.EventId);
             if (user == null || ev == null) 
             {
