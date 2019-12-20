@@ -1,5 +1,5 @@
 @using Newtonsoft.Json.Linq
-@model IEnumerable<CMWeb.Models.StatManager>
+@model IEnumerable<CMWeb.Models.SuperConference>
 
 @{
     ViewData["Title"] = "Index";
@@ -32,12 +32,67 @@
 </div>
 
  
-
 @foreach (var item in (List<string>) ViewData["Events"])
 {
     <p>@item</p>
     <p>@JObject.Parse(item)["Attendance"]</p>
 }
+
+@foreach (var item in (List<string>) ViewData["ConferencesEventsAttendance"])
+ {
+     <p>@item</p>
+ }
+<br/>
+  <h1>EVENTSATTENDANCE</h1>
+  
+  @foreach (var item in (List<string>) ViewData["EventsAttendance"])
+   {
+       <p>@item</p>
+   }
+<br/>
+<h1>CONFERENCETRACKSATTENDANCE</h1>
+
+@foreach (var item in (List<string>) ViewData["ConferencesTrackAttendance"])
+ {
+     <p>@item</p>
+ }
+<br/>
+<h1>TRACKSATTENDANCE</h1>
+
+@foreach (var item in (List<string>) ViewData["TracksAttendance"])
+ {
+     <p>@item</p>
+ }
+<h1>CONFERENCEEVENTSRATINGS</h1>
+
+@foreach (var item in (List<string>) ViewData["ConferencesEventsRatings"])
+ {
+     <p>@item</p>
+ }
+<h1>EventsRatings</h1>
+
+@foreach (var item in (List<string>) ViewData["EventsRatings"])
+ {
+     <p>@item</p>
+ }
+<h1>CONFERENCESTRACKRATINGS</h1>
+
+@foreach (var item in (List<string>) ViewData["ConferencesTrackRating"])
+ {
+     <p>@item</p>
+ }
+<h1>TRACKSRATING</h1>
+
+@foreach (var item in (List<string>) ViewData["TracksRating"])
+ {
+     <p>@item</p>
+ }
+<h1>SPEAKERSRATING</h1>
+
+@foreach (var item in (List<string>) ViewData["SpeakersRating"])
+ {
+     <p>@item</p>
+ }
 </body>
 
 <script>
@@ -55,7 +110,6 @@ function getRandomColor() {
 <script>
     const data = [{name: "conf1", data: [{event: "ev1", attendance: 1}, {event: "ev2", attendance: 2}, {event: "ev3", attendance: 1}]},
                   {name: "conf2", data: [{event: "ev1", attendance: 2}, {event: "ev2", attendance: 3}, {event: "ev3", attendance: 4}]}];
-    
     
     var myChart = document.getElementById('myChart').getContext('2d');
     var eventsName = [];

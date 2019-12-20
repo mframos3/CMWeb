@@ -12,13 +12,13 @@ namespace CMWeb.Models
         public string Name { get; set; }
         
         [Required]
-        [Display(Name = "Start Date"), DataType(DataType.Date)]
+        [Display(Name = "Start Date"), DataType(DataType.DateTime)]
         [Remote(action: "DateChecker", controller: "Event", AdditionalFields = "EndDate,ConferenceId")]
         //[Remote(action: "ConflictChecker", controller: "Event", AdditionalFields = "EndDate,EventCenterRoomId")]
         public DateTime StartDate { get; set; }
         
         [Required]
-        [Display(Name = "End Date"),DataType(DataType.Date)]
+        [Display(Name = "End Date"),DataType(DataType.DateTime)]
         [Remote(action: "DateChecker", controller: "Event", AdditionalFields = "StartDate,ConferenceId")]
         //[Remote(action: "ConflictChecker", controller: "Event", AdditionalFields = "StartDate,EventCenterRoomId")]
         public DateTime EndDate { get; set; }

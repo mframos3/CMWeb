@@ -6,28 +6,28 @@
 
 <h1>Create</h1>
 
-<h4>ConferenceRating</h4>
+<h4>Select Event Type</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Rating" class="control-label"></label>
-                <input asp-for="Rating" class="form-control" />
-                <span asp-validation-for="Rating" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Comment" class="control-label"></label>
-                <input asp-for="Comment" class="form-control" />
-                <span asp-validation-for="Comment" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        <div>
+            <a asp-controller="Chat" asp-action="Create"> Chat </a>
+        </div>
+        <div>
+            <a asp-controller="Meal" asp-action="Create"> Meal </a>
+        </div>
+        <div>
+            <a asp-controller="Party" asp-action="Create"> Party </a>
+        </div>
+        <div>
+            <a asp-controller="Talk" asp-action="Create"> Talk </a>
+        </div>
+        <div>
+            <a asp-controller="Workshop" asp-action="Create"> Workshop </a>
+        </div>
     </div>
 </div>
+
 
 
 @section Scripts {

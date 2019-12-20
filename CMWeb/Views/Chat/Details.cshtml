@@ -3,9 +3,34 @@
 @{
     ViewData["Title"] = "Details";
 }
-
+<style>
+    .rate-select{
+    display: inline-flex;
+    }
+</style>
 <h1>Details</h1>
 
+<form asp-controller="EventRating" asp-action="Create" method="post">  
+        <fieldset>
+        <legend>How about the meal?</legend>
+            <div class ="rate-select">
+                <input type="checkbox" name="Rating" value="1" onclick="return ValidateRating();">1<br>  
+                <input type="checkbox" name="Rating" value="2" onclick="return ValidateRating();">2<br>  
+                <input type="checkbox" name="Rating" value="3" onclick="return ValidateRating();">3<br>
+                <input type="checkbox" name="Rating" value="4" onclick="return ValidateRating();">4<br>
+                <input type="checkbox" name="Rating" value="5" onclick="return ValidateRating();">5<br>
+            </div>
+            <div>
+                Comment:<br>
+                <input type="text" name="Comment"><br>
+                <input value="@Model.Id" type="hidden" name="EventId"/>
+                <input value="@ViewData["CurrentUserId"]" name="UserId" type="hidden"/>
+                <br>
+            </div>
+            <input type="submit" value="Enviar">  
+        </fieldset>  
+    </form>  
+    <a asp-controller="EventRating" asp-action="Index" asp-route-eventId="@Model.Id">Show all comments</a>
 <div>
     <h4>Chat</h4>
     <hr />
@@ -59,3 +84,20 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Details" asp-controller="Conference" asp-route-id="@Model.ConferenceId">Back to Conference</a>
 </div>
+<script>
+function ValidateRating()  
+    {  
+        var checkboxes = document.getElementsByName("Rating");  
+        var numberOfCheckedItems = 0;  
+        for(var i = 0; i < checkboxes.length; i++)  
+        {  
+            if(checkboxes[i].checked)  
+                numberOfCheckedItems++;  
+        }  
+        if(numberOfCheckedItems > 1)  
+        {  
+            alert("You can't select more than one rate!");  
+            return false;  
+        }  
+    }
+</script>

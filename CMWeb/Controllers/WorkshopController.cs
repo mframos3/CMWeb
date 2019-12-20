@@ -45,7 +45,7 @@ namespace CMWeb.Controllers
             
             ClaimsPrincipal currentUser = this.User;
             var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            
+
             var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == workshop.Id);
             if (eventUser != null)
             {
@@ -81,7 +81,8 @@ namespace CMWeb.Controllers
             
             ClaimsPrincipal currentUser = this.User;
             var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            
+            ViewData["CurrentUserId"] = currentUserId;
+
             var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == workshop.Id);
             if (eventUser != null)
             {
