@@ -42,9 +42,14 @@
     .dropdown a:hover {background-color: #ddd;}
     
     .show {display: block;}
+    
+    .rate-select {
+      display: inline-flex;
+    }
+ 
+    
 </style>
 <h1>Details</h1>
-
 <div>
     <h4>Conference</h4>
     <h3>@Model.SuperConference.Name</h3>
@@ -60,9 +65,42 @@
     <br>
     <a asp-controller="Notification" asp-action="Create" asp-route-conferenceId="@Model.Id">Send Notification</a>
     <br>
-    <a asp-controller="ConferenceRating" asp-action="Create">Rate Conference</a>
     
-        
+    
+    <form asp-controller="ConferenceRating" asp-action="Create" method="post">  
+        <fieldset>
+        <legend>How about the conference?</legend>
+            <div class="rate-select">
+                <table>
+                    <tr>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="Rating" value="1" onclick="return ValidateRating();"></td>
+                        <td><input type="checkbox" name="Rating" value="2" onclick="return ValidateRating();"></td>
+                        <td><input type="checkbox" name="Rating" value="3" onclick="return ValidateRating();"></td>
+                        <td><input type="checkbox" name="Rating" value="4" onclick="return ValidateRating();"></td>
+                        <td><input type="checkbox" name="Rating" value="5" onclick="return ValidateRating();"></td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                Comment:<br>
+                <input type="text" name="Comment"><br>
+                <input value="@Model.Id" type="hidden" name="ConferenceId"/>
+                <input value="@ViewData["CurrentUserId"]" name="UserId" type="hidden"/>
+                <br>
+            </div>
+            <input type="submit" value="Enviar">  
+        </fieldset>  
+    </form>  
+    <a asp-controller="ConferenceRating" asp-action="Index" asp-route-conferenceId="@Model.Id">Show all comments</a>
+
+ 
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -136,7 +174,10 @@
                 @Html.DisplayFor(modelItem => item.EndDate)
             </td>
             <td>
-                <a asp-action="Track" asp-controller="Event" asp-route-track="@item.Track">@Html.DisplayFor(modelItem => item.Track)</a>
+                @foreach (var track in @item.Track.Split(";"))
+                {
+                    <a asp-action="Track" asp-controller="Event" asp-route-track="@track">@track</a>
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.GetType().Name)
@@ -171,5 +212,20 @@ window.onclick = function(event) {
       }
     }
   }
-}
-</script>
+};
+    function ValidateRating()  
+    {  
+        var checkboxes = document.getElementsByName("Rating");  
+        var numberOfCheckedItems = 0;  
+        for(var i = 0; i < checkboxes.length; i++)  
+        {  
+            if(checkboxes[i].checked)  
+                numberOfCheckedItems++;  
+        }  
+        if(numberOfCheckedItems > 1)  
+        {  
+            alert("You can't select more than one rate!");  
+            return false;  
+        }  
+    }  
+    </script>

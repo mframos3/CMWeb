@@ -20,7 +20,7 @@ namespace CMWeb.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Attend(int? id)
+        public async Task<IActionResult> Attend(int? id, UserType type)
         {
             if (id == null)
             {
@@ -45,7 +45,7 @@ namespace CMWeb.Controllers
                 return RedirectToAction("Details", routeValues: new {id = meal.Id});
             }
 
-            var newEventUser = new EventUser {UserId = currentUserId, EventId = meal.Id};
+            var newEventUser = new EventUser {UserId = currentUserId, EventId = meal.Id, Type = type};
             _context.Add(newEventUser);
             await _context.SaveChangesAsync();
             
@@ -81,7 +81,7 @@ namespace CMWeb.Controllers
             
             ClaimsPrincipal currentUser = this.User;
             var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            
+            ViewData["CurrentUserId"] = currentUserId;
             var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == meal.Id);
             if (eventUser != null)
             {
@@ -91,7 +91,8 @@ namespace CMWeb.Controllers
             {
                 ViewData["Attendance"] = false;
             }
-
+            var speaker = _context.EventUsers.Where(eu => eu.Type == UserType.Speaker).Select(eu => eu.EventId == id);
+            ViewData["Speaker"] = speaker.Any();
             return View(meal);
         }
 

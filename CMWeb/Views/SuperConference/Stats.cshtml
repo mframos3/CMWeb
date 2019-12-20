@@ -38,6 +38,36 @@
  {
      <p>@item</p>
  }
+<h1>CONFERENCEEVENTSRATINGS</h1>
+
+@foreach (var item in (List<string>) ViewData["ConferencesEventsRatings"])
+ {
+     <p>@item</p>
+ }
+<h1>EventsRatings</h1>
+
+@foreach (var item in (List<string>) ViewData["EventsRatings"])
+ {
+     <p>@item</p>
+ }
+<h1>CONFERENCESTRACKRATINGS</h1>
+
+@foreach (var item in (List<string>) ViewData["ConferencesTrackRating"])
+ {
+     <p>@item</p>
+ }
+<h1>TRACKSRATING</h1>
+
+@foreach (var item in (List<string>) ViewData["TracksRating"])
+ {
+     <p>@item</p>
+ }
+<h1>SPEAKERSRATING</h1>
+
+@foreach (var item in (List<string>) ViewData["SpeakersRating"])
+ {
+     <p>@item</p>
+ }
 </body>
 
 <!-- TODO: Cambiar chart.js por d3.js. Revisar https://jsfiddle.net/PBrockmann/x3jdxkqb/. En su reemplazo habría que hacer los filtros server-side.--> 
@@ -46,7 +76,10 @@
     var eventsName = [];
     var eventsAttendance = [];
     
-  
+    var events = [];
+    
+   
+
     
     
     

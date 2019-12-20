@@ -18,6 +18,23 @@ namespace CMWeb.Controllers
         {
             _context = context;
         }
+        
+        
+        public async Task<IActionResult> Index(int conferenceId)
+        {
+            var filteredrate = new List<ConferenceRating>();
+            var rates = await _context.ConferenceRatings.ToListAsync();
+            foreach (var rate in rates)
+            {
+                if (rate.ConferenceId == conferenceId)
+                {
+                    filteredrate.Add(rate);
+                }
+            }
+            return View(filteredrate);
+        }
+
+
 
         // GET: Notification/Create
         public IActionResult Create()
@@ -30,15 +47,17 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Rating,Comment")] ConferenceRating conferenceRating)
+        public async Task<IActionResult> Create([Bind("Id,Rating,Comment,ConferenceId,UserId")] ConferenceRating conferenceRating)
         {
-            if (ModelState.IsValid)
+            var user = _context.ConferenceRatings.FirstOrDefault(u => u.UserId == conferenceRating.UserId);
+            var conference = _context.ConferenceRatings.FirstOrDefault(u => u.ConferenceId == conferenceRating.ConferenceId);
+            if (user == null || conference == null) 
             {
                 _context.Add(conferenceRating);
                 await _context.SaveChangesAsync();
-                return Redirect("/Conference/Details/1");
             }
-            return View(conferenceRating);
+            return Redirect($"/Conference/Details/{conferenceRating.ConferenceId}");
+
         }
     }
 }

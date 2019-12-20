@@ -5,15 +5,17 @@ using CMWeb.Data;
 using CMWeb.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CMWeb.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191218201651_EditConferenceRating")]
+    partial class EditConferenceRating
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -214,10 +216,6 @@ namespace CMWeb.Data.Migrations
 
                     b.Property<string>("UserId");
 
-                    b.Property<float>("Rating");
-
-                    b.Property<int>("Type");
-
                     b.HasKey("EventId", "UserId");
 
                     b.HasIndex("UserId");
@@ -304,19 +302,6 @@ namespace CMWeb.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SuperConferences");
-                });
-
-            modelBuilder.Entity("CMWeb.Models.UserNotification", b =>
-                {
-                    b.Property<string>("NotificationId");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("NotificationId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserNotification");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -545,19 +530,6 @@ namespace CMWeb.Data.Migrations
                     b.HasOne("CMWeb.Models.Menu", "Menu")
                         .WithMany("MealMenus")
                         .HasForeignKey("MenuId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("CMWeb.Models.UserNotification", b =>
-                {
-                    b.HasOne("CMWeb.Models.Notification", "Notification")
-                        .WithMany("UserNotifications")
-                        .HasForeignKey("NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("CMWeb.Areas.Identity.Data.CMWebUser", "User")
-                        .WithMany("UserNotifications")
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

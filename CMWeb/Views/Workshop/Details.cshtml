@@ -3,9 +3,58 @@
 @{
     ViewData["Title"] = "Details";
 }
-
+<style>
+    .rate-select{
+    display: inline-flex;
+    }
+</style>
 <h1>Details</h1>
-
+<form asp-controller="EventRating" asp-action="Create" method="post">  
+        <fieldset>
+        <legend>How about the workshop? Rate in terms of overall quality and utility!</legend>
+            <div class ="rate-select">
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                    </tr>
+                    <tr>
+                        <td>Events</td>
+                        <td><input type="checkbox" name="Rating" value="1" onclick="return ValidateRating();"></td>
+                        <td><input type="checkbox" name="Rating" value="2" onclick="return ValidateRating();"></td>
+                        <td><input type="checkbox" name="Rating" value="3" onclick="return ValidateRating();"></td>
+                        <td><input type="checkbox" name="Rating" value="4" onclick="return ValidateRating();"></td>
+                        <td><input type="checkbox" name="Rating" value="5" onclick="return ValidateRating();"></td>
+                    </tr>
+                    <tr>
+                        <td>Speaker</td>
+                        <td><input type="checkbox" name="SpeakerRating" value="1" onclick="return ValidateRatingSpeaker();"></td>
+                        <td><input type="checkbox" name="SpeakerRating" value="2" onclick="return ValidateRatingSpeaker();"></td>
+                        <td><input type="checkbox" name="SpeakerRating" value="3" onclick="return ValidateRatingSpeaker();"></td>
+                        <td><input type="checkbox" name="SpeakerRating" value="4" onclick="return ValidateRatingSpeaker();"></td>
+                        <td><input type="checkbox" name="SpeakerRating" value="5" onclick="return ValidateRatingSpeaker();"></td>
+                        </tr>
+                </table>
+                
+            </div>
+            <div>
+                <br/>
+                <b>Write a general comment about the event:</b><br>
+                <input type="text" name="Comment"><br>
+                <input value="@Model.Id" type="hidden" name="EventId"/>
+                <input value="@ViewData["CurrentUserId"]" name="UserId" type="hidden"/>
+                <br>
+            </div>
+            
+            <input type="submit" value="Enviar">  
+        </fieldset>  
+    </form>  
+<a asp-controller="EventRating" asp-action="Index" asp-route-eventId="@Model.Id">Show all comments</a>
+<hr/>
 <div>
     <h4>Workshop</h4>
     <hr />
@@ -48,37 +97,66 @@
         </dd>
     </dl>
 </div>
-<h3> Files</h3>
+<hr/>
+<div>
+    <table>
+        <tr>
+            <th>
+                Files
+            </th>
+        </tr>
+        <tr>
+            @{
+                if (!Model.Files.Any())
+                {
+                    <td class="col-sm-10">
+                        Event has no files yet.
+                    </td>
+                }
+                else
+                {
+                    if (DateTime.Now > Model.EndDate)
+                    {
+                        foreach (var item in Model.Files)
+                        {
+                            <td>
+                                <a asp-action="Download" asp-controller="FileManager" asp-route-filename="@item.Name">
+                                    @item.Name
+                                </a>
+                            </td>
+                        }
+                    }
+                    else
+                    {
+                        <td class="col-sm-10">
+                            Event must end in order to see the files.
+                        </td>
+                    } 
+                }
+                }
+        </tr>
+    </table>
 
-@{
-    if (DateTime.Now > Model.EndDate)
-    {
-        foreach (var item in Model.Files)
-        {
-            <li>
-                <a asp-action="Download" asp-controller="FileManager" asp-route-filename="@item.Name">
-                    @item.Name
-                </a>
-            </li>
-        }
-    }
-    else
-    {
-        <dd class="col-sm-10">
-            Event must end in order to see the files.
-        </dd>
-    }
-}
     
+</div>
+<hr/>
 <div>
 
         @{
             if (!(bool)ViewData["Attendance"])
             {
-                <a asp-action="Attend" asp-route-id="@Model.Id">Attend</a>
+                <a class="btn btn-primary" asp-action="Attend" asp-route-id="@Model.Id" 
+                   asp-route-type="Attendee">Attend</a>
+
+                if (!(bool) ViewData["Speaker"])
+                {
+                    <a class="btn btn-primary" asp-action="Attend" asp-route-id="@Model.Id" 
+                       asp-route-type="Speaker">Attend as Speaker</a>
+                }
+                
             }
-    
         }
+<hr/>
     <h3>Upload Files</h3>
     <form asp-controller="FileManager" asp-action="UploadFile" asp-route-ev="@Model.Id" 
           asp-route-evType="@Model.GetType().Name" method="post"
@@ -91,3 +169,35 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Details" asp-controller="Conference" asp-route-id="@Model.ConferenceId">Back to Conference</a>
 </div>
+<script>
+function ValidateRating()  
+    {  
+        var checkboxes = document.getElementsByName("Rating");  
+        var numberOfCheckedItems = 0;  
+        for(var i = 0; i < checkboxes.length; i++)  
+        {  
+            if(checkboxes[i].checked)  
+                numberOfCheckedItems++;  
+        }  
+        if(numberOfCheckedItems > 1)  
+        {  
+            alert("You can't select more than one rate!");  
+            return false;  
+        }  
+    }
+    function ValidateRatingSpeaker()  
+            {  
+                var checkboxes = document.getElementsByName("SpeakerRating");  
+                var numberOfCheckedItems = 0;  
+                for(var i = 0; i < checkboxes.length; i++)  
+                {  
+                    if(checkboxes[i].checked)  
+                        numberOfCheckedItems++;  
+                }  
+                if(numberOfCheckedItems > 1)  
+                {  
+                    alert("You can't select more than one rate!");  
+                    return false;  
+                }  
+            }
+</script>
