@@ -5,15 +5,17 @@ using CMWeb.Data;
 using CMWeb.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CMWeb.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191220030449_UserNotification")]
+    partial class UserNotification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,6 +88,8 @@ namespace CMWeb.Data.Migrations
 
                     b.Property<int>("EventCenterId");
 
+                    b.Property<float>("Rating");
+
                     b.Property<string>("Sponsor");
 
                     b.Property<DateTime>("StartDate");
@@ -108,11 +112,7 @@ namespace CMWeb.Data.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<int>("ConferenceId");
-
                     b.Property<int>("Rating");
-
-                    b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
@@ -213,10 +213,6 @@ namespace CMWeb.Data.Migrations
                     b.Property<int>("EventId");
 
                     b.Property<string>("UserId");
-
-                    b.Property<float>("Rating");
-
-                    b.Property<int>("Type");
 
                     b.HasKey("EventId", "UserId");
 

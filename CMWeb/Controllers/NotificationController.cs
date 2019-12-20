@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CMWeb.Data;
 using CMWeb.Models;
+using CMWeb.Areas.Identity.Data;
+using System.Security.Claims;
 
 namespace CMWeb.Controllers
 {
@@ -44,8 +46,10 @@ namespace CMWeb.Controllers
         }
 
         // GET: Notification/Create
-        public IActionResult Create()
+        public IActionResult Create(int conferenceId = 0, int eventId = 0)
         {
+            ViewData["conferenceId"] = conferenceId;
+            ViewData["eventId"] = eventId;
             return View();
         }
 
@@ -54,11 +58,41 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content")] Notification notification)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content")] Notification notification, string receivers, int conferenceId, int eventId)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(notification);
+                bool present;
+                foreach (CMWebUser user in _context.Users)
+                {
+                    present = false;
+                    foreach (Event aEvent in _context.Events.Include(e => e.EventUsers))
+                    {
+                        if (aEvent.EventUsers != null)
+                        {
+                            foreach (EventUser eventUser in aEvent.EventUsers)
+                            {
+                                if (eventUser.UserId == user.Id & receivers == eventUser.Type.ToString())
+                                {
+                                    if (eventId == eventUser.EventId || conferenceId == aEvent.ConferenceId)
+                                    {
+                                        var newUserNotification = new UserNotification();
+                                        newUserNotification.UserId = user.Id;
+                                        newUserNotification.NotificationId = notification.Id;
+                                        _context.Add(newUserNotification);
+                                        present = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (present)
+                        {
+                            break;
+                        }
+                    }
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
