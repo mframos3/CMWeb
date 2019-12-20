@@ -135,9 +135,16 @@
         @{
             if (!(bool)ViewData["Attendance"])
             {
-                <a class="btn btn-primary" asp-action="Attend" asp-route-id="@Model.Id">Attend</a>
+                <a class="btn btn-primary" asp-action="Attend" asp-route-id="@Model.Id" 
+                   asp-route-type="Attendee">Attend</a>
+
+                if (!(bool) ViewData["Speaker"])
+                {
+                    <a class="btn btn-primary" asp-action="Attend" asp-route-id="@Model.Id" 
+                       asp-route-type="Speaker">Attend as Speaker</a>
+                }
+                
             }
-    
         }
 <hr/>
     <h3>Upload Files</h3>
