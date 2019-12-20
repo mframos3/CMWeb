@@ -52,10 +52,20 @@
                 <input value="@ViewData["CurrentUserId"]" name="UserId" type="hidden"/>
                 <br>
             </div>
-            <input type="submit" value="Enviar">  
+            <input class="btn btn-primary" type="submit" value="Enviar">  
+            <hr/>
         </fieldset>  
     </form>  
-    <a asp-controller="EventRating" asp-action="Index" asp-route-eventId="@Model.Id">Show all comments</a>
+
+<div class="form-group row">
+    <div class="col-md-2">
+        <a class="btn btn-primary" asp-controller="Notification" asp-action="Create" asp-route-parentId="@Model.Id" asp-route-parent="Talk">Send Notification</a>
+    </div>
+    <div class="col-md-2">
+        <a class="btn btn-primary"asp-controller="EventRating" asp-action="Index" asp-route-eventId="@Model.Id">Show all comments</a>
+    </div>
+</div>
+
 
 <div>
 <hr/>

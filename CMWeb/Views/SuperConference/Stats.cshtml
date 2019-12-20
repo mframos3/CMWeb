@@ -15,62 +15,61 @@
 
 @foreach (var item in (List<string>) ViewData["ConferencesEventsAttendance"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 <br/>
   <h1>EVENTSATTENDANCE</h1>
   
   @foreach (var item in (List<string>) ViewData["EventsAttendance"])
    {
-       <p>@item</p>
+       <p>@Html.Raw(item)</p>
    }
 <br/>
 <h1>CONFERENCETRACKSATTENDANCE</h1>
 
 @foreach (var item in (List<string>) ViewData["ConferencesTrackAttendance"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 <br/>
 <h1>TRACKSATTENDANCE</h1>
 
 @foreach (var item in (List<string>) ViewData["TracksAttendance"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 <h1>CONFERENCEEVENTSRATINGS</h1>
 
 @foreach (var item in (List<string>) ViewData["ConferencesEventsRatings"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 <h1>EventsRatings</h1>
 
 @foreach (var item in (List<string>) ViewData["EventsRatings"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 <h1>CONFERENCESTRACKRATINGS</h1>
 
 @foreach (var item in (List<string>) ViewData["ConferencesTrackRating"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 <h1>TRACKSRATING</h1>
 
 @foreach (var item in (List<string>) ViewData["TracksRating"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 <h1>SPEAKERSRATING</h1>
 
 @foreach (var item in (List<string>) ViewData["SpeakersRating"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 </body>
 
-<!-- TODO: Cambiar chart.js por d3.js. Revisar https://jsfiddle.net/PBrockmann/x3jdxkqb/. En su reemplazo habría que hacer los filtros server-side.--> 
 <script>
     var myChart = document.getElementById('myChart').getContext('2d');
     var eventsName = [];
@@ -78,8 +77,12 @@
     
     var events = [];
     
-   
-
+    @foreach (var item in (List<string>) ViewData["ConferencesEventsAttendance"])
+    {
+        <text>events.push(@Html.Raw(item));</text>
+    }
+    
+   console.log(events[0]);
     
     
     

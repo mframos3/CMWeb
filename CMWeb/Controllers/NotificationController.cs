@@ -46,10 +46,10 @@ namespace CMWeb.Controllers
         }
 
         // GET: Notification/Create
-        public IActionResult Create(int conferenceId = 0, int eventId = 0)
+        public IActionResult Create(string parent, int parentId )
         {
-            ViewData["conferenceId"] = conferenceId;
-            ViewData["eventId"] = eventId;
+            ViewData["parentId"] = parentId;
+            ViewData["parent"] = parent;
             return View();
         }
 
@@ -58,45 +58,37 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content")] Notification notification, string receivers, int conferenceId, int eventId)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content")] Notification notification, string receivers, string parent, int parentId)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(notification);
+            _context.Add(notification);
+            foreach (var user in _context.Users)
             {
-                _context.Add(notification);
-                bool present;
-                foreach (CMWebUser user in _context.Users)
+                var present = false;
+                foreach (var aEvent in _context.Events.Include(e => e.EventUsers))
                 {
-                    present = false;
-                    foreach (Event aEvent in _context.Events.Include(e => e.EventUsers))
+                    if (aEvent.EventUsers != null)
                     {
-                        if (aEvent.EventUsers != null)
+                        if (aEvent.EventUsers
+                            .Where(eventUser => eventUser.UserId == user.Id & receivers == eventUser.Type.ToString())
+                            .Any(eventUser => parentId == eventUser.EventId || parentId == aEvent.ConferenceId))
                         {
-                            foreach (EventUser eventUser in aEvent.EventUsers)
+                            var newUserNotification = new UserNotification
                             {
-                                if (eventUser.UserId == user.Id & receivers == eventUser.Type.ToString())
-                                {
-                                    if (eventId == eventUser.EventId || conferenceId == aEvent.ConferenceId)
-                                    {
-                                        var newUserNotification = new UserNotification();
-                                        newUserNotification.UserId = user.Id;
-                                        newUserNotification.NotificationId = notification.Id;
-                                        _context.Add(newUserNotification);
-                                        present = true;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        if (present)
-                        {
-                            break;
+                                UserId = user.Id, NotificationId = notification.Id
+                            };
+                            _context.Add(newUserNotification);
+                            present = true;
                         }
                     }
+                    if (present)
+                    {
+                        break;
+                    }
                 }
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            return View(notification);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", parent, routeValues: new {id = parent});
         }
 
         // GET: Notification/Edit/5

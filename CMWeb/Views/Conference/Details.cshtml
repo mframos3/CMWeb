@@ -61,9 +61,9 @@
         <a asp-controller="Talk" asp-action="Create" asp-route-conferenceId="@Model.Id">Talk</a>
         <a asp-controller="Workshop" asp-action="Create" asp-route-conferenceId="@Model.Id">Workshop</a>
     </div>
-   
+    <hr/>
     <br>
-    <a asp-controller="Notification" asp-action="Create" asp-route-conferenceId="@Model.Id">Send Notification</a>
+    <a class="btn btn-primary" asp-controller="Notification" asp-action="Create" asp-route-parentId="@Model.Id" asp-route-parent="Conference">Send Notification</a>
     <br>
     
     
