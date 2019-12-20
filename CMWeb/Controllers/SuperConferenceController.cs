@@ -221,7 +221,7 @@ namespace CMWeb.Controllers
         
         private async Task<List<string>> GetEventsAttendance(int superConferenceId)
         {
-            var output = new List<object>();
+            var output = new List<AttendanceData>();
             var superConference = await _context.SuperConferences
                 .Include(c => c.Conferences)
                 .FirstOrDefaultAsync(m => m.Id == superConferenceId);
@@ -232,7 +232,7 @@ namespace CMWeb.Controllers
             
             foreach (var eEvent in eEvents)
             {
-                var data = new List<object>{};
+                var tuple = new AttendanceData() {Name = eEvent.Name, Data = new List<NameAttendance>()};
                 var eventConferences = conferences.Where(c => c.Id == eEvent.ConferenceId);
                 foreach (var conference in eventConferences)
                 {
@@ -250,11 +250,11 @@ namespace CMWeb.Controllers
                         Attendance = @group.Count()
                     });
                     var attendance = conferenceAttendance.FirstOrDefault(ca => ca.Id == conference.Id);
-                    data.Add(attendance == null
-                        ? new {name = conference.Edition, attendance = 0}
-                        : new {name = conference.Edition, attendance = attendance.Attendance});
+                    tuple.Data.Add(attendance == null
+                        ? new NameAttendance() {Name = conference.Edition, Attendance = 0}
+                        : new NameAttendance() {Name = conference.Edition, Attendance = attendance.Attendance});
                 }
-                var tuple = new {name = eEvent.Name, data};
+                
                 output.Add(tuple);
             }
 
@@ -424,7 +424,7 @@ namespace CMWeb.Controllers
         
         private async Task<List<string>> GetEventsRating(int superConferenceId)
         {
-            var output = new List<object>();
+            var output = new List<RatingData>();
             var superConference = await _context.SuperConferences
                 .Include(c => c.Conferences)
                 .FirstOrDefaultAsync(m => m.Id == superConferenceId);
@@ -435,7 +435,7 @@ namespace CMWeb.Controllers
             
             foreach (var eEvent in eEvents)
             {
-                var data = new List<object>{};
+                var tuple = new RatingData() {Name = eEvent.Name, Data = new List<NameRating>()};
                 var eventConferences = conferences.Where(c => c.Id == eEvent.ConferenceId);
                 foreach (var conference in eventConferences)
                 {
@@ -455,11 +455,11 @@ namespace CMWeb.Controllers
                         Rating = @group.Sum(i => i.Rating) / @group.Count()
                     });
                     var rating = conferenceRating.FirstOrDefault(ca => ca.Id == conference.Id);
-                    data.Add(rating == null
+                    tuple.Data.Add(rating == null
                         ? new NameRating() {Name = conference.Edition, Rating = 0}
                         : new NameRating() {Name = conference.Edition, Rating = rating.Rating});
                 }
-                var tuple = new {name = eEvent.Name, data};
+                
                 output.Add(tuple);
             }
 
