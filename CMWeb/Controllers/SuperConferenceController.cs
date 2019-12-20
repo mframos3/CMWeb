@@ -638,7 +638,7 @@ namespace CMWeb.Controllers
                             speakersRating.Data.Add(new NameRating()
                             {
                                 Name = users.Find(u => u.Id == speaker.UserId).Name,
-                                Rating = 0
+                                Rating = speaker.Rating
                             });
                         }
                     }

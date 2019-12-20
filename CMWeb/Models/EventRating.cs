@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using CMWeb.Areas.Identity.Data;
 
 namespace CMWeb.Models
@@ -12,5 +13,7 @@ namespace CMWeb.Models
         
         public int EventId { get; set; }
         public Event Event { get; set; }
+
+        [NotMapped] public int SpeakerRating { get; set;}
     }
 }

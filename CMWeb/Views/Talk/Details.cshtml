@@ -19,6 +19,7 @@
             <div class ="rate-select">
                 <table>
                     <tr>
+                        <th></th>
                         <th>1</th>
                         <th>2</th>
                         <th>3</th>
@@ -26,11 +27,20 @@
                         <th>5</th>
                     </tr>
                     <tr>
+                        <td>Event</td>
                         <td><input type="checkbox" name="Rating" value="1" onclick="return ValidateRating();"></td>
                         <td><input type="checkbox" name="Rating" value="2" onclick="return ValidateRating();"></td>
                         <td><input type="checkbox" name="Rating" value="3" onclick="return ValidateRating();"></td>
                         <td><input type="checkbox" name="Rating" value="4" onclick="return ValidateRating();"></td>
                         <td><input type="checkbox" name="Rating" value="5" onclick="return ValidateRating();"></td>
+                    </tr>
+                    <tr>
+                    <td>Speaker</td>
+                    <td><input type="checkbox" name="SpeakerRating" value="1" onclick="return ValidateRatingSpeaker();"></td>
+                    <td><input type="checkbox" name="SpeakerRating" value="2" onclick="return ValidateRatingSpeaker();"></td>
+                    <td><input type="checkbox" name="SpeakerRating" value="3" onclick="return ValidateRatingSpeaker();"></td>
+                    <td><input type="checkbox" name="SpeakerRating" value="4" onclick="return ValidateRatingSpeaker();"></td>
+                    <td><input type="checkbox" name="SpeakerRating" value="5" onclick="return ValidateRatingSpeaker();"></td>
                     </tr>
                 </table>
                 
@@ -177,4 +187,19 @@ function ValidateRating()
             return false;  
         }  
     }
+     function ValidateRatingSpeaker()  
+            {  
+                var checkboxes = document.getElementsByName("SpeakerRating");  
+                var numberOfCheckedItems = 0;  
+                for(var i = 0; i < checkboxes.length; i++)  
+                {  
+                    if(checkboxes[i].checked)  
+                        numberOfCheckedItems++;  
+                }  
+                if(numberOfCheckedItems > 1)  
+                {  
+                    alert("You can't select more than one rate!");  
+                    return false;  
+                }  
+            }
 </script>

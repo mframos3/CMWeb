@@ -35,6 +35,7 @@ namespace CMWeb.Controllers
         // GET: Notification/Create
         public IActionResult Create()
         {
+            
             return View();
         }
 
@@ -43,9 +44,17 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Rating,Comment,UserId,EventId")] EventRating eventRating)
+        public async Task<IActionResult> Create([Bind("Id,Rating,Comment,UserId,EventId,SpeakerRating")] EventRating eventRating)
         {
             var user = _context.EventRatings.FirstOrDefault(u => u.UserId == eventRating.UserId);
+            var speaker = _context.EventUsers.Where(s =>s.Type == UserType.Speaker).First(s => s.EventId == eventRating.EventId);
+            var ratingCount = _context.EventRatings.Count(e => e.EventId == eventRating.EventId);
+            
+            Console.WriteLine(speaker.Rating);
+            
+            speaker.Rating = ((speaker.Rating*ratingCount)+(eventRating.SpeakerRating))/(ratingCount+1);
+            
+            Console.WriteLine(ratingCount);
             var ev = _context.EventRatings.FirstOrDefault(u => u.EventId == eventRating.EventId);
             if (user == null || ev == null) 
             {
