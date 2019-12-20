@@ -486,13 +486,6 @@ function getRandomColor() {
     });
 </script>
 
-<h1>SPEAKERSRATING</h1>
-
-@foreach (var item in (List<string>) ViewData["SpeakersRating"])
- {
-     <p>@Html.Raw(item)</p>
- }
-
 <script>
     var SpeakersRatingData = []
     var SpeakersRating =  [];
