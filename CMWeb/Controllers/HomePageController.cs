@@ -29,7 +29,8 @@ namespace CMWeb.Controllers
             }
             ViewData["notifications"] = notificationList;
             ClaimsPrincipal currentUser = this.User;
-            ViewData["userId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewData["userId"] = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+            Console.WriteLine(currentUser.FindFirstValue(ClaimTypes.NameIdentifier));
             var applicationDbContext = _context.Conferences.Include(conference => conference.Events);
             return View(await applicationDbContext.ToListAsync());
         }

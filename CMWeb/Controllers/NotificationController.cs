@@ -59,9 +59,20 @@ namespace CMWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Content")] Notification notification, string receivers, int conferenceId)
         {
-            Console.WriteLine("line");
             if (ModelState.IsValid)
             {
+                _context.Add(notification);
+                foreach (Event aEvent in _context.Events)
+                {
+                    foreach (CMWebUser user in _context.Users)
+                    {
+                        Console.WriteLine(user.Id);
+                        var newEventUser = new EventUser();
+                        newEventUser.UserId = user.Id;
+                        newEventUser.EventId = aEvent.Id;
+                        _context.Add(newEventUser);
+                    }
+                }
                 if (receivers == "Atendees")
                 {
                     bool present;
@@ -78,7 +89,7 @@ namespace CMWeb.Controllers
                                     newUserNotification.UserId = user.Id;
                                     newUserNotification.NotificationId = notification.Id;
                                     _context.Add(newUserNotification);
-                                    await _context.SaveChangesAsync();
+                                    present = true;
                                 }
                                 if (present)
                                 {
@@ -92,7 +103,6 @@ namespace CMWeb.Controllers
                         }
                     }
                 }
-                _context.Add(notification);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

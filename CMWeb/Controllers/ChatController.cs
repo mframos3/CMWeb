@@ -87,7 +87,7 @@ namespace CMWeb.Controllers
                 ViewData["Attendance"] = true;
             }
             else
-            {
+            {   
                 ViewData["Attendance"] = false;
             }
 
