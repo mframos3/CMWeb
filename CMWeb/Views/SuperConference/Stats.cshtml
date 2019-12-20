@@ -131,23 +131,21 @@ function getRandomColor() {
     }
       
     var EventsAttendanceChart = document.getElementById('EventsAttendance').getContext('2d');
-    
-    var EventsAttendanceData = [{"name":"A","data":[{"name":"2019","attendance":1}, {"name":"2020","attendance":1}]}, {"name":"ASDSAF","data":[{"name":"2019","attendance":1}, {"name":"2020","attendance":0}]}]
-    
+        
     for (let d of EventsAttendanceData)
         {   
             
             let attendance = [];
-            for (let e of d.data)
+            for (let e of d.Data)
                 {
-                                if (! EventsAttendanceConf.includes(e.name))
+                                if (! EventsAttendanceConf.includes(e.Name))
                                 {
-                                    EventsAttendanceConf.push(e.name);
+                                    EventsAttendanceConf.push(e.Name);
                                 }
-                                attendance.push(e.attendance);
+                                attendance.push(e.Attendance);
 
                 }
-            let data = {label: d.name, data: attendance, backgroundColor: getRandomColor()};
+            let data = {label: d.Name, data: attendance, backgroundColor: getRandomColor()};
             EventsAttendance.push(data)
             
            
