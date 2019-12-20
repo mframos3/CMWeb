@@ -236,23 +236,36 @@ namespace CMWeb.Controllers
                 var eventConferences = conferences.Where(c => c.Id == eEvent.ConferenceId);
                 foreach (var conference in eventConferences)
                 {
-                    var userConference = from ea in _context.EventUsers.Where(eu => eu.EventId == eEvent.Id) 
+                    var userConference = from ea in _context.EventUsers.Where(eu => eu.EventId == eEvent.Id)
                         join ce in conference.Events on ea.EventId equals ce.Id
-                        where ea.EventId == ce.Id select new
-                    {
-                        ea.UserId, 
-                        ce.ConferenceId
-                    };
-                    
-                    var conferenceAttendance = userConference.GroupBy(uc => uc.ConferenceId).ToList().Select(group => new IdAttendance()
-                    {
-                        Id = @group.Key,
-                        Attendance = @group.Count()
-                    });
+                        where ea.EventId == ce.Id
+                        select new
+                        {
+                            ea.UserId,
+                            ce.ConferenceId
+                        };
+
+                    var conferenceAttendance = userConference.GroupBy(uc => uc.ConferenceId).ToList().Select(group =>
+                        new IdAttendance()
+                        {
+                            Id = @group.Key,
+                            Attendance = @group.Count()
+                        });
                     var attendance = conferenceAttendance.FirstOrDefault(ca => ca.Id == conference.Id);
-                    tuple.Data.Add(attendance == null
-                        ? new NameAttendance() {Name = conference.Edition, Attendance = 0}
-                        : new NameAttendance() {Name = conference.Edition, Attendance = attendance.Attendance});
+                    if (output.Any(o => o.Name == eEvent.Name))
+                    {
+                        output.First(o => o.Name == eEvent.Name).Data.Add(attendance == null
+                            ? new NameAttendance() {Name = conference.Edition, Attendance = 0}
+                            : new NameAttendance() {Name = conference.Edition, Attendance = attendance.Attendance});
+                    }
+                    else
+                    {
+                        tuple.Data.Add(attendance == null
+                            ? new NameAttendance() {Name = conference.Edition, Attendance = 0}
+                            : new NameAttendance() {Name = conference.Edition, Attendance = attendance.Attendance}); 
+                    }
+
+                      
                 }
                 
                 output.Add(tuple);
@@ -455,9 +468,18 @@ namespace CMWeb.Controllers
                         Rating = @group.Sum(i => i.Rating) / Math.Max(@group.Count(), 1)
                     });
                     var rating = conferenceRating.FirstOrDefault(ca => ca.Id == conference.Id);
-                    tuple.Data.Add(rating == null
-                        ? new NameRating() {Name = conference.Edition, Rating = 0}
-                        : new NameRating() {Name = conference.Edition, Rating = rating.Rating});
+                    if (output.Any(o => o.Name == eEvent.Name))
+                    {
+                        output.First(o => o.Name == eEvent.Name).Data.Add(rating == null
+                            ? new NameRating() {Name = conference.Edition, Rating = 0}
+                            : new NameRating() {Name = conference.Edition, Rating = rating.Rating});
+                    }
+                    else
+                    {
+                        tuple.Data.Add(rating == null
+                            ? new NameRating() {Name = conference.Edition, Rating = 0}
+                            : new NameRating() {Name = conference.Edition, Rating = rating.Rating}); 
+                    }
                 }
                 
                 output.Add(tuple);
