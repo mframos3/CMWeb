@@ -19,7 +19,7 @@
             <div class="col">
 
                 <h3>Itinerario </h3>
-                <p>Upcoming Conferences:</p>
+                <p>Upcoming Conferences: </p>
                 @foreach (Conference conference in Model)
                 {
                 <div class="card">
@@ -44,22 +44,27 @@
             </div>
 
             <div class="col-6">
-                <h3>Feed</h3>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Welcome to the conference</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">@@Benedeto</h6>
+                <h3>Feed </h3>
+                @foreach (var notification in ViewData["notifications"] as IList<Notification>)
+                {
+                    if (notification.UserNotifications != null)
+                    {
+                        foreach (UserNotification userNotification in notification.UserNotifications)
+                        {
+                            if (userNotification.UserId == (string)ViewData["userId"])
+                            {
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@notification.Title</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">@notification.Content</h6>
+                                    </div>
+                                </div>
 
-                        <a asp-controller="Conference" asp-action="Details" asp-route-id="1">1. - Deep Learning Conference 2019</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Don't forget to select a Menu</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">@@Benedeto</h6>
-                        <a asp-controller="Conference" asp-action="Details" asp-route-id="1">1. - Deep Learning Conference 2019</a>
-                    </div>
-                </div>
+                            }
+                        }
+
+                    }
+                }
             </div>
 
 

@@ -30,7 +30,7 @@ namespace CMWeb.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
         
-        public async Task<IActionResult> Attend(int? id)
+        public async Task<IActionResult> Attend(int? id, UserType type)
         {
             if (id == null)
             {
@@ -58,6 +58,7 @@ namespace CMWeb.Controllers
             var newEventUser = new EventUser();
             newEventUser.UserId = currentUserId;
             newEventUser.EventId = party.Id;
+            newEventUser.Type = type;
             _context.Add(newEventUser);
             await _context.SaveChangesAsync();
             
@@ -95,7 +96,8 @@ namespace CMWeb.Controllers
                 ViewData["Attendance"] = false;
             }
             
-            
+            var speaker = _context.EventUsers.Where(eu => eu.Type == UserType.Speaker).Select(eu => eu.EventId == id);
+            ViewData["Speaker"] = speaker.Any();
             return View(party);
         }
 

@@ -14,11 +14,34 @@
         <fieldset>
         <legend>How about the party?</legend>
             <div class ="rate-select">
-                <input type="checkbox" name="Rating" value="1" onclick="return ValidateRating();">1<br>  
-                <input type="checkbox" name="Rating" value="2" onclick="return ValidateRating();">2<br>  
-                <input type="checkbox" name="Rating" value="3" onclick="return ValidateRating();">3<br>
-                <input type="checkbox" name="Rating" value="4" onclick="return ValidateRating();">4<br>
-                <input type="checkbox" name="Rating" value="5" onclick="return ValidateRating();">5<br>
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Event</td>
+                        <td><input type="checkbox" name="Rating" value="1" onclick="return ValidateRating();"></td>
+                        <td><input type="checkbox" name="Rating" value="2" onclick="return ValidateRating();"></td>
+                        <td><input type="checkbox" name="Rating" value="3" onclick="return ValidateRating();"></td>
+                        <td><input type="checkbox" name="Rating" value="4" onclick="return ValidateRating();"></td>
+                        <td><input type="checkbox" name="Rating" value="5" onclick="return ValidateRating();"></td>
+                    </tr>
+                    <tr>
+                        <td>Speaker</td>
+                        <td><input type="checkbox" name="SpeakerRating" value="1" onclick="return ValidateRatingSpeaker();"></td>
+                        <td><input type="checkbox" name="SpeakerRating" value="2" onclick="return ValidateRatingSpeaker();"></td>
+                        <td><input type="checkbox" name="SpeakerRating" value="3" onclick="return ValidateRatingSpeaker();"></td>
+                        <td><input type="checkbox" name="SpeakerRating" value="4" onclick="return ValidateRatingSpeaker();"></td>
+                        <td><input type="checkbox" name="SpeakerRating" value="5" onclick="return ValidateRatingSpeaker();"></td>
+                    </tr>
+                </table>
+                
             </div>
             <div>
                 Comment:<br>
@@ -27,49 +50,59 @@
                 <input value="@ViewData["CurrentUserId"]" name="UserId" type="hidden"/>
                 <br>
             </div>
-            <input type="submit" value="Enviar">  
+            <input class="btn btn-primary" type="submit" value="Enviar">  
         </fieldset>  
-    </form>  
-    <a asp-controller="EventRating" asp-action="Index" asp-route-eventId="@Model.Id">Show all comments</a>
+    <hr/>
+</form>  
+    
+<div class="form-group row">
+    <div class="col-md-2">
+        <a class="btn btn-primary" asp-controller="Notification" asp-action="Create" asp-route-parentId="@Model.Id" asp-route-parent="Party">Send Notification</a>
+    </div>
+    <div class="col-md-2">
+        <a class="btn btn-primary"asp-controller="EventRating" asp-action="Index" asp-route-eventId="@Model.Id">Show all comments</a>
+    </div>
+</div>
 
 <div>
-    <h4>Party</h4>
     <hr />
+    <h4>Party</h4>
+    <hr/>
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.StartDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.StartDate)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EndDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.EndDate)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Track)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Track)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Conference)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Conference.SuperConference.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EventCenterRoom)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.EventCenterRoom.Name)
         </dd>
     </dl>
@@ -78,7 +111,15 @@
     @{
         if (!(bool)ViewData["Attendance"])
         {
-            <a asp-action="Attend" asp-route-id="@Model.Id">Attend</a>
+            <a class="btn btn-primary" asp-action="Attend" asp-route-id="@Model.Id" 
+               asp-route-type="Attendee">Attend</a>
+
+            if (!(bool) ViewData["Speaker"])
+            {
+                <a class="btn btn-primary" asp-action="Attend" asp-route-id="@Model.Id" 
+                   asp-route-type="Speaker">Attend as Speaker</a>
+            }
+                
         }
 
     }
@@ -103,4 +144,19 @@ function ValidateRating()
             return false;  
         }  
     }
+     function ValidateRatingSpeaker()  
+            {  
+                var checkboxes = document.getElementsByName("SpeakerRating");  
+                var numberOfCheckedItems = 0;  
+                for(var i = 0; i < checkboxes.length; i++)  
+                {  
+                    if(checkboxes[i].checked)  
+                        numberOfCheckedItems++;  
+                }  
+                if(numberOfCheckedItems > 1)  
+                {  
+                    alert("You can't select more than one rate!");  
+                    return false;  
+                }  
+            }
 </script>

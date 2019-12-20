@@ -34,7 +34,7 @@ ViewData["Title"] = "Track";
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Where(instance => String.Equals(instance.Track, ViewData["Track"]))) {
+        @foreach (var item in Model.Where(instance => instance.Track.Split(";").Contains(ViewData["Track"]))) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)

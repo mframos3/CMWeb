@@ -35,7 +35,7 @@
 
 @foreach (var item in (List<string>) ViewData["ConferencesEventsAttendance"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 <br/>
 
@@ -116,7 +116,7 @@ function getRandomColor() {
   
   @foreach (var item in (List<string>) ViewData["EventsAttendance"])
    {
-       <p>@item</p>
+       <p>@Html.Raw(item)</p>
    }
 <br/>
 
@@ -189,7 +189,7 @@ function getRandomColor() {
 
 @foreach (var item in (List<string>) ViewData["ConferencesTrackAttendance"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 
 <script>
@@ -258,7 +258,7 @@ function getRandomColor() {
 
 @foreach (var item in (List<string>) ViewData["TracksAttendance"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 
 <script>
@@ -326,266 +326,30 @@ function getRandomColor() {
 
 @foreach (var item in (List<string>) ViewData["ConferencesEventsRatings"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 <h1>EventsRatings</h1>
 
 @foreach (var item in (List<string>) ViewData["EventsRatings"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 <h1>CONFERENCESTRACKRATINGS</h1>
 
 @foreach (var item in (List<string>) ViewData["ConferencesTrackRating"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 <h1>TRACKSRATING</h1>
 
 @foreach (var item in (List<string>) ViewData["TracksRating"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
 <h1>SPEAKERSRATING</h1>
 
 @foreach (var item in (List<string>) ViewData["SpeakersRating"])
  {
-     <p>@item</p>
+     <p>@Html.Raw(item)</p>
  }
-</body>
-
-
-
-
-<script>
-    const data = [{name: "conf1", data: [{event: "ev1", attendance: 1}, {event: "ev2", attendance: 2}, {event: "ev3", attendance: 1}]},
-                  {name: "conf2", data: [{event: "ev1", attendance: 2}, {event: "ev2", attendance: 3}, {event: "ev3", attendance: 4}]}];
-    
-    var myChart = document.getElementById('myChart').getContext('2d');
-    var eventsName = [];
-    var confsName = [];
-    
-    let datasets = []
-    let datasetsEv = []
-    
-    for (let d of data)
-        {   
-            let attendance = []
-            for (let e of d.data)
-                {
-                                if (! eventsName.includes(e.event))
-                                {
-                                    eventsName.push(e.event)
-                                }
-                                attendance.push(e.attendance)
-
-                }
-            let data = {label: d.name, data: attendance, backgroundColor: getRandomColor()}
-            datasets.push(data)
-            
-           
-        }
-   
-    var massPopChart = new Chart(myChart, {
-        type: "bar",
-        data: {
-            labels: eventsName,
-            datasets: datasets
-        },
-        options: {
-             scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            precision: 0
-                        }
-                    }]
-                },
-            title: {
-                display: true,
-                text: "Attendance",
-                fontSize: 25
-            },
-            legend: {
-               position: "right",
-               labels : {
-                   fontColor: "#000"
-               } 
-            }
-        }
-    });
-</script>
-
-<script>
-
-    const dataEv = [{name: "ev1", data: [{conference: "conf1", attendance: 1}, {conference: "conf2", attendance: 2}]},
-                        {name: "ev2", data: [{conference: "conf1", attendance: 2}, {conference: "conf2", attendance: 3}]},
-                        {name: "ev3", data: [{conference: "conf1", attendance: 1}, {conference: "conf2", attendance: 4}]}]
-        
-
-    
-    var myChart2 = document.getElementById('myChart1').getContext('2d');
-    
-    for (let d of dataEv)
-                {   
-                    let attendance = []
-                    for (let e of d.data)
-                        {
-                                        if (! confsName.includes(e.conference))
-                                        {
-                                            confsName.push(e.conference)
-                                        }
-                                        attendance.push(e.attendance)
-        
-                        }
-                    
-                    let data = {label: d.name, data: attendance, backgroundColor: getRandomColor()}
-                    datasetsEv.push(data)
-                    
-                   
-                }
-    
-    var massPopChart2 = new Chart(myChart2, {
-        type: "bar",
-        data: {
-            labels: confsName,
-            datasets: datasetsEv
-        },
-        options: {
-             scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            precision: 0
-                        }
-                    }]
-                },
-            title: {
-                display: true,
-                text: "Attendance",
-                fontSize: 25
-            },
-            legend: {
-               position: "right",
-               labels : {
-                   fontColor: "#000"
-               } 
-            }
-        }
-    });
-</script>
-
-
-<script>
-    const dataTrackConf = [{name: "conf1", data: [{track: "t1", attendance: 5}, {track: "t2", attendance: 4}, {track: "t3", attendance: 5}]},
-                            {name: "conf2", data: [{track: "t1", attendance: 3}, {track: "t2", attendance: 1}, {track: "t3", attendance: 4}]}];
-    
-    
-    var myChart3 = document.getElementById('myChart2').getContext('2d');
-    var tracksName = []
-    var datasetTrack = []
-    
-    for (let d of dataTrackConf)
-        {   
-            let attendance = []
-            for (let t of d.data)
-                {
-                                if (! tracksName.includes(t.track))
-                                {
-                                    tracksName.push(t.track)
-                                }
-                                attendance.push(t.attendance)
-
-                }
-            let data = {label: d.name, data: attendance, backgroundColor: getRandomColor()}
-            datasetTrack.push(data)
-            
-           
-        }
-   
-    var massPopChart3 = new Chart(myChart3, {
-        type: "bar",
-        data: {
-            labels: tracksName,
-            datasets: datasetTrack
-        },
-        options: {
-             scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            precision: 0
-                        }
-                    }]
-                },
-            title: {
-                display: true,
-                text: "Attendance",
-                fontSize: 25
-            },
-            legend: {
-               position: "right",
-               labels : {
-                   fontColor: "#000"
-               } 
-            }
-        }
-    });
-</script>
-
-
-<script>
-
-    const dataConfTrack = [{name: "t1", data: [{conference: "conf1", attendance: 1}, {conference: "conf2", attendance: 2}]},
-                           {name: "t2", data: [{conference: "conf1", attendance: 2}, {conference: "conf2", attendance: 3}]},
-                           {name: "t3", data: [{conference: "conf1", attendance: 1}, {conference: "conf2", attendance: 4}]}]
-        
-    var datasetConfTrack = []
-    
-    var myChart4 = document.getElementById('myChart3').getContext('2d');
-    
-    for (let d of dataConfTrack)
-                {   
-                    let attendance = []
-                    for (let e of d.data)
-                        {
-                                        attendance.push(e.attendance)
-        
-                        }
-                    
-                    let data = {label: d.name, data: attendance, backgroundColor: getRandomColor()}
-                    datasetConfTrack.push(data)
-                    
-                   
-                }
-    
-    var massPopChart3 = new Chart(myChart4, {
-        type: "bar",
-        data: {
-            labels: confsName,
-            datasets: datasetConfTrack
-        },
-        options: {
-             scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            precision: 0
-                        }
-                    }]
-                },
-            title: {
-                display: true,
-                text: "Attendance",
-                fontSize: 25
-            },
-            legend: {
-               position: "right",
-               labels : {
-                   fontColor: "#000"
-               } 
-            }
-        }
-    });
-</script>
-    
+</body>   

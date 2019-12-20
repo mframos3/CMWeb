@@ -11,26 +11,59 @@
 <h1>Details</h1>
 
 <form asp-controller="EventRating" asp-action="Create" method="post">  
-        <fieldset>
-        <legend>How about the meal?</legend>
-            <div class ="rate-select">
-                <input type="checkbox" name="Rating" value="1" onclick="return ValidateRating();">1<br>  
-                <input type="checkbox" name="Rating" value="2" onclick="return ValidateRating();">2<br>  
-                <input type="checkbox" name="Rating" value="3" onclick="return ValidateRating();">3<br>
-                <input type="checkbox" name="Rating" value="4" onclick="return ValidateRating();">4<br>
-                <input type="checkbox" name="Rating" value="5" onclick="return ValidateRating();">5<br>
-            </div>
-            <div>
-                Comment:<br>
-                <input type="text" name="Comment"><br>
-                <input value="@Model.Id" type="hidden" name="EventId"/>
-                <input value="@ViewData["CurrentUserId"]" name="UserId" type="hidden"/>
-                <br>
-            </div>
-            <input type="submit" value="Enviar">  
-        </fieldset>  
-    </form>  
-    <a asp-controller="EventRating" asp-action="Index" asp-route-eventId="@Model.Id">Show all comments</a>
+    <fieldset>
+        <legend>How about the Chat? Rate the event in terms of quality and comfort!</legend>
+        <div class ="rate-select">
+            <table>
+                <tr>
+                    <th></th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                </tr>
+                <tr>
+                    <td>Event</td>
+                    <td><input type="checkbox" name="Rating" value="1" onclick="return ValidateRating();"></td>
+                    <td><input type="checkbox" name="Rating" value="2" onclick="return ValidateRating();"></td>
+                    <td><input type="checkbox" name="Rating" value="3" onclick="return ValidateRating();"></td>
+                    <td><input type="checkbox" name="Rating" value="4" onclick="return ValidateRating();"></td>
+                    <td><input type="checkbox" name="Rating" value="5" onclick="return ValidateRating();"></td>
+                </tr>
+                <tr>
+                    <td>Speaker</td>
+                    <td><input type="checkbox" name="SpeakerRating" value="1" onclick="return ValidateRatingSpeaker();"></td>
+                    <td><input type="checkbox" name="SpeakerRating" value="2" onclick="return ValidateRatingSpeaker();"></td>
+                    <td><input type="checkbox" name="SpeakerRating" value="3" onclick="return ValidateRatingSpeaker();"></td>
+                    <td><input type="checkbox" name="SpeakerRating" value="4" onclick="return ValidateRatingSpeaker();"></td>
+                    <td><input type="checkbox" name="SpeakerRating" value="5" onclick="return ValidateRatingSpeaker();"></td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            Comment:<br>
+            <input type="text" name="Comment"><br>
+            <input value="@Model.Id" type="hidden" name="EventId"/>
+            <input value="@ViewData["CurrentUserId"]" name="UserId" type="hidden"/>
+            <br>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Enviar">  
+        <br/>
+        <hr/>
+    </fieldset>  
+</form>
+
+<div class="form-group row">
+    <div class="col-md-2">
+        <a class="btn btn-primary" asp-controller="Notification" asp-action="Create" asp-route-parentId="@Model.Id" asp-route-parent="Chat">Send Notification</a>
+    </div>
+    <div class="col-md-2">
+        <a class="btn btn-primary"asp-controller="EventRating" asp-action="Index" asp-route-eventId="@Model.Id" >Show all comments</a>
+    </div>
+</div>
+
+
 <div>
     <h4>Chat</h4>
     <hr />
@@ -77,10 +110,19 @@
     @{
             if (!(bool)ViewData["Attendance"])
             {
-                <a asp-action="Attend" asp-route-id="@Model.Id">Attend</a>
+                <a class="btn btn-primary" asp-action="Attend" asp-route-id="@Model.Id" 
+                   asp-route-type="Attendee">Attend</a>
+
+                if (!(bool) ViewData["Speaker"])
+                {
+                    <a class="btn btn-primary" asp-action="Attend" asp-route-id="@Model.Id" 
+                       asp-route-type="Speaker">Attend as Speaker</a>
+                }
+                
             }
+    }
+    <br/>
     
-        }
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Details" asp-controller="Conference" asp-route-id="@Model.ConferenceId">Back to Conference</a>
 </div>
@@ -100,4 +142,19 @@ function ValidateRating()
             return false;  
         }  
     }
+    function ValidateRatingSpeaker()  
+            {  
+                var checkboxes = document.getElementsByName("SpeakerRating");  
+                var numberOfCheckedItems = 0;  
+                for(var i = 0; i < checkboxes.length; i++)  
+                {  
+                    if(checkboxes[i].checked)  
+                        numberOfCheckedItems++;  
+                }  
+                if(numberOfCheckedItems > 1)  
+                {  
+                    alert("You can't select more than one rate!");  
+                    return false;  
+                }  
+            }
 </script>

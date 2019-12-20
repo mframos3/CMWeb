@@ -95,6 +95,16 @@ namespace CMWeb.Data
                 .WithMany(u => u.EventUsers)
                 .HasForeignKey(eu => eu.UserId);
 
+            modelBuilder.Entity<UserNotification>().HasKey(userNotification => new { userNotification.NotificationId, userNotification.UserId });
+
+            modelBuilder.Entity<UserNotification>().HasOne(userNotification => userNotification.Notification)
+                .WithMany(notification => notification.UserNotifications)
+                .HasForeignKey(userNotification => userNotification.NotificationId);
+
+            modelBuilder.Entity<UserNotification>().HasOne(userNotification => userNotification.User)
+                .WithMany(user => user.UserNotifications)
+                .HasForeignKey(userNotification => userNotification.UserId);
+
             modelBuilder.Entity<EventCenterRoom>()
                 .HasOne(ecr => ecr.EventCenter)
                 .WithMany(ec => ec.EventCenterRooms);
