@@ -11,7 +11,8 @@ namespace CMWeb.Data
             : base(options)
         {
         }
-        
+
+        public DbSet<EventUser> EventUsers { get; set; }
         public DbSet<Conference> Conferences { get; set; }
 
         public DbSet<EventCenter> EventCenters { get; set; }
@@ -29,7 +30,9 @@ namespace CMWeb.Data
         public DbSet<Menu> Menus { get; set; }
         
         public DbSet<FileDetails> Files { get; set; }
-        
+
+        public DbSet<SuperConference> SuperConferences { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -68,11 +71,19 @@ namespace CMWeb.Data
             modelBuilder.Entity<EventRating>().HasOne(er => er.User)
                 .WithMany(u => u.EventRatings)
                 .HasForeignKey(er => er.UserId);
+            
+            modelBuilder.Entity<MealMenu>()
+                .HasKey(t => new { t.MealId, t.MenuId });
 
-            modelBuilder.Entity<Meal>()
-                .HasOne(meal => meal.Menu)
-                .WithMany(menu => menu.Meals)
-                .HasForeignKey(meal => meal.MenuId);
+            modelBuilder.Entity<MealMenu>()
+                .HasOne(mm => mm.Meal)
+                .WithMany(m => m.MealMenus)
+                .HasForeignKey(mm => mm.MealId);
+
+            modelBuilder.Entity<MealMenu>()
+                .HasOne(mm => mm.Menu)
+                .WithMany(m => m.MealMenus)
+                .HasForeignKey(mm => mm.MenuId);
             
             modelBuilder.Entity<EventUser>().HasKey(eu => new {eu.EventId, eu.UserId});
             
@@ -84,16 +95,34 @@ namespace CMWeb.Data
                 .WithMany(u => u.EventUsers)
                 .HasForeignKey(eu => eu.UserId);
 
+            modelBuilder.Entity<UserNotification>().HasKey(userNotification => new { userNotification.NotificationId, userNotification.UserId });
+
+            modelBuilder.Entity<UserNotification>().HasOne(userNotification => userNotification.Notification)
+                .WithMany(notification => notification.UserNotifications)
+                .HasForeignKey(userNotification => userNotification.NotificationId);
+
+            modelBuilder.Entity<UserNotification>().HasOne(userNotification => userNotification.User)
+                .WithMany(user => user.UserNotifications)
+                .HasForeignKey(userNotification => userNotification.UserId);
+
             modelBuilder.Entity<EventCenterRoom>()
                 .HasOne(ecr => ecr.EventCenter)
                 .WithMany(ec => ec.EventCenterRooms);
-                
+            
+            modelBuilder.Entity<Conference>()
+                .HasOne(ec => ec.EventCenter)
+                .WithMany(c => c.Conferences);
+
             modelBuilder.Entity<FileDetails>()
                 .HasOne(f => f.Event)
                 .WithMany(e => e.Files)
-                .HasForeignKey(f => f.EventId);
-
+                .HasForeignKey(f => f.EventId); 
+            
+            modelBuilder.Entity<Conference>()
+                .HasOne(c => c.SuperConference)
+                .WithMany(c => c.Conferences);
 
         }
+
     }
 }

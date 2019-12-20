@@ -1,0 +1,550 @@
+@using Newtonsoft.Json.Linq
+@model IEnumerable<CMWeb.Models.SuperConference>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+
+<h1>Estadísticas</h1>
+<body>
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <canvas id="ConferencesEventsAttendance"></canvas>
+        </div>
+        <div class="col-sm">
+            <canvas id="EventsAttendance"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <canvas id="ConferencesTrackAttendance"></canvas>
+        </div>
+        <div class="col-sm">
+            <canvas id="TracksAttendance"></canvas>
+        </div>
+    </div>
+    
+    <div class="row">
+            <div class="col-sm">
+                <canvas id="EventsRatings"></canvas>
+            </div>
+            <div class="col-sm">
+                <canvas id="ConferencesTrackRating"></canvas>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <canvas id="TracksRating"></canvas>
+            </div>
+            <div class="col-sm">
+                <canvas id="SpeakersRating"></canvas>
+            </div>
+        </div>
+    
+</div>
+
+<script>
+function getRandomColor() {
+      var letters = '0123456789ABCDEF';
+      var color = '#';
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+</script>
+
+<script>
+    var conferenceEventsAttendanceData = []
+    var conferenceEventsAttendance =  [];
+    var conferenceEventsAttendanceConf = [];
+    @foreach (var item in (List<string>) ViewData["ConferencesEventsAttendance"])
+    {    
+        <text>conferenceEventsAttendanceData.push(@Html.Raw(item));</text>
+    }
+      
+    var ConferencesEventsAttendanceChart = document.getElementById('ConferencesEventsAttendance').getContext('2d');
+    
+    
+    for (let d of conferenceEventsAttendanceData)
+        {   
+            
+            let attendance = [];
+            for (let e of d.data)
+                {
+                                if (! conferenceEventsAttendanceConf.includes(e.Name))
+                                {
+                                    conferenceEventsAttendanceConf.push(e.Name);
+                                }
+                                attendance.push(e.Attendance);
+
+                }
+            let data = {label: d.name, data: attendance, backgroundColor: getRandomColor()};
+            conferenceEventsAttendance.push(data)
+            
+           
+        }
+   
+    var massPopChart = new Chart(ConferencesEventsAttendanceChart, {
+        type: "bar",
+        data: {
+            labels: conferenceEventsAttendanceConf,
+            datasets: conferenceEventsAttendance
+        },
+        options: {
+             scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                },
+            title: {
+                display: true,
+                text: "Attendance by events",
+                fontSize: 25
+            },
+            legend: {
+               position: "right",
+               labels : {
+                   fontColor: "#000"
+               } 
+            }
+        }
+    });
+</script>
+
+<script>
+    var EventsAttendanceData = []
+    var EventsAttendance =  [];
+    var EventsAttendanceConf = [];
+    @foreach (var item in (List<string>) ViewData["EventsAttendance"])
+    {    
+        <text>EventsAttendanceData.push(@Html.Raw(item));</text>
+    }
+      
+    var EventsAttendanceChart = document.getElementById('EventsAttendance').getContext('2d');
+    
+    var EventsAttendanceData = [{"name":"A","data":[{"name":"2019","attendance":1}, {"name":"2020","attendance":1}]}, {"name":"ASDSAF","data":[{"name":"2019","attendance":1}, {"name":"2020","attendance":0}]}]
+    
+    for (let d of EventsAttendanceData)
+        {   
+            
+            let attendance = [];
+            for (let e of d.data)
+                {
+                                if (! EventsAttendanceConf.includes(e.name))
+                                {
+                                    EventsAttendanceConf.push(e.name);
+                                }
+                                attendance.push(e.attendance);
+
+                }
+            let data = {label: d.name, data: attendance, backgroundColor: getRandomColor()};
+            EventsAttendance.push(data)
+            
+           
+        }
+   
+    var massPopChart = new Chart(EventsAttendanceChart, {
+        type: "bar",
+        data: {
+            labels: EventsAttendanceConf,
+            datasets: EventsAttendance
+        },
+        options: {
+             scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                },
+            title: {
+                display: true,
+                text: "Attendance by conference",
+                fontSize: 25
+            },
+            legend: {
+               position: "right",
+               labels : {
+                   fontColor: "#000"
+               } 
+            }
+        }
+    });
+</script>
+
+<script>
+    var ConferencesTrackAttendanceData = []
+    var ConferencesTrackAttendance =  [];
+    var ConferencesTrackAttendanceConf = [];
+    @foreach (var item in (List<string>) ViewData["ConferencesTrackAttendance"])
+    {    
+        <text>ConferencesTrackAttendanceData.push(@Html.Raw(item));</text>
+    }
+      
+    var ConferencesTrackAttendanceChart = document.getElementById('ConferencesTrackAttendance').getContext('2d');
+       
+    for (let d of ConferencesTrackAttendanceData)
+        {   
+            
+            let attendance = [];
+            for (let e of d.data)
+                {
+                                if (! ConferencesTrackAttendanceConf.includes(e.Name))
+                                {
+                                    ConferencesTrackAttendanceConf.push(e.Name);
+                                }
+                                attendance.push(e.Attendance);
+
+                }
+            let data = {label: d.name, data: attendance, backgroundColor: getRandomColor()};
+            ConferencesTrackAttendance.push(data)
+            
+           
+        }
+   
+    var massPopChart = new Chart(ConferencesTrackAttendanceChart, {
+        type: "bar",
+        data: {
+            labels: ConferencesTrackAttendanceConf,
+            datasets: ConferencesTrackAttendance
+        },
+        options: {
+             scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                },
+            title: {
+                display: true,
+                text: "Attendance by track",
+                fontSize: 25
+            },
+            legend: {
+               position: "right",
+               labels : {
+                   fontColor: "#000"
+               } 
+            }
+        }
+    });
+</script>
+
+<script>
+    var TracksAttendanceData = []
+    var TracksAttendance =  [];
+    var TracksAttendanceConf = [];
+    @foreach (var item in (List<string>) ViewData["TracksAttendance"])
+    {    
+        <text>TracksAttendanceData.push(@Html.Raw(item));</text>
+    }
+      
+    var TracksAttendanceChart = document.getElementById('TracksAttendance').getContext('2d');
+       
+    for (let d of TracksAttendanceData)
+        {   
+            
+            let attendance = [];
+            for (let e of d.Data)
+                {
+                                if (! TracksAttendanceConf.includes(e.Name))
+                                {
+                                    TracksAttendanceConf.push(e.Name);
+                                }
+                                attendance.push(e.Attendance);
+
+                }
+            let data = {label: d.Name, data: attendance, backgroundColor: getRandomColor()};
+            TracksAttendance.push(data)
+            
+           
+        }
+   
+    var massPopChart = new Chart(TracksAttendanceChart, {
+        type: "bar",
+        data: {
+            labels: TracksAttendanceConf,
+            datasets: TracksAttendance
+        },
+        options: {
+             scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                },
+            title: {
+                display: true,
+                text: "Attendance by conference with tracks",
+                fontSize: 25
+            },
+            legend: {
+               position: "right",
+               labels : {
+                   fontColor: "#000"
+               } 
+            }
+        }
+    });
+</script>
+
+<script>
+    var EventsRatingsData = []
+    var EventsRatings =  [];
+    var EventsRatingsConf = [];
+    @foreach (var item in (List<string>) ViewData["EventsRatings"])
+    {    
+        <text>EventsRatingsData.push(@Html.Raw(item));</text>
+    }
+      
+    var EventsRatingsChart = document.getElementById('EventsRatings').getContext('2d');
+    
+    
+    for (let d of EventsRatingsData)
+        {   
+            
+            let attendance = [];
+            for (let e of d.Data)
+                {
+                                if (! EventsRatingsConf.includes(e.Name))
+                                {
+                                    EventsRatingsConf.push(e.Name);
+                                }
+                                attendance.push(e.Rating);
+
+                }
+            let data = {label: d.Name, data: attendance, backgroundColor: getRandomColor()};
+            EventsRatings.push(data)
+            
+           
+        }
+   
+    var massPopChart = new Chart(EventsRatingsChart, {
+        type: "bar",
+        data: {
+            labels: EventsRatingsConf,
+            datasets: EventsRatings
+        },
+        options: {
+             scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                },
+            title: {
+                display: true,
+                text: "Rating of events by conference",
+                fontSize: 25
+            },
+            legend: {
+               position: "right",
+               labels : {
+                   fontColor: "#000"
+               } 
+            }
+        }
+    });
+</script>
+
+<script>
+    var ConferencesTrackRatingData = []
+    var ConferencesTrackRating =  [];
+    var ConferencesTrackRatingConf = [];
+    @foreach (var item in (List<string>) ViewData["ConferencesTrackRating"])
+    {    
+        <text>ConferencesTrackRatingData.push(@Html.Raw(item));</text>
+    }
+      
+    var ConferencesTrackRatingChart = document.getElementById('ConferencesTrackRating').getContext('2d');
+    
+    
+    for (let d of ConferencesTrackRatingData)
+        {   
+            
+            let attendance = [];
+            for (let e of d.data)
+                {
+                                if (! ConferencesTrackRatingConf.includes(e.Name))
+                                {
+                                    ConferencesTrackRatingConf.push(e.Name);
+                                }
+                                attendance.push(e.Rating);
+
+                }
+            let data = {label: d.name, data: attendance, backgroundColor: getRandomColor()};
+            ConferencesTrackRating.push(data)
+            
+           
+        }
+   
+    var massPopChart = new Chart(ConferencesTrackRatingChart, {
+        type: "bar",
+        data: {
+            labels: ConferencesTrackRatingConf,
+            datasets: ConferencesTrackRating
+        },
+        options: {
+             scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                },
+            title: {
+                display: true,
+                text: "Rating by conference for tracks",
+                fontSize: 25
+            },
+            legend: {
+               position: "right",
+               labels : {
+                   fontColor: "#000"
+               } 
+            }
+        }
+    });
+</script>
+
+<script>
+    var TracksRatingData = []
+    var TracksRating =  [];
+    var TracksRatingConf = [];
+    @foreach (var item in (List<string>) ViewData["TracksRating"])
+    {    
+        <text>TracksRatingData.push(@Html.Raw(item));</text>
+    }
+      
+    var TracksRatingChart = document.getElementById('TracksRating').getContext('2d');
+    
+    
+    for (let d of TracksRatingData)
+        {   
+            
+            let attendance = [];
+            for (let e of d.Data)
+                {
+                                if (! TracksRatingConf.includes(e.Name))
+                                {
+                                    TracksRatingConf.push(e.Name);
+                                }
+                                attendance.push(e.Rating);
+
+                }
+            let data = {label: d.Name, data: attendance, backgroundColor: getRandomColor()};
+            TracksRating.push(data)
+            
+           
+        }
+   
+    var massPopChart = new Chart(TracksRatingChart, {
+        type: "bar",
+        data: {
+            labels: TracksRatingConf,
+            datasets: TracksRating
+        },
+        options: {
+             scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                },
+            title: {
+                display: true,
+                text: "Rating for tracks",
+                fontSize: 25
+            },
+            legend: {
+               position: "right",
+               labels : {
+                   fontColor: "#000"
+               } 
+            }
+        }
+    });
+</script>
+
+<script>
+    var SpeakersRatingData = []
+    var SpeakersRating =  [];
+    var SpeakersRatingConf = [];
+    @foreach (var item in (List<string>) ViewData["SpeakersRating"])
+    {    
+        <text>SpeakersRatingData.push(@Html.Raw(item));</text>
+    }
+      
+    var SpeakersRatingChart = document.getElementById('SpeakersRating').getContext('2d');
+    
+    
+    for (let d of SpeakersRatingData)
+        {   
+            
+            let attendance = [];
+            for (let e of d.Data)
+                {
+                                if (! SpeakersRatingConf.includes(e.Name))
+                                {
+                                    SpeakersRatingConf.push(e.Name);
+                                }
+                                attendance.push(e.Rating);
+
+                }
+            let data = {label: d.Name, data: attendance, backgroundColor: getRandomColor()};
+            SpeakersRating.push(data)
+            
+           
+        }
+   
+    var massPopChart = new Chart(SpeakersRatingChart, {
+        type: "bar",
+        data: {
+            labels: SpeakersRatingConf,
+            datasets: SpeakersRating
+        },
+        options: {
+             scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                },
+            title: {
+                display: true,
+                text: "Rating by speakers",
+                fontSize: 25
+            },
+            legend: {
+               position: "right",
+               labels : {
+                   fontColor: "#000"
+               } 
+            }
+        }
+    });
+</script>
+
+</body>   

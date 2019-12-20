@@ -1,0 +1,76 @@
+@model Meal
+@{
+    ViewData["Title"] = "SelectMenus";
+}
+
+<h1>Event</h1>
+
+<div>
+    <h4>Meal</h4>
+    <hr />
+    <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.StartDate)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.StartDate)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.EndDate)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.EndDate)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Track)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Track)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Conference)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Conference.SuperConference.Name)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.EventCenterRoom)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.EventCenterRoom.Name)
+            </dd>
+        </dl>
+
+</div>
+<br>
+<h3> Menu Options </h3>
+ <form asp-action="AddMenus" asp-route-mealId="@Model.Id">
+        <table class="table">
+            <tr>
+                <th>Select</th>
+                <th>Name</th>
+                <th>Soup</th>
+                <th>Entree</th>
+                <th>Main</th>
+                <th>Dessert</th>
+            </tr>
+            @for (var i = 0; i < ViewBag.Menus.Count; i++)
+            {
+                <tr>
+                    <td><input name="AreChecked" type="checkbox" value="@ViewBag.Menus[i].Id"/></td>
+                    <td>@ViewBag.Menus[i].Name</td>
+                    <td>@ViewBag.Menus[i].Soup</td>
+                    <td>@ViewBag.Menus[i].Entree</td>
+                    <td>@ViewBag.Menus[i].Main</td>
+                    <td>@ViewBag.Menus[i].Dessert</td>
+                </tr>
+            }
+        </table>
+        <button class="btn btn-primary">Go to Conference</button>
+    </form> 

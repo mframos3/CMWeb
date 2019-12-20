@@ -1,19 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CMWeb.Data;
 using CMWeb.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace CMWeb.Controllers
 {
     public class PartyController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+        
         public PartyController(ApplicationDbContext context)
         {
             _context = context;
@@ -27,7 +29,42 @@ namespace CMWeb.Controllers
                 .Include(p => p.EventCenterRoom);
             return View(await applicationDbContext.ToListAsync());
         }
+        
+        public async Task<IActionResult> Attend(int? id, UserType type)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var party = (Party) await _context.Events
+                .Include(p => p.Conference)
+                .Include(p => p.EventCenterRoom)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (party == null)
+            {
+                return NotFound();
+            }
+            
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
 
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == party.Id);
+            if (eventUser != null)
+            {
+                return RedirectToAction("Details", routeValues: new {id = party.Id});
+            }
+            
+            var newEventUser = new EventUser();
+            newEventUser.UserId = currentUserId;
+            newEventUser.EventId = party.Id;
+            newEventUser.Type = type;
+            _context.Add(newEventUser);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Details", routeValues: new {id = party.Id});
+        }
+        
         // GET: Party/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -37,14 +74,30 @@ namespace CMWeb.Controllers
             }
 
             var party = (Party) await _context.Events
-                .Include(p => p.Conference)
+                .Include(p => p.Conference).ThenInclude(c => c.SuperConference)
                 .Include(p => p.EventCenterRoom)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (party == null)
             {
                 return NotFound();
             }
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            ViewData["CurrentUserId"] = currentUserId;
 
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == party.Id);
+            if (eventUser != null)
+            {
+                ViewData["Attendance"] = true;
+            }
+            else
+            {
+                ViewData["Attendance"] = false;
+            }
+            
+            var speaker = _context.EventUsers.Where(eu => eu.Type == UserType.Speaker).FirstOrDefault(eu => eu.EventId == id);
+            ViewData["Speaker"] = speaker != null;
             return View(party);
         }
 
@@ -52,7 +105,7 @@ namespace CMWeb.Controllers
         public IActionResult Create(int conferenceId)
         {
             ViewData["ConferenceId"] = conferenceId;
-            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id");
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Name");
             return View();
         }
 

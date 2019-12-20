@@ -7,8 +7,7 @@ namespace CMWeb.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Sponsor");
+            // Borré el drop sponsor
 
             migrationBuilder.AddColumn<int>(
                 name: "EventCenterId",

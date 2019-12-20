@@ -7,8 +7,6 @@ namespace CMWeb.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Sponsor");
 
             migrationBuilder.CreateTable(
                 name: "Files",

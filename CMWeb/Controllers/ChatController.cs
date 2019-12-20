@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CMWeb.Data;
 using CMWeb.Models;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace CMWeb.Controllers
 {
@@ -25,7 +27,44 @@ namespace CMWeb.Controllers
             var applicationDbContext = _context.Events.OfType<Chat>().Include(c => c.Conference).Include(c => c.EventCenterRoom);
             return View(await applicationDbContext.ToListAsync());
         }
+        
+        public async Task<IActionResult> Attend(int? id, UserType type)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var chat = (Chat) await _context.Events
+                .Include(p => p.Conference).ThenInclude(c => c.SuperConference)
+                .Include(p => p.EventCenterRoom)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (chat == null)
+            {
+                return NotFound();
+            }
+            
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
 
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == chat.Id);
+            if (eventUser != null)
+            {
+                return RedirectToAction("Details", routeValues: new {id = chat.Id});
+            }
+            
+            var newEventUser = new EventUser();
+            newEventUser.UserId = currentUserId;
+            newEventUser.EventId = chat.Id;
+            newEventUser.Type = type;
+            _context.Add(newEventUser);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Details", routeValues: new {id = chat.Id});
+        }
+        
+        
+        
         // GET: Chat/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -42,7 +81,23 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            ViewData["CurrentUserId"] = currentUserId;
 
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == chat.Id);
+            if (eventUser != null)
+            {
+                ViewData["Attendance"] = true;
+            }
+            else
+            {   
+                ViewData["Attendance"] = false;
+            }
+
+            var speaker = _context.EventUsers.Where(eu => eu.Type == UserType.Speaker).FirstOrDefault(eu => eu.EventId == id);
+            ViewData["Speaker"] = speaker != null;
             return View(chat);
         }
 
@@ -50,7 +105,7 @@ namespace CMWeb.Controllers
         public IActionResult Create(int conferenceId)
         {
             ViewData["ConferenceId"] = conferenceId;
-            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id");
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Name");
             return View();
         }
 
@@ -61,13 +116,13 @@ namespace CMWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,StartDate,EndDate,Track,ConferenceId,EventCenterRoomId")] Chat chat)
         {
+            
             if (ModelState.IsValid)
             {
                 _context.Add(chat);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Conference", new {id = chat.ConferenceId});
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Id", chat.ConferenceId);
             ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id", chat.EventCenterRoomId);
             return View(chat);
         }

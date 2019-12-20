@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CMWeb.Data;
 using CMWeb.Models;
+using CMWeb.Areas.Identity.Data;
+using System.Security.Claims;
 
 namespace CMWeb.Controllers
 {
@@ -44,8 +46,10 @@ namespace CMWeb.Controllers
         }
 
         // GET: Notification/Create
-        public IActionResult Create()
+        public IActionResult Create(string parent, int parentId )
         {
+            ViewData["parentId"] = parentId;
+            ViewData["parent"] = parent;
             return View();
         }
 
@@ -54,15 +58,37 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content")] Notification notification)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content")] Notification notification, string receivers, string parent, int parentId)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(notification);
+            _context.Add(notification);
+            foreach (var user in _context.Users)
             {
-                _context.Add(notification);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var present = false;
+                foreach (var aEvent in _context.Events.Include(e => e.EventUsers))
+                {
+                    if (aEvent.EventUsers != null)
+                    {
+                        if (aEvent.EventUsers
+                            .Where(eventUser => eventUser.UserId == user.Id & receivers == eventUser.Type.ToString())
+                            .Any(eventUser => parentId == eventUser.EventId || parentId == aEvent.ConferenceId))
+                        {
+                            var newUserNotification = new UserNotification
+                            {
+                                UserId = user.Id, NotificationId = notification.Id
+                            };
+                            _context.Add(newUserNotification);
+                            present = true;
+                        }
+                    }
+                    if (present)
+                    {
+                        break;
+                    }
+                }
             }
-            return View(notification);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", parent, routeValues: new {id = parentId});
         }
 
         // GET: Notification/Edit/5

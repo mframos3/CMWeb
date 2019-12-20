@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -25,7 +26,42 @@ namespace CMWeb.Controllers
             var applicationDbContext = _context.Events.OfType<Workshop>().Include(w => w.Conference).Include(w => w.EventCenterRoom);
             return View(await applicationDbContext.ToListAsync());
         }
+        
+        public async Task<IActionResult> Attend(int? id, UserType type)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var workshop = (Workshop) await _context.Events
+                .Include(p => p.Conference).ThenInclude(c => c.SuperConference)
+                .Include(p => p.EventCenterRoom)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (workshop == null)
+            {
+                return NotFound();
+            }
+            
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
 
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == workshop.Id);
+            if (eventUser != null)
+            {
+                return RedirectToAction("Details", routeValues: new {id = workshop.Id});
+            }
+            
+            var newEventUser = new EventUser();
+            newEventUser.UserId = currentUserId;
+            newEventUser.EventId = workshop.Id;
+            newEventUser.Type = type;
+            _context.Add(newEventUser);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Details", routeValues: new {id = workshop.Id});
+        }
+        
         // GET: Workshop/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -43,7 +79,22 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            ViewData["CurrentUserId"] = currentUserId;
 
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == workshop.Id);
+            if (eventUser != null)
+            {
+                ViewData["Attendance"] = true;
+            }
+            else
+            {
+                ViewData["Attendance"] = false;
+            }
+            var speaker = _context.EventUsers.Where(eu => eu.Type == UserType.Speaker).FirstOrDefault(eu => eu.EventId == id);
+            ViewData["Speaker"] = speaker != null;
             return View(workshop);
         }
 
@@ -51,7 +102,7 @@ namespace CMWeb.Controllers
         public IActionResult Create(int conferenceId)
         {
             ViewData["ConferenceId"] = conferenceId;
-            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id");
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Name");
             return View();
         }
 

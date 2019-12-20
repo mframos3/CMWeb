@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -25,7 +26,42 @@ namespace CMWeb.Controllers
             var applicationDbContext = _context.Events.OfType<Talk>().Include(t => t.Conference).Include(t => t.EventCenterRoom);
             return View(await applicationDbContext.ToListAsync());
         }
+        
+        public async Task<IActionResult> Attend(int? id, UserType type)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var talk = (Talk) await _context.Events
+                .Include(p => p.Conference)
+                .Include(p => p.EventCenterRoom)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (talk == null)
+            {
+                return NotFound();
+            }
+            
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
 
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == talk.Id);
+            if (eventUser != null)
+            {
+                return RedirectToAction("Details", routeValues: new {id = talk.Id});
+            }
+            
+            var newEventUser = new EventUser();
+            newEventUser.UserId = currentUserId;
+            newEventUser.EventId = talk.Id;
+            newEventUser.Type = type;
+            _context.Add(newEventUser);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Details", routeValues: new {id = talk.Id});
+        }    
+        
         // GET: Talk/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -35,7 +71,7 @@ namespace CMWeb.Controllers
             }
 
             var talk = (Talk) await _context.Events
-                .Include(t => t.Conference)
+                .Include(t => t.Conference).ThenInclude(c => c.SuperConference)
                 .Include(t => t.EventCenterRoom)
                 .Include(t => t.Files)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -43,7 +79,22 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
+            
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            ViewData["CurrentUserId"] = currentUserId;
 
+            var eventUser = await _context.EventUsers.FirstOrDefaultAsync(m => m.UserId == currentUserId & m.EventId == talk.Id);
+            if (eventUser != null)
+            {
+                ViewData["Attendance"] = true;
+            }
+            else
+            {
+                ViewData["Attendance"] = false;
+            }
+            var speaker = _context.EventUsers.Where(eu => eu.Type == UserType.Speaker).FirstOrDefault(eu => eu.EventId == id);
+            ViewData["Speaker"] = speaker != null;
             return View(talk);
         }
 
@@ -51,7 +102,7 @@ namespace CMWeb.Controllers
         public IActionResult Create(int conferenceId)
         {
             ViewData["ConferenceId"] = conferenceId;
-            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Id");
+            ViewData["EventCenterRoomId"] = new SelectList(_context.EventCenterRooms, "Id", "Name");
             return View();
         }
 

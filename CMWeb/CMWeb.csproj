@@ -20,6 +20,28 @@
       <_ContentIncludedByDefault Remove="Views\Event\Details.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Event\Edit.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Event\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Mealbackup\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Mealbackup\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Mealbackup\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Mealbackup\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Mealbackup\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Controllers\MealControllerbackup.cs" />
+      <Compile Remove="Views\Mealbackup\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Views\Mealbackup\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Views\Mealbackup\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Views\Mealbackup\**" />
     </ItemGroup>
 
 </Project>

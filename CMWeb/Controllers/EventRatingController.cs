@@ -19,9 +19,23 @@ namespace CMWeb.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> Index(int eventId)
+        {
+            var filteredrate = new List<EventRating>();
+            var rates = await _context.EventRatings.ToListAsync();
+            foreach (var rate in rates)
+            {
+                if (rate.EventId == eventId)
+                {
+                    filteredrate.Add(rate);
+                }
+            }
+            return View(filteredrate);
+        }
         // GET: Notification/Create
         public IActionResult Create()
         {
+            
             return View();
         }
 
@@ -30,15 +44,27 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Rating,Comment")] EventRating eventRating)
+        public async Task<IActionResult> Create([Bind("Id,Rating,Comment,UserId,EventId,SpeakerRating")] EventRating eventRating)
         {
-            if (ModelState.IsValid)
+            var user = _context.EventRatings.FirstOrDefault(u => u.UserId == eventRating.UserId);
+            var speaker = _context.EventUsers.Where(s =>s.Type == UserType.Speaker).First(s => s.EventId == eventRating.EventId);
+            var ratingCount = _context.EventRatings.Count(e => e.EventId == eventRating.EventId);
+            
+            Console.WriteLine(speaker.Rating);
+            
+            speaker.Rating = ((speaker.Rating*ratingCount)+(eventRating.SpeakerRating))/(ratingCount+1);
+            
+            Console.WriteLine(ratingCount);
+            var ev = _context.EventRatings.FirstOrDefault(u => u.EventId == eventRating.EventId);
+            if (user == null || ev == null) 
             {
                 _context.Add(eventRating);
                 await _context.SaveChangesAsync();
-                return Redirect("/Event/Details/");
+                
             }
-            return View(eventRating);
+
+            return Redirect("/SuperConference");
+
         }
 
        

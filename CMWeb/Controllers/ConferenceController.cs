@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -28,13 +29,15 @@ namespace CMWeb.Controllers
         // GET: Conference/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            
             if (id == null)
             {
                 return NotFound();
             }
-            
+
             
             var conference = await _context.Conferences
+                .Include(c => c.SuperConference)
                 .Include(c => c.Events)
                 .ThenInclude(e => e.EventCenterRoom)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -42,14 +45,20 @@ namespace CMWeb.Controllers
             {
                 return NotFound();
             }
+            ViewData["EventCenterName"] = await _context.EventCenters.FindAsync(conference.EventCenterId);
 
             // ViewData["Events"] = conference.Events;
             return View(conference);
         }
 
         // GET: Conference/Create
-        public IActionResult Create()
+        public IActionResult Create(int superConferenceId)
         {
+            ViewData["superConferenceId"] = superConferenceId;
+            ViewData["EventCenterId"] = new SelectList(_context.EventCenters, "Id", "Name");
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            ViewData["CurrentUserId"] = currentUserId;
             return View();
         }
 
@@ -58,13 +67,15 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,StartDate,EndDate")] Conference conference)
+        public async Task<IActionResult> Create([Bind("Id,Edition,Description,StartDate,EndDate,SuperConferenceId,Sponsor,EventCenterId")] Conference conference)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(conference);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var superConference = await _context.SuperConferences.FindAsync(conference.SuperConferenceId);
+                superConference.Conferences.Add(conference);
+                return RedirectToAction("Index", "SuperConference");
             }
             return View(conference);
         }
@@ -90,7 +101,7 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,StartDate,EndDate")] Conference conference)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,StartDate,EndDate,SuperConferenceId")] Conference conference)
         {
             if (id != conference.Id)
             {
@@ -152,6 +163,12 @@ namespace CMWeb.Controllers
         private bool ConferenceExists(int id)
         {
             return _context.Conferences.Any(e => e.Id == id);
+        }
+        
+        [AcceptVerbs("Get", "Post")]
+        public  IActionResult DateChecker(DateTime startDate, DateTime endDate)
+        {
+            return startDate > endDate ? Json("End Date must be after Start Date.") : Json(true);
         }
     }
 }
