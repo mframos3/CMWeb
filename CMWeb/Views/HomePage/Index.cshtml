@@ -51,13 +51,16 @@
                     {
                         foreach (UserNotification userNotification in notification.UserNotifications)
                         {
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">@notification.Title</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">@notification.Content</h6>
+                            if (userNotification.UserId == (string)ViewData["userId"])
+                            {
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@notification.Title</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">@notification.Content</h6>
+                                    </div>
                                 </div>
-                            </div>
 
+                            }
                         }
 
                     }

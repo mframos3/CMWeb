@@ -9,7 +9,7 @@
 <div>
     <h4>Event</h4>
     <hr />
-    <a asp-controller="Notification" asp-action="Create">Send Notification</a>
+    <a asp-controller="Notification" asp-action="Create" asp-route-eventId="@Model.Id">Send Notification</a>
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)

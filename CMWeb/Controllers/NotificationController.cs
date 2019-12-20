@@ -46,9 +46,10 @@ namespace CMWeb.Controllers
         }
 
         // GET: Notification/Create
-        public IActionResult Create(int conferenceId)
+        public IActionResult Create(int conferenceId = 0, int eventId = 0)
         {
             ViewData["conferenceId"] = conferenceId;
+            ViewData["eventId"] = eventId;
             return View();
         }
 
@@ -57,24 +58,24 @@ namespace CMWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content")] Notification notification, string receivers, int conferenceId)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content")] Notification notification, string receivers, int conferenceId, int eventId)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(notification);
-                if (receivers == "Atendees")
+                bool present;
+                foreach (CMWebUser user in _context.Users)
                 {
-                    bool present;
-                    foreach (CMWebUser user in _context.Users)
+                    present = false;
+                    foreach (Event aEvent in _context.Events.Include(e => e.EventUsers))
                     {
-                        present = false;
-                        foreach (Event aEvent in _context.Events.Include(e => e.EventUsers))
+                        if (aEvent.EventUsers != null)
                         {
-                            if (aEvent.EventUsers != null)
+                            foreach (EventUser eventUser in aEvent.EventUsers)
                             {
-                                foreach (EventUser eventUser in aEvent.EventUsers)
+                                if (eventUser.UserId == user.Id & receivers == eventUser.Type.ToString())
                                 {
-                                    if (aEvent.ConferenceId == conferenceId & eventUser.UserId == user.Id)
+                                    if (eventId == eventUser.EventId || conferenceId == aEvent.ConferenceId)
                                     {
                                         var newUserNotification = new UserNotification();
                                         newUserNotification.UserId = user.Id;
@@ -85,10 +86,10 @@ namespace CMWeb.Controllers
                                     }
                                 }
                             }
-                            if (present)
-                            {
-                                break;
-                            }
+                        }
+                        if (present)
+                        {
+                            break;
                         }
                     }
                 }
