@@ -88,7 +88,7 @@ namespace CMWeb.Controllers
                 }
             }
             await _context.SaveChangesAsync();
-            return RedirectToAction("Details", parent, routeValues: new {id = parent});
+            return RedirectToAction("Details", parent, routeValues: new {id = parentId});
         }
 
         // GET: Notification/Edit/5
