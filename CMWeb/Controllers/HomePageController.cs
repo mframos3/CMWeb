@@ -8,6 +8,7 @@ using CMWeb.Models;
 using Microsoft.EntityFrameworkCore;
 using CMWeb.Data;
 using System.Security.Claims;
+using CMWeb.Areas.Identity.Data;
 
 namespace CMWeb.Controllers
 {
@@ -23,7 +24,7 @@ namespace CMWeb.Controllers
         public async Task<IActionResult> Index()
         {
             IList<Notification> notificationList = new List<Notification>();
-            foreach (Notification notification in _context.Notifications)
+            foreach (Notification notification in _context.Notifications.Include(n => n.UserNotifications))
             {
                 notificationList.Add(notification);
             }

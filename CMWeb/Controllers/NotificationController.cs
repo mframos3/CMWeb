@@ -62,38 +62,27 @@ namespace CMWeb.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(notification);
-                foreach (Event aEvent in _context.Events)
-                {
-                    foreach (CMWebUser user in _context.Users)
-                    {
-                        Console.WriteLine(user.Id);
-                        var newEventUser = new EventUser();
-                        newEventUser.UserId = user.Id;
-                        newEventUser.EventId = aEvent.Id;
-                        _context.Add(newEventUser);
-                    }
-                }
                 if (receivers == "Atendees")
                 {
                     bool present;
                     foreach (CMWebUser user in _context.Users)
                     {
                         present = false;
-                        foreach (Event aEvent in _context.Conferences.Find(conferenceId).Events)
+                        foreach (Event aEvent in _context.Events.Include(e => e.EventUsers))
                         {
-                            foreach (EventUser eventUser in aEvent.EventUsers)
+                            if (aEvent.EventUsers != null)
                             {
-                                if (eventUser.UserId == user.Id)
+                                foreach (EventUser eventUser in aEvent.EventUsers)
                                 {
-                                    var newUserNotification = new UserNotification();
-                                    newUserNotification.UserId = user.Id;
-                                    newUserNotification.NotificationId = notification.Id;
-                                    _context.Add(newUserNotification);
-                                    present = true;
-                                }
-                                if (present)
-                                {
-                                    break;
+                                    if (aEvent.ConferenceId == conferenceId & eventUser.UserId == user.Id)
+                                    {
+                                        var newUserNotification = new UserNotification();
+                                        newUserNotification.UserId = user.Id;
+                                        newUserNotification.NotificationId = notification.Id;
+                                        _context.Add(newUserNotification);
+                                        present = true;
+                                        break;
+                                    }
                                 }
                             }
                             if (present)
