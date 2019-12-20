@@ -161,7 +161,10 @@
                 @Html.DisplayFor(modelItem => item.EndDate)
             </td>
             <td>
-                <a asp-action="Track" asp-controller="Event" asp-route-track="@item.Track">@Html.DisplayFor(modelItem => item.Track)</a>
+                @foreach (var track in @item.Track.Split(";"))
+                {
+                    <a asp-action="Track" asp-controller="Event" asp-route-track="@track">@track</a>
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.GetType().Name)
